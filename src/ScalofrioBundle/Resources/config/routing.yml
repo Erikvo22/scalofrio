@@ -1,0 +1,165 @@
+scalofrio_index:
+    path:     /index
+    defaults: { _controller: ScalofrioBundle:User:index }
+
+############# APARTADO DE INCIDENCIAS ################
+
+scalofrio_incidencia_add:
+    path:     /incidencia/add
+    defaults: { _controller: ScalofrioBundle:User:IncidenciaAdd }
+
+scalofrio_incidencia_create:
+    path: /incidencia/create
+    defaults: {_controller: ScalofrioBundle:User:createIncidencia }
+    methods: POST
+
+scalofrio_incidencia_redirect_add:
+    path: /incidencia/create
+    defaults:
+        _controller: ScalofrioBundle:User:incidenciaAdd
+        path: /incidencia/add
+        permanent: true
+
+scalofrio_incidencia_edit:
+    path:     /incidencia/edit/{id}
+    defaults: { _controller: ScalofrioBundle:User:IncidenciaEdit }
+
+scalofrio_incidencia_update:
+    path:     /incidencia/update/{id}
+    defaults: { _controller: ScalofrioBundle:User:incidenciaUpdate }
+    methods: [POST, PUT]
+
+scalofrio_incidencia_redirect_edit:
+    path: /incidencia/update{id}
+    defaults:
+        _controller: ScalofrioBundle:User:incidenciaEdit
+        path: /incidencia/edit/{id}
+        permanent: true
+
+scalofrio_incidencia_view:
+    path:     /incidencia/view/{id}
+    defaults: { _controller: ScalofrioBundle:User:incidenciaView }
+
+scalofrio_incidencia_delete:
+    path:     /incidencia/delete/{id}
+    defaults: { _controller: ScalofrioBundle:User:incidenciaDelete }
+    methods: [POST, DELETE]
+
+
+
+############# EXPORTAR A CSV ################
+
+scalofrio_export:
+    path: /index/export
+    defaults: { _controller: ScalofrioBundle:User:generateCsv }
+
+
+
+############# APARTADO DE USUARIOS ################
+
+scalofrio_user_add:
+    path:     /user/add
+    defaults: { _controller: ScalofrioBundle:User:UserAdd }
+
+scalofrio_user_create:
+    path: /user/create
+    defaults: {_controller: ScalofrioBundle:User:createUser }
+    methods: POST
+
+scalofrio_user_redirect_add:
+    path: /user/create
+    defaults:
+        _controller: ScalofrioBundle:User:UserAdd
+        path: /user/add
+        permanent: true
+
+
+############# APARTADO DE COMERCIALES ################
+
+scalofrio_comercial_add:
+    path:     /comercial/add
+    defaults: { _controller: ScalofrioBundle:User:ComercialAdd }
+
+scalofrio_comercial_create:
+    path: /comercial/create
+    defaults: {_controller: ScalofrioBundle:User:createComercial }
+    methods: POST
+
+scalofrio_comercial_redirect_add:
+    path: /user/comercial
+    defaults:
+        _controller: ScalofrioBundle:User:ComercialAdd
+        path: /comercial/add
+        permanent: true
+
+
+
+############# APARTADO DE CLIENTES ################
+
+scalofrio_cliente_add:
+    path:     /cliente/add
+    defaults: { _controller: ScalofrioBundle:User:ClienteAdd }
+
+scalofrio_cliente_create:
+    path: /cliente/create
+    defaults: {_controller: ScalofrioBundle:User:createCliente }
+    methods: POST
+
+scalofrio_cliente_redirect_add:
+    path: /cliente/create
+    defaults:
+        _controller: ScalofrioBundle:User:ClienteAdd
+        path: /cliente/add
+        permanent: true
+
+
+
+
+############# APARTADO DE GESTIONES ################
+
+scalofrio_gestion_add:
+    path:     /gestion/add
+    defaults: { _controller: ScalofrioBundle:User:GestionAdd }
+
+scalofrio_gestion_create:
+    path: /gestion/create
+    defaults: {_controller: ScalofrioBundle:User:createGestion }
+    methods: POST
+
+scalofrio_gestion_redirect_add:
+    path: /gestion/create
+    defaults:
+        _controller: ScalofrioBundle:User:GestionAdd
+        path: /gestion/add
+        permanent: true
+
+
+
+
+############# AUTENTIFICACIÓN ################
+
+scalofrio_homepage:
+    path: /
+    defaults: {_controller: ScalofrioBundle:User:home}
+
+scalofrio_login:
+    path: /login
+    defaults: {_controller: ScalofrioBundle:Security:login}
+
+scalofrio_login_check:
+    path: /login_check
+    defaults: {_controller: ScalofrioBundle:Security:loginCheck}
+
+scalofrio_logout:
+    path: /logout
+
+
+
+############# BUSCADOR ################
+
+scalofrio_busqueda:
+    path: /busqueda
+    defaults: {_controller: ScalofrioBundle:User:busqueda }
+
+
+

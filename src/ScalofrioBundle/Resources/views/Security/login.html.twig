@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('public/css/signin.css') }}">
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="container">
+        <form action="{{ path('scalofrio_login_check') }}" method="post" class="form-signin">
+            <h2 class="form-signin-heading">Scalofrio S.L. - Incidencias</h2>
+
+            {% if error %}
+                <div class="text-danger">
+                    <p>
+                        <strong>
+                            {{ error.messageKey }}
+                        </strong>
+                    </p>
+                </div>
+            {% endif %}
+
+            <label for="username" class="sr-only">Usuario</label>
+            <input type="text" id="username" class="form-control" name="_username" value="{{ last_username }}" placeholder="Usuario" required autofocus />
+
+            <label for="password" class="sr-only">Contraseña</label>
+            <input type="password" id="password" class="form-control" name="_password" placeholder="Contraseña" required />
+
+            <input type="hidden" name="_target_path" value="scalofrio_homepage" />
+
+            <button type="submit" class="btn btn-lg btn-primary btn-block">Acceder</button>
+        </form>
+    </div> <!-- /container -->
+{% endblock %}

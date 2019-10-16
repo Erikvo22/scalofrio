@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h2><b><span class="glyphicon glyphicon-ok-circle"></span> Nueva incidencia</b></h2>
+                </div>
+                {{ form_start(form) }}
+
+                <div class="form-group" style="width: 200px">
+                    {{ form_label(form.fecha) }}
+                    {{ form_widget(form.fecha) }}
+                    <span class = "text-danger">{{ form_errors(form.fecha) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.comercial) }}
+                    {{ form_widget(form.comercial, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.comercial) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.cliente) }}
+                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.establecimiento) }} (opcional)
+                    {{ form_widget(form.establecimiento, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.establecimiento) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.ruta) }}
+                    {{ form_widget(form.ruta, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.ruta) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.nombrecliente) }}
+                    {{ form_widget(form.nombrecliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.nombrecliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.cargocliente) }}
+                    {{ form_widget(form.cargocliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cargocliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.gestion) }}
+                    {{ form_widget(form.gestion, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.gestion) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.resultado) }}
+                    {{ form_widget(form.resultado, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.resultado) }}</span>
+                </div>
+                <div class="form-group" style="width: 100px">
+                    <label>Tiempo (min.)</label>
+                    {{ form_widget(form.tiempo, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.tiempo) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.repuestos) }}
+                    {{ form_widget(form.repuestos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.repuestos) }}</span>
+                </div><br>
+
+
+                <div id="signature-pad" class="m-signature-pad">
+                    <label>Firma del cliente</label>
+                    <div class="m-signature-pad--body">
+                        <canvas style="border: 2px dashed #ccc" name={{ form_widget(form.firma) }}></canvas>
+                    </div>
+                    <div class="m-signature-pad--footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-action="clear">Clear</button>
+                       {#<button type="button" class="btn btn-sm btn-info" data-action="save">Guardar</button>#}
+                    </div>
+                </div>
+
+
+
+                <p>
+                    {{ form_widget(form.guardar, {'label' : 'Crear incidencia', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    {% include 'footer.html.twig' %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+
+        $(function () {
+            var wrapper = document.getElementById("signature-pad"),
+                clearButton = wrapper.querySelector("[data-action=clear]"),
+                saveButton = wrapper.querySelector("[data-action=save]"),
+                canvas = wrapper.querySelector("canvas"),
+                signaturePad;
+
+            // Adjust canvas coordinate space taking into account pixel ratio,
+            // to make it look crisp on mobile devices.
+            // This also causes canvas to be cleared.
+            window.resizeCanvas = function () {
+                var ratio =  window.devicePixelRatio || 1;
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+            }
+
+            resizeCanvas();
+
+            signaturePad = new SignaturePad(canvas);
+
+            clearButton.addEventListener("click", function(event) {
+                signaturePad.clear();
+            });
+
+            saveButton.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                if (signaturePad.isEmpty()) {
+                    alert("Por favor, proporciona una firma.");
+                } else {
+                    var dataUrl = signaturePad.toDataURL();
+                    var image_data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
+
+                    $.ajax({
+                        url: '/save-signature',
+                        type: 'POST',
+                        data: {
+                            image_data: image_data,
+                        },
+                    }).done(function() {
+                        //
+                    });
+                }
+            });
+        });
+
+
+
+    </script>
+{% endblock %}

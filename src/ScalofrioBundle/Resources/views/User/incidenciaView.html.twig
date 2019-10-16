@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    <div class = "container well">
+        <div class="col-md-9">
+            <h2>{{ incidencia.cliente.nombre }} > {{ incidencia.establecimiento }}</h2>
+            <br>
+            <dl>
+                <dt>Fecha</dt>
+                <dd>
+                    {{ incidencia.fecha|date('d-m-Y') }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Comercial</dt>
+                <dd>
+                    {{ incidencia.comercial.nombre }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Establecimiento</dt>
+                <dd>
+                    {{ incidencia.establecimiento }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Ruta</dt>
+                <dd>
+                    {{ incidencia.ruta.nombre }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Nombre del cliente</dt>
+                <dd>
+                    {{ incidencia.nombrecliente }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Tipo de cargo del cliente</dt>
+                <dd>
+                    {{ incidencia.cargocliente }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Gestión</dt>
+                <dd>
+                    {{ incidencia.gestion.nombre }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Resultado de la gestión</dt>
+                <dd>
+                    {{ incidencia.resultado }}
+                    &nbsp;
+                </dd>
+                <br>
+                <dt>Tiempo (min.)</dt>
+                <dd>
+                    {{ incidencia.tiempo }}
+                    &nbsp;
+                </dd>
+                <br>
+
+                <dt>Descripción de la incidencia</dt>
+                <dd>
+                    {{ incidencia.repuestos }}
+                    &nbsp;
+                </dd>
+
+
+            </dl>
+        </div>
+        <div class="col-md-3">
+           <h3>Acciones</h3>
+            <p>
+                <a href="{{ path('scalofrio_incidencia_edit', {id: incidencia.id}) }}" class="btn btn-primary btn-lg btn-block">
+                    <span class="glyphicon glyphicon-edit"></span>
+                    Editar incidencia
+                </a>
+            </p>
+            <p>
+                {{ include('ScalofrioBundle:User/forms:form.html.twig', { form: delete_form, message: '¿Estás seguro?' }) }}
+            </p>
+        </div>
+    </div>
+
+    {% include 'footer.html.twig' %}
+{% endblock %}

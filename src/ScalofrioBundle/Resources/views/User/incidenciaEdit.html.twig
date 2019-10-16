@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    {#Mensaje de confirmación de operación#}
+    {%  for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h2><b>Editar incidencia</b></h2>
+                </div>
+                {{ form_start(form) }}
+
+                <div class="form-group" style="width: 200px">
+                    {{ form_label(form.fecha) }}
+                    {{ form_widget(form.fecha) }}
+                    <span class = "text-danger">{{ form_errors(form.fecha) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.comercial) }}
+                    {{ form_widget(form.comercial, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.comercial) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.cliente) }}
+                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.establecimiento) }}
+                    {{ form_widget(form.establecimiento, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.establecimiento) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.ruta) }}
+                    {{ form_widget(form.ruta, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.ruta) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.nombrecliente) }}
+                    {{ form_widget(form.nombrecliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.nombrecliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.cargocliente) }}
+                    {{ form_widget(form.cargocliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cargocliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.gestion) }}
+                    {{ form_widget(form.gestion, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.gestion) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.resultado) }}
+                    {{ form_widget(form.resultado, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.resultado) }}</span>
+                </div>
+                <div class="form-group" style="width: 100px">
+                    <label>Tiempo (min.)</label>
+                    {{ form_widget(form.tiempo, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.tiempo) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.repuestos) }}
+                    {{ form_widget(form.repuestos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.repuestos) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.firma) }}
+                    {{ form_widget(form.firma, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.firma) }}</span>
+                </div>
+
+                <p>
+                    {{ form_widget(form.guardar, {'label' : 'Actualizar incidencia', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    {% include 'footer.html.twig' %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+{% endblock %}

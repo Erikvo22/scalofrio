@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h2><b><span class="glyphicon glyphicon-home"></span> Nuevo cliente</b></h2>
+                </div>
+                {{ form_start(form) }}
+
+                <div class="form-group">
+                    {{ form_label(form.nombre) }}
+                    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.nombre) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.email) }} (opcional)
+                    {{ form_widget(form.email, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.email) }}</span>
+                </div>
+
+                <p>
+                    {{ form_widget(form.guardar, {'label' : 'Crear cliente', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    {% include 'footer.html.twig' %}
+{% endblock %}
