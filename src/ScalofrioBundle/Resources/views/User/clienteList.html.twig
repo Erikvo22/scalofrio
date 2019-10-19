@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+    {#Mensaje de confirmación de operación#}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
+    {#Mensaje de confirmación de operación#}
+    <div id="buscador" style="text-align: center">
+        <form action="{{ path('scalofrio_busqueda_cliente') }}" method="post">
+
+            <fieldset class="searchform">
+                <span class="glyphicon glyphicon-search" style="color: #868686"></span><input type="text"
+                                                                                              placeholder="Buscar cliente..."
+                                                                                              name="buscar"
+                                                                                              class="searchfield"/>
+            </fieldset>
+
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="col-md-6">
+            <div class="page-header margin-none">
+                <h2><b>Listado de clientes</b></h2>
+                <a href="{{ path('scalofrio_cliente_add') }}" class="btn btn-sm btn-warning padding-none">
+                    <span class="glyphicon glyphicon-home"></span>
+                    Nuevo cliente</a>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Acciones</th>
+                    </tr>
+                    {% for cliente in pagination %}
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.nombre }}</td>
+                            <td>{{ cliente.email }}</td>
+                            <td class="actions">
+                                <a href="{{ path('scalofrio_cliente_view', { id: cliente.id}) }}"
+                                   class="btn btn-sm btn-primary">Ver</a>
+                                <a href="{{ path('scalofrio_cliente_edit', { id: cliente.id}) }}"
+                                   class="btn btn-sm btn-danger">Editar</a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {#display navigation#}
+                <div class="navigation" style="text-align: center">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
+
+            <div class="col-md-6">
+                <div class="page-header margin-none">
+                    <h3><b>Nueva relación 'Cliente > Establecimiento'</b></h3>
+                </div>
+                {{ form_start(form) }}
+                <div class="form-group col-md-4">
+                    <label>Cliente</label>
+                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(form.cliente) }}</span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Establecimiento</label>
+                    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(form.nombre) }}</span>
+                </div>
+                <p class="col-md-2">
+                    {{ form_widget(form.guardar, {'label' : 'Crear', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    {% include 'footer.html.twig' %}
+{% endblock %}
+
+

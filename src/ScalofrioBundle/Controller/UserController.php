@@ -2,11 +2,13 @@
 
 namespace ScalofrioBundle\Controller;
 
+use ScalofrioBundle\Entity\Establecimientos;
 use ScalofrioBundle\Form\IncidenciasType;
 use ScalofrioBundle\Form\UsuariosType;
 use ScalofrioBundle\Form\ComercialType;
 use ScalofrioBundle\Form\ClienteType;
 use ScalofrioBundle\Form\GestionType;
+use ScalofrioBundle\Form\EstablecimientosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use ScalofrioBundle\Entity\Usuarios;
@@ -338,6 +340,78 @@ class UserController extends Controller
 
     /******** APARTADO DE CLIENTES **********/
 
+    public function clienteListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT u FROM ScalofrioBundle:Cliente u";
+        $clientes = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $clientes, $request->query->getInt('page', 1),
+            10
+        );
+
+        //Añadir nuevo establecimiento
+        $establecimientos = new Establecimientos();
+        $form = $this->createEstablecimientosCreateForm($establecimientos);
+
+        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
+    }
+
+    public function clienteViewAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('ScalofrioBundle:Cliente');
+        $cliente = $repository->find($id);
+        $establecimientos = $em->getRepository('ScalofrioBundle:Establecimientos')->findBy(
+            array(
+                'cliente' => $id
+            )
+        );
+
+        if(!$cliente){
+            $messageException = 'Cliente no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+
+        return $this->render('@Scalofrio/User/clienteView.html.twig', array('cliente' => $cliente, 'establecimientos' => $establecimientos));
+    }
+
+
+    private function createEstablecimientosCreateForm(Establecimientos $entity)
+    {
+        $form = $this->createForm(new EstablecimientosType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_establecimientos_create'),
+            'method' => 'POST'
+        ));
+        return $form;
+    }
+
+    public function createEstablecimientosAction(Request $request)
+    {
+        $establecimiento = new Establecimientos();
+        $form = $this->createEstablecimientosCreateForm($establecimiento);
+        $form->handleRequest($request);
+
+        if($form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($establecimiento);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Establecimiento creado correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_cliente_list');
+        }
+        return $this->render('ScalofrioBundle:User:clienteView.html.twig', array('form' => $form->createView()));
+    }
+
     public function clienteAddAction()
     {
         $cliente = new Cliente();
@@ -372,9 +446,54 @@ class UserController extends Controller
                 'Cliente creado correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_cliente_list');
         }
         return $this->render('ScalofrioBundle:User:clienteAdd.html.twig', array('form' => $form->createView()));
+    }
+
+
+    public function clienteEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cliente = $em->getRepository('ScalofrioBundle:Cliente')->find($id);
+
+        if(!$cliente){
+            $messageException = 'Cliente no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createClienteEditForm($cliente);
+
+        return $this->render('ScalofrioBundle:User:clienteEdit.html.twig', array('cliente' => $cliente, 'form' => $form->createView()));
+    }
+
+    private function createClienteEditForm (Cliente $entity)
+    {
+        $form = $this->createForm(new ClienteType(), $entity, array('action' => $this->generateUrl('scalofrio_cliente_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function clienteUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cliente = $em->getRepository('ScalofrioBundle:Cliente')->find($id);
+
+        if(!$cliente){
+            $messageException = 'Cliente no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createClienteEditForm($cliente);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $em->flush();
+            $successMessage = 'Cliente actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_cliente_list', array('id' => $cliente->getId()));
+        }
+        return $this->render('ScalofrioBundle:User:clienteEdit.html.twig', array('cliente' => $cliente, 'form' => $form->createView()));
     }
 
 
@@ -446,6 +565,34 @@ class UserController extends Controller
 
         );
         return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+    }
+
+    public function busquedaClienteAction(Request $request)
+    {
+
+        $busqueda = trim($_POST['buscar']);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT c FROM ScalofrioBundle:Cliente c
+        WHERE c.nombre LIKE '%" .$busqueda. "%'
+        ORDER BY c.nombre";
+        $prod = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+
+            $prod,
+            $request->query->getInt('page', 1),
+            10
+
+        );
+
+        //Añadir nuevo establecimiento
+        $establecimientos = new Establecimientos();
+        $form = $this->createEstablecimientosCreateForm($establecimientos);
+
+        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
     }
 
 

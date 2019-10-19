@@ -95,6 +95,34 @@ scalofrio_comercial_redirect_add:
 
 
 ############# APARTADO DE CLIENTES ################
+scalofrio_cliente_list:
+    path:   /cliente/list
+    defaults: { _controller: ScalofrioBundle:User:clienteList }
+
+scalofrio_cliente_view:
+    path:   /cliente/view{id}
+    defaults: { _controller: ScalofrioBundle:User:clienteView }
+
+scalofrio_establecimientos_create:
+    path: /establecimiento/create
+    defaults: {_controller: ScalofrioBundle:User:createEstablecimientos }
+    methods: POST
+
+scalofrio_cliente_edit:
+    path:   /cliente/edit{id}
+    defaults: { _controller: ScalofrioBundle:User:clienteEdit }
+
+scalofrio_cliente_update:
+     path:     /cliente/update/{id}
+     defaults: { _controller: ScalofrioBundle:User:clienteUpdate }
+     methods: [POST, PUT]
+
+scalofrio_cliente_redirect_edit:
+    path: /cliente/update{id}
+    defaults:
+         _controller: ScalofrioBundle:User:clienteEdit
+         path: /cliente/edit/{id}
+         permanent: true
 
 scalofrio_cliente_add:
     path:     /cliente/add
@@ -160,6 +188,10 @@ scalofrio_logout:
 scalofrio_busqueda:
     path: /busqueda
     defaults: {_controller: ScalofrioBundle:User:busqueda }
+
+scalofrio_busqueda_cliente:
+    path: /busquedaCliente
+    defaults: {_controller: ScalofrioBundle:User:busquedaCliente }
 
 
 
