@@ -4,11 +4,18 @@
     {{ include('menu.html.twig') }}
     {{ parent() }}
 
+    {#Mensaje de confirmación de operación#}
+    {%  for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
     <div class="main container">
         <div class="row well">
             <div class="col-md-6">
                 <div class="page-header">
-                    <h2><b><span class="glyphicon glyphicon-user"></span> Nuevo usuario</b></h2>
+                    <h2><b>Editar usuario</b></h2>
                 </div>
                 {{ form_start(form) }}
 
@@ -35,13 +42,13 @@
 
                 <div class="checkbox">
                     <label>
-                    {{ form_widget(form.isActive) }} Activo
-                    <span class = "text-danger">{{ form_errors(form.isActive) }}</span>
+                        {{ form_widget(form.isActive) }} Activo
+                        <span class = "text-danger">{{ form_errors(form.isActive) }}</span>
                     </label>
                 </div>
 
                 <p>
-                    {{ form_widget(form.guardar, {'label' : 'Crear usuario', 'attr': {'class': 'btn btn-success'}}) }}
+                    {{ form_widget(form.guardar, {'label' : 'Actualizar usuario', 'attr': {'class': 'btn btn-success'}}) }}
                 </p>
 
                 {{ form_end(form) }}

@@ -71,6 +71,14 @@ class Usuarios implements AdvancedUserInterface, \Serializable
      */
     private $updatedAt;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="usuarios")
+     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $cliente;
+
 
     public function __construct()
     {
@@ -299,6 +307,23 @@ class Usuarios implements AdvancedUserInterface, \Serializable
     public function isEnabled()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Cliente
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Cliente $cliente
+     * @return Usuarios
+     */
+    public function setCliente($cliente)
+    {
+        $this->cliente = $cliente;
     }
 
 }

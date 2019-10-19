@@ -252,6 +252,22 @@ class UserController extends Controller
 
     /******** APARTADO DE USUARIOS **********/
 
+    public function userListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT u FROM ScalofrioBundle:Usuarios u";
+        $usuarios = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $usuarios, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination));
+    }
+
     public function userAddAction()
     {
         $user = new Usuarios();
@@ -291,9 +307,54 @@ class UserController extends Controller
                 'Usuario creado correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_user_list');
         }
         return $this->render('ScalofrioBundle:User:userAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    public function userEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('ScalofrioBundle:Usuarios')->find($id);
+
+        if(!$user){
+            $messageException = 'Usuario no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createUserEditForm($user);
+
+        return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user
+        , 'form' => $form->createView()));
+    }
+
+    private function createUserEditForm (Usuarios $entity)
+    {
+        $form = $this->createForm(new UsuariosType(), $entity, array('action' => $this->generateUrl('scalofrio_user_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function userUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('ScalofrioBundle:Usuarios')->find($id);
+
+        if(!$user){
+            $messageException = 'Usuario no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createUserEditForm($user);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $em->flush();
+            $successMessage = 'Usuario actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_user_list', array('id' => $user->getId()));
+        }
+        return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user, 'form' => $form->createView()));
     }
 
     /******** APARTADO DE COMERCIALES **********/
@@ -595,5 +656,29 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
     }
 
+
+    public function busquedaUserAction(Request $request)
+    {
+
+        $busqueda = trim($_POST['buscar']);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT u FROM ScalofrioBundle:Usuarios u
+        WHERE u.username LIKE '%" .$busqueda. "%'
+        ORDER BY u.username";
+        $prod = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+
+            $prod,
+            $request->query->getInt('page', 1),
+            10
+
+        );
+
+        return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination));
+    }
 
 }

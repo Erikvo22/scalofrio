@@ -73,6 +73,26 @@ scalofrio_user_redirect_add:
         path: /user/add
         permanent: true
 
+scalofrio_user_edit:
+    path:   /user/edit{id}
+    defaults: { _controller: ScalofrioBundle:User:userEdit }
+
+scalofrio_user_update:
+    path:     /user/update/{id}
+    defaults: { _controller: ScalofrioBundle:User:userUpdate }
+    methods: [POST, PUT]
+
+scalofrio_user_redirect_edit:
+    path: /user/update{id}
+    defaults:
+        _controller: ScalofrioBundle:User:userEdit
+        path: /user/edit/{id}
+        permanent: true
+
+scalofrio_user_list:
+    path:   /user/list
+    defaults: { _controller: ScalofrioBundle:User:userList }
+
 
 ############# APARTADO DE COMERCIALES ################
 
@@ -192,6 +212,10 @@ scalofrio_busqueda:
 scalofrio_busqueda_cliente:
     path: /busquedaCliente
     defaults: {_controller: ScalofrioBundle:User:busquedaCliente }
+
+scalofrio_busqueda_user:
+    path: /busquedaUsuario
+    defaults: {_controller: ScalofrioBundle:User:busquedaUser }
 
 
 
