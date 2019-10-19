@@ -3,12 +3,16 @@
 namespace ScalofrioBundle\Controller;
 
 use ScalofrioBundle\Entity\Establecimientos;
+use ScalofrioBundle\Entity\Maquinas;
+use ScalofrioBundle\Entity\Repuestos;
 use ScalofrioBundle\Form\IncidenciasType;
 use ScalofrioBundle\Form\UsuariosType;
 use ScalofrioBundle\Form\ComercialType;
 use ScalofrioBundle\Form\ClienteType;
 use ScalofrioBundle\Form\GestionType;
 use ScalofrioBundle\Form\EstablecimientosType;
+use ScalofrioBundle\Form\MaquinasType;
+use ScalofrioBundle\Form\RepuestosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use ScalofrioBundle\Entity\Usuarios;
@@ -555,6 +559,164 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_cliente_list', array('id' => $cliente->getId()));
         }
         return $this->render('ScalofrioBundle:User:clienteEdit.html.twig', array('cliente' => $cliente, 'form' => $form->createView()));
+    }
+
+    /******** APARTADO DE MAQUINAS **********/
+
+    public function maquinasListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT u FROM ScalofrioBundle:Maquinas u";
+        $maquinas = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $maquinas, $request->query->getInt('page', 1),
+            10
+        );
+
+        //Añadir nuevos repuestos
+        $repuestos = new Repuestos();
+        $form = $this->createRepuestosCreateForm($repuestos);
+
+        return $this->render('ScalofrioBundle:User:maquinasList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
+    }
+
+    public function maquinasViewAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('ScalofrioBundle:Maquinas');
+        $maquina = $repository->find($id);
+        $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
+            array(
+                'maquinas' => $id
+            )
+        );
+
+        if(!$maquina){
+            $messageException = 'Máquina no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+
+        return $this->render('@Scalofrio/User/maquinasView.html.twig', array('maquina' => $maquina, 'repuestos' => $repuestos));
+    }
+
+
+    private function createRepuestosCreateForm(Repuestos $entity)
+    {
+        $form = $this->createForm(new RepuestosType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_repuestos_create'),
+            'method' => 'POST'
+        ));
+        return $form;
+    }
+
+    public function createRepuestosAction(Request $request)
+    {
+        $repuesto = new Repuestos();
+        $form = $this->createRepuestosCreateForm($repuesto);
+        $form->handleRequest($request);
+
+        if($form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($repuesto);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Repuesto creado correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_maquinas_list');
+        }
+        return $this->render('ScalofrioBundle:User:maquinasView.html.twig', array('form' => $form->createView()));
+    }
+
+    public function maquinasAddAction()
+    {
+        $maquinas = new Maquinas();
+        $form = $this->createMaquinasCreateForm($maquinas);
+
+        return $this->render('ScalofrioBundle:User:maquinasAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    private function createMaquinasCreateForm(Maquinas $entity)
+    {
+        $form = $this->createForm(new MaquinasType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_maquinas_create'),
+            'method' => 'POST'
+        ));
+        return $form;
+    }
+
+    public function createMaquinasAction(Request $request)
+    {
+        $maquina = new Maquinas();
+        $form = $this->createMaquinasCreateForm($maquina);
+        $form->handleRequest($request);
+
+        if($form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($maquina);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Máquina creada correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_maquinas_list');
+        }
+        return $this->render('ScalofrioBundle:User:maquinasAdd.html.twig', array('form' => $form->createView()));
+    }
+
+
+    public function maquinasEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $maquina = $em->getRepository('ScalofrioBundle:Maquinas')->find($id);
+
+        if(!$maquina){
+            $messageException = 'Máquina no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createMaquinasEditForm($maquina);
+
+        return $this->render('ScalofrioBundle:User:maquinasEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
+    }
+
+    private function createMaquinasEditForm (Maquinas $entity)
+    {
+        $form = $this->createForm(new MaquinasType(), $entity, array('action' => $this->generateUrl('scalofrio_maquinas_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function maquinasUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $maquina = $em->getRepository('ScalofrioBundle:Maquinas')->find($id);
+
+        if(!$maquina){
+            $messageException = 'Máquina no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createMaquinasEditForm($maquina);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $em->flush();
+            $successMessage = 'Máquina actualizada correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_maquinas_list', array('id' => $maquina->getId()));
+        }
+        return $this->render('ScalofrioBundle:User:maquinasEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
     }
 
 

@@ -182,6 +182,53 @@ scalofrio_gestion_redirect_add:
         permanent: true
 
 
+############# APARTADO DE MAQUINAS ################
+scalofrio_maquinas_list:
+    path:   /maquinas/list
+    defaults: { _controller: ScalofrioBundle:User:maquinasList }
+
+scalofrio_maquinas_view:
+    path:   /maquinas/view{id}
+    defaults: { _controller: ScalofrioBundle:User:maquinasView }
+
+scalofrio_repuestos_create:
+    path: /repuestos/create
+    defaults: {_controller: ScalofrioBundle:User:createRepuestos }
+    methods: POST
+
+scalofrio_maquinas_edit:
+    path:   /maquinas/edit{id}
+    defaults: { _controller: ScalofrioBundle:User:maquinasEdit }
+
+scalofrio_maquinas_update:
+    path:     /maquinas/update/{id}
+    defaults: { _controller: ScalofrioBundle:User:maquinasUpdate }
+    methods: [POST, PUT]
+
+scalofrio_maquinas_redirect_edit:
+    path: /maquinas/update{id}
+    defaults:
+        _controller: ScalofrioBundle:User:maquinasEdit
+        path: /maquinas/edit/{id}
+        permanent: true
+
+scalofrio_maquinas_add:
+    path:     /maquinas/add
+    defaults: { _controller: ScalofrioBundle:User:maquinasAdd }
+
+scalofrio_maquinas_create:
+    path: /maquinas/create
+    defaults: {_controller: ScalofrioBundle:User:createMaquinas }
+    methods: POST
+
+scalofrio_maquinas_redirect_add:
+    path: /maquinas/create
+    defaults:
+        _controller: ScalofrioBundle:User:maquinasAdd
+        path: /maquinas/add
+        permanent: true
+
+
 
 
 ############# AUTENTIFICACIÓN ################

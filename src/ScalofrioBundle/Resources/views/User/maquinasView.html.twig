@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    <div class="container well">
+        <div class="col-md-9">
+            <h2>{{ maquina.nombre }}</h2>
+            <br>
+            <dl>
+                <dt>Repuestos</dt>
+                <dd>
+                    {% for i in repuestos|keys %}
+                        {{ repuestos[i].nombre }} <br>
+                    {% endfor %}
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    {% include 'footer.html.twig' %}
+{% endblock %}
