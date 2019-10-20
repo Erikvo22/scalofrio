@@ -3,6 +3,9 @@
 namespace ScalofrioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Table(name="INCIDENCIAS_CLIENTES")
@@ -18,6 +21,7 @@ class IncidenciasCliente
     protected $id;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(name="TITULO", type="string", length=80)
      */
     private $titulo;
@@ -28,6 +32,7 @@ class IncidenciasCliente
     private $tipo;
 
     /**
+     * @Assert\Choice(choices = {"BAJA", "MEDIA", "ALTA","URGENTE"})
      * @ORM\Column(name="PRIORIDAD", type="string", length=25)
      */
     private $prioridad;
@@ -48,7 +53,11 @@ class IncidenciasCliente
     private $fechaCreacion;
 
     /**
+     * @Assert\NotNull(
+     *      message = "Debe elegir a un cliente"
+     * )
      * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="incidenciasCliente")
+     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $cliente;
 
@@ -173,7 +182,7 @@ class IncidenciasCliente
     }
 
     /**
-     * Get the value of cliente
+     * @return \ScalofrioBundle\Entity\Cliente
      */
     public function getCliente()
     {
@@ -181,15 +190,12 @@ class IncidenciasCliente
     }
 
     /**
-     * Set the value of cliente
-     *
-     * @return  self
+     * @param \ScalofrioBundle\Entity\Cliente $cliente
+     * @return Incidencias
      */
     public function setCliente($cliente)
     {
         $this->cliente = $cliente;
-
-        return $this;
     }
 
     /**

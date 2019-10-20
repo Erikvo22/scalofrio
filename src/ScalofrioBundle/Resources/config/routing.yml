@@ -161,16 +161,15 @@ scalofrio_busqueda:
     path: /busqueda
     defaults: {_controller: ScalofrioBundle:User:busqueda }
 
-    
 
 scalofrio_incidenciaCliente_add:
     path:     /incidenciaCliente/nueva
-    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:newIncidenciaCliente }
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteNew }
     methods: GET
 
 scalofrio_incidenciaCliente_create:
     path:     /incidenciaCliente/create
-    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:createIncidenciaCliente }
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteCreate }
     methods: POST
 
 scalofrio_incidenciaCliente_editar:

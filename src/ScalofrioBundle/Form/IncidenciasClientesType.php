@@ -9,7 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\CallbackTransformer;
-
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 class IncidenciasClientesType extends AbstractType
 {
     /**
@@ -19,21 +20,52 @@ class IncidenciasClientesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fechaIncidencia', DateType::class, array(
-                'required' => true,
-                'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'form-control input-inline datetimepicker',
-                    'data-provide' => 'datetimepicker',
-                    'html5' => false,
-                ],
-            ))
+            ->add(
+                    'fechaIncidencia', 
+                    DateType::class, array(
+                        'widget'=> 'single_text',
+                        'required' => true,
+                        'attr' => [
+                            'class' => 'form-control input-inline datetimepicker js-datepicker',
+                            'data-provide' => 'datetimepicker',
+                            'html5' => false,
+                        ],
+                    )
+            )
             ->add('titulo')
             ->add('tipo')
-            ->add('prioridad','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'NO RESUELTO'=>'NO RESUELTO')))
+            ->add('cliente')
+            ->add(
+                    'prioridad',
+                    'choice', 
+                    array(
+                        'choices' => array(
+                                        'BAJA'=>'BAJA',
+                                        'MEDIA'=>'MEDIA', 
+                                        'ALTA'=>'ALTA',
+                                        'URGENTE'=>'URGENTE'
+                                    )
+                    )
+            )
             ->add('descripcion',TextareaType::class, array(
                 'attr' => array('class' => 'tinymce', 'placeholder' => 'Descripción de la incidencia...')))
-            ->add('guardar', 'submit', array('label' => 'Guardar'))
+            ->add(
+                'guardar', 
+                SubmitType::class, 
+                array(
+                    'attr' => array('class' => ' btn btn-info'),
+                    'label' => 'Guardar'
+                )
+            )
+            ->add(
+                'cancelar',
+                ButtonType::class,
+                array(
+                    'attr' => array('class' => 'btn btn-dark'),
+                    'label' => 'Cancelar'
+                )
+            )
+            
         ;
      
 

@@ -52,6 +52,7 @@ security:
         - { path: ^/index/export, roles: ROLE_ADMIN }
         - { path: ^/user/add, roles: ROLE_ADMIN }
         - { path: ^/incidencia/add, roles: ROLE_ADMIN }
+        - { path: ^/incidenciaCliente/nueva, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/incidencia/edit, roles: ROLE_ADMIN }
         - { path: ^/incidencia/view, roles: ROLE_ADMIN }
         - { path: ^/incidencia/delete, roles: ROLE_ADMIN }

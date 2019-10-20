@@ -11,6 +11,7 @@
                     <h2><b><span class="glyphicon glyphicon-ok-circle"></span>Nueva incidencia</b></h2>
                 </div>
                 {{ form_start(form) }}
+                {{ form_row(form._token) }}
                 <div class="form-group">
                     {{ form_label(form.titulo) }}
                     {{ form_widget(form.titulo, { 'attr' : {'class' : 'form-control'}}) }}
@@ -27,12 +28,24 @@
                     <span class = "text-danger">{{ form_errors(form.prioridad) }}</span>
                 </div>
                 <div class="form-group">
+                    {{ form_label(form.fechaIncidencia) }}
+                    {{ form_widget(form.fechaIncidencia, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.fechaIncidencia) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.cliente) }}
+                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
+                </div>
+                <div class="form-group">
                     {{ form_label(form.descripcion) }}
                     {{ form_widget(form.descripcion, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.descripcion) }}</span>
                 </div>
-                <button type="button" class="btn btn-sm btn-info" data-action="save">Guardar</button>
-                <button type="button" class="btn btn-sm btn-secondary" data-action="cancelar">Cancelar</button>
+                <div class="form-gtoup">
+                     {{ form_widget(form.guardar) }}
+                     <button type="button" onclick="location.href='{{ path("scalofrio_index") }}'" class="btn btn-dark">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>

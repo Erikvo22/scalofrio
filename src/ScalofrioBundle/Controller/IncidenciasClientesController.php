@@ -8,16 +8,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class IncidenciasClientesController extends Controller
 {
-    public function newIncidenciaClienteAction(Request $request)
-    {
-
+    public function incidenciaClienteNewAction()
+    {   
         $incidencia = new IncidenciasCliente();
-
         $form = $this->createIncidenciaCreateForm($incidencia);
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView()));
+    }
 
+    public function incidenciaClienteCreateAction(Request $request)
+    {
+        $incidencia = new IncidenciasCliente();
+        $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($incidencia);
             $em->flush();
@@ -29,8 +33,7 @@ class IncidenciasClientesController extends Controller
 
             return $this->redirectToRoute('scalofrio_index');
         }
-
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView()));
     }
 
     public function createIncidenciaCreateForm(IncidenciasCliente $entity)
