@@ -5,7 +5,7 @@
 
     <div class = "container well">
         <div class="col-md-9">
-            <h2>{{ incidencia.cliente.nombre }} > {{ incidencia.establecimiento }}</h2>
+            <h2>{{ incidencia.cliente.nombre }} > {{ incidencia.establecimientos }}</h2>
             <br>
             <dl>
                 <dt>Fecha</dt>
@@ -22,16 +22,9 @@
                 </dd>
                 <br>
 
-                <dt>Establecimiento</dt>
-                <dd>
-                    {{ incidencia.establecimiento }}
-                    &nbsp;
-                </dd>
-                <br>
-
                 <dt>Ruta</dt>
                 <dd>
-                    {{ incidencia.ruta.nombre }}
+                    {{ incidencia.ruta }}
                     &nbsp;
                 </dd>
                 <br>
@@ -70,11 +63,19 @@
                 </dd>
                 <br>
 
-                <dt>Descripción de la incidencia</dt>
+                <dt>Máquina</dt>
                 <dd>
-                    {{ incidencia.repuestos }}
+                    {{ incidencia.maquinas.nombre }}
                     &nbsp;
                 </dd>
+                <br>
+
+                <dt>Gestión</dt>
+                <dd>
+                    {{ incidencia.repuestos.nombre }}
+                    &nbsp;
+                </dd>
+                <br>
 
 
             </dl>

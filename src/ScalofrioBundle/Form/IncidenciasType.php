@@ -29,17 +29,21 @@ class IncidenciasType extends AbstractType
                 ],
             ))
             ->add('tiempo')
-            ->add('cargocliente')
+            ->add('cargocliente','choice', array('choices' => array(''=>'','JEFE/A DE BARES'=>'JEFE/A DE BARES',
+                'MAITRE'=>'MAITRE', 'SEGUNDO/A'=>'SEGUNDO/A', 'JEFE/A SECTOR'=>'JEFE/A SECTOR', 'CAMARERO/A'=>'CAMARERO/A',
+                'ECONOMATO' => 'ECONOMATO', 'SSTT CLIENTE' => 'SSTT CLIENTE')))
             ->add('nombrecliente')
             ->add('firma')
-            ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'NO RESUELTO'=>'NO RESUELTO')))
-            ->add('repuestos',TextareaType::class, array(
-                'attr' => array('class' => 'tinymce', 'placeholder' => 'Descripción de la incidencia...')))
-            ->add('ruta')
+            ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'PENDIENTE'=>'PENDIENTE',
+                'CAMBIO DE MÁQUINA'=>'CAMBIO DE MÁQUINA')))
+            ->add('ruta','choice', array('choices' => array(''=>'','GC NORTE'=>'GC NORTE', 'GC SUR'=>'GC SUR',
+                'LANZAROTE'=>'LANZAROTE', 'FUERTEVENTURA'=>'FUERTEVENTURA')))
             ->add('comercial')
             ->add('cliente')
-            ->add('establecimiento','text', array('required' => false))
+            ->add('establecimientos')
             ->add('gestion')
+            ->add('maquinas')
+            ->add('repuestos')
             ->add('guardar', 'submit', array('label' => 'Guardar'))
         ;
 

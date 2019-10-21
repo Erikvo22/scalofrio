@@ -35,9 +35,9 @@
                     <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.establecimiento) }}
-                    {{ form_widget(form.establecimiento, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.establecimiento) }}</span>
+                    {{ form_label(form.establecimientos) }}
+                    {{ form_widget(form.establecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
                 </div>
                 <div class="form-group">
                     {{ form_label(form.ruta) }}
@@ -68,6 +68,11 @@
                     <label>Tiempo (min.)</label>
                     {{ form_widget(form.tiempo, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.tiempo) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.maquinas) }}
+                    {{ form_widget(form.maquinas, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.maquinas) }}</span>
                 </div>
                 <div class="form-group">
                     {{ form_label(form.repuestos) }}

@@ -155,7 +155,7 @@ class UserController extends Controller
             $em->flush();
             $successMessage = 'Incidencia actualizada correctamente';
             $this->addFlash('mensaje', $successMessage);
-            return $this->redirectToRoute('scalofrio_incidencia_edit', array('id' => $incidencia->getId()));
+            return $this->redirectToRoute('scalofrio_index');
         }
         return $this->render('ScalofrioBundle:User:incidenciaEdit.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView()));
     }
