@@ -19,7 +19,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/form": "^2.8",
         "knplabs/knp-paginator-bundle": "^2.8",
-        "egyg33k/csv-bundle": "^1.0"
+        "egyg33k/csv-bundle": "^1.0",
+        "genemu/form-bundle": "2.2.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

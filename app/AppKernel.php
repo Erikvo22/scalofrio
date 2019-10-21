@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new ScalofrioBundle\ScalofrioBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Egyg33k\CsvBundle\Egyg33kCsvBundle(),
+            new Genemu\Bundle\FormBundle\GenemuFormBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

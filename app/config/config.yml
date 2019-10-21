@@ -61,15 +61,10 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    default_mailer: default
-    mailers:
-        default:
-            transport: %mailer_transport%
-            auth_mode:  %mailer_auth_mode%
-            host:       %mailer_host%
-            username:  %mailer_user%
-            password:  %mailer_password%
-            spool:     { type: memory }
+    transport:  %mailer_transport%
+    host:       %mailer_host%
+    username:   %mailer_user%
+    password:   %mailer_password%
 
 #KNP PAGINATOR
 knp_paginator:
@@ -82,3 +77,6 @@ knp_paginator:
     template:
         pagination: '@KnpPaginator/Pagination/twitter_bootstrap_v3_pagination.html.twig'
         sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
+
+genemu_form:
+    select2: ~
