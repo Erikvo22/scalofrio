@@ -12,7 +12,7 @@ class IncidenciasClientesController extends Controller
     {
         $incidencia = new IncidenciasCliente();
         $form = $this->createIncidenciaCreateForm($incidencia);
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView(), 'modo' => 'nuevo'));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo"));
     }
 
     public function incidenciaClienteCreateAction(Request $request)
@@ -21,12 +21,12 @@ class IncidenciasClientesController extends Controller
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
         $parameters = array
-        ( 
+            (
             "data" => array
-                (
-                    "userName" => $this->getUser()->getUserName(),
-                    "data"=> $form->getData()      
-                )
+            (
+                "userName" => $this->getUser()->getUserName(),
+                "data" => $form->getData(),
+            ),
         );
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -40,7 +40,40 @@ class IncidenciasClientesController extends Controller
 
             return $this->redirectToRoute('scalofrio_index');
         }
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView(), 'modo' => 'nuevo'));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo"));
+    }
+
+    public function incidenciaClienteShowAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $incidencia = $em->getRepository(IncidenciasCliente::class)->findOneBy(array('id' => $id));
+        $form = $this->mostrarIncidenciaForm($incidencia);
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "lectura"));
+    }
+
+    public function actualizarEstadoAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $incidencia = $em->getRepository(IncidenciasCliente::class)->findOneBy(array('id' => $id));
+        if ($incidencia) {
+            $estado = $incidencia->getEstado();
+            $nuevoEstado = $estado === 0 ? 1 : 0;
+            $incidencia->setEstado($nuevoEstado);
+            $em->persist($incidencia);
+            $em->flush();
+
+            $mensaje = $nuevoEstado == 0 ? "Pendiente de resolver" : "Resuelta";
+            $this->addFlash(
+                'mensaje',
+                'Incidencia: ' . $mensaje
+            );
+        } else {
+            $this->addFlash(
+                'mensaje',
+                'Se ha producido un errror al actualizar el estado.'
+            );  
+        }
+        return $this->redirectToRoute('scalofrio_listarIncidencias');
     }
 
     public function createIncidenciaCreateForm(IncidenciasCliente $entity)
@@ -48,50 +81,17 @@ class IncidenciasClientesController extends Controller
         $form = $this->createForm(new IncidenciasClientesType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_incidenciaCliente_create'),
             'method' => 'POST',
+            'attr' => array("modo" => "nuevo"),
         ));
 
         return $form;
     }
-    public function incidenciaClienteShowAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $incidencia = $em->getRepository(IncidenciasCliente::class)->findOneBy(array('id' => $id));
-        $form = $this->createIncidenciaEditForm($incidencia);
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView(), 'modo' => 'lectura'));
-    }
 
-    private function createIncidenciaEditForm(IncidenciasCliente $entity)
+    private function mostrarIncidenciaForm(IncidenciasCliente $entity)
     {
-        $form = $this->createForm(new IncidenciasClientesType(), $entity, array(
-            'action' => $this->generateUrl('scalofrio_incidenciaCliente_editar',
-                array('id' => $entity->getId())), 'method' => 'PUT'));
+        $form = $this->createForm(new IncidenciasClientesType(), $entity, array("attr" => array("modo" => "lectura")));
         return $form;
     }
-
-    // public function incidenciaClienteEditAction($id, Request $request)
-    // {
-    //     $em = $this->getDoctrine()->getManager();
-    //     $incidencia = $em->getRepository(IncidenciasCliente::class)->findOneBy(array('id' => $id));
-
-    //     if (!$incidencia) {
-    //         $messageException = 'Incidencia no encontrada.';
-    //         throw $this->createNotFoundException($messageException);
-    //     }
-
-    //     $form = $this->createIncidenciaEditForm($incidencia);
-    //     $form->handleRequest($request);
-        
-    //     return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView(), 'modo' => 'editar'));
-        
-        
-    //     // if ($form->isSubmitted() && $form->isValid()) {
-    //     //     $em->flush();
-    //     //     $successMessage = 'Incidencia actualizada correctamente';
-    //     //     $this->addFlash('mensaje', $successMessage);
-    //     //     return $this->redirectToRoute('scalofrio_index');
-    //     // }
-    // }
-
     private function sendMail($parameters)
     {
         $message = (new \Swift_Message('Hello Email'))
@@ -106,6 +106,23 @@ class IncidenciasClientesController extends Controller
             );
 
         $this->get('mailer')->send($message);
+
+    }
+    public function listarAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
+
+        $incidencias = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $incidencias, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
 
     }
 

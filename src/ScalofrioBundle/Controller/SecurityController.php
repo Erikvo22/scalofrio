@@ -13,14 +13,11 @@ class SecurityController extends Controller
         $error = $authenticationUtils->getLastAuthenticationError();
 
         $lastUsername = $authenticationUtils->getLastUsername();
-
         return $this->render('ScalofrioBundle:Security:login.html.twig', array('last_username' => $lastUsername, 'error' => $error));
     }
 
     public function loginCheckAction()
-    {
-
-    }
+    {}
 
 
 }

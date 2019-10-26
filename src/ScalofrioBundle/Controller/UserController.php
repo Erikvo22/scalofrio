@@ -2,26 +2,24 @@
 
 namespace ScalofrioBundle\Controller;
 
+use ScalofrioBundle\Entity\Cliente;
+use ScalofrioBundle\Entity\Comercial;
 use ScalofrioBundle\Entity\Establecimientos;
+use ScalofrioBundle\Entity\Gestion;
+use ScalofrioBundle\Entity\Incidencias;
 use ScalofrioBundle\Entity\Maquinas;
 use ScalofrioBundle\Entity\Repuestos;
-use ScalofrioBundle\Form\IncidenciasType;
-use ScalofrioBundle\Form\UsuariosType;
-use ScalofrioBundle\Form\ComercialType;
+use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\ClienteType;
-use ScalofrioBundle\Form\GestionType;
+use ScalofrioBundle\Form\ComercialType;
 use ScalofrioBundle\Form\EstablecimientosType;
+use ScalofrioBundle\Form\GestionType;
+use ScalofrioBundle\Form\IncidenciasType;
 use ScalofrioBundle\Form\MaquinasType;
 use ScalofrioBundle\Form\RepuestosType;
+use ScalofrioBundle\Form\UsuariosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use ScalofrioBundle\Entity\Usuarios;
-use ScalofrioBundle\Entity\Incidencias;
-use ScalofrioBundle\Entity\IncidenciasCliente;
-use ScalofrioBundle\Entity\Comercial;
-use ScalofrioBundle\Entity\Cliente;
-use ScalofrioBundle\Entity\Gestion;
-
 
 class UserController extends Controller
 {
@@ -30,7 +28,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
-        if($rol[0] == 'ROLE_ADMIN'){
+        if ($rol[0] == 'ROLE_ADMIN') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
         } else {
             $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
@@ -42,15 +40,19 @@ class UserController extends Controller
             $incidencias, $request->query->getInt('page', 1),
             10
         );
-
-        return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+        if ($rol[0] == 'ROLE_ADMIN') {
+            return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+        } else {
+            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
+        }
     }
 
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
-        if($rol[0] == 'ROLE_ADMIN'){
+
+        if ($rol[0] == 'ROLE_ADMIN') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
         } else {
             $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
@@ -60,13 +62,16 @@ class UserController extends Controller
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-          $incidencias, $request->query->getInt('page', 1),
-          10
+            $incidencias, $request->query->getInt('page', 1),
+            10
         );
+        if ($rol[0] == 'ROLE_ADMIN') {
+            return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+        } else {
 
-        return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
+        }
     }
-
 
     /******** APARTADO DE INCIDENCIAS **********/
 
@@ -82,7 +87,7 @@ class UserController extends Controller
     {
         $form = $this->createForm(new IncidenciasType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_incidencia_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -93,8 +98,7 @@ class UserController extends Controller
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($incidencia);
             $em->flush();
@@ -108,10 +112,9 @@ class UserController extends Controller
                     ->setBody('Prueba');
 
                 $this->get('mailer')->send($message);
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 throw $e;
             }
-
 
             $this->addFlash(
                 'mensaje',
@@ -130,7 +133,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
 
-        if(!$incidencia){
+        if (!$incidencia) {
             $messageException = 'Incidencia no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
@@ -140,7 +143,7 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:incidenciaEdit.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView()));
     }
 
-    private function createIncidenciaEditForm (Incidencias $entity)
+    private function createIncidenciaEditForm(Incidencias $entity)
     {
         $form = $this->createForm(new IncidenciasType(), $entity, array('action' => $this->generateUrl('scalofrio_incidencia_update',
             array('id' => $entity->getId())), 'method' => 'PUT'));
@@ -152,7 +155,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
 
-        if(!$incidencia){
+        if (!$incidencia) {
             $messageException = 'Incidencia no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
@@ -160,7 +163,7 @@ class UserController extends Controller
         $form = $this->createIncidenciaEditForm($incidencia);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
             $successMessage = 'Incidencia actualizada correctamente';
             $this->addFlash('mensaje', $successMessage);
@@ -175,19 +178,19 @@ class UserController extends Controller
         $repository = $this->getDoctrine()->getRepository('ScalofrioBundle:Incidencias');
         $incidencia = $repository->find($id);
 
-        if(!$incidencia){
+        if (!$incidencia) {
             $messageException = 'Incidencia no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
 
-        $deleteForm  = $this->createIncidenciaDeleteForm($incidencia);
+        $deleteForm = $this->createIncidenciaDeleteForm($incidencia);
 
         return $this->render('@Scalofrio/User/incidenciaView.html.twig', array('incidencia' => $incidencia, 'delete_form' => $deleteForm->createView()));
     }
 
-
     /*ELIMINAR*/
-    private function createIncidenciaDeleteForm($incidencia){
+    private function createIncidenciaDeleteForm($incidencia)
+    {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('scalofrio_incidencia_delete', array('id' => $incidencia->getId())))
             ->setMethod('DELETE')
@@ -199,7 +202,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
 
-        if(!$incidencia){
+        if (!$incidencia) {
             $messageException = 'Incidencia no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
@@ -207,8 +210,7 @@ class UserController extends Controller
         $form = $this->createIncidenciaDeleteForm($incidencia);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->remove($incidencia);
             $em->flush();
             $successMessage = 'Incidencia eliminada correctamente';
@@ -216,8 +218,6 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_index');
         }
     }
-
-
 
     /******** EXPORTAR A CSV **********/
 
@@ -239,8 +239,8 @@ class UserController extends Controller
             'Gestion',
             'Resultado',
             'Tiempo(min)',
-            'Descripcion'
-            ]);
+            'Descripcion',
+        ]);
 
         foreach ($incidencias as $incidencia) {
             $csv->insertOne([
@@ -255,13 +255,12 @@ class UserController extends Controller
                 $incidencia->getGestion(),
                 $incidencia->getResultado(),
                 $incidencia->getTiempo(),
-                $incidencia->getRepuestos()
+                $incidencia->getRepuestos(),
             ]);
         }
         $csv->output('incidencias.csv');
         die;
     }
-
 
     /******** APARTADO DE USUARIOS **********/
 
@@ -293,7 +292,7 @@ class UserController extends Controller
     {
         $form = $this->createForm(new UsuariosType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_user_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -304,8 +303,7 @@ class UserController extends Controller
         $form = $this->createUserCreateForm($user);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $password = $form->get('password')->getData();
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $password);
@@ -330,7 +328,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('ScalofrioBundle:Usuarios')->find($id);
 
-        if(!$user){
+        if (!$user) {
             $messageException = 'Usuario no encontrado.';
             throw $this->createNotFoundException($messageException);
         }
@@ -338,10 +336,10 @@ class UserController extends Controller
         $form = $this->createUserEditForm($user);
 
         return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user
-        , 'form' => $form->createView()));
+            , 'form' => $form->createView()));
     }
 
-    private function createUserEditForm (Usuarios $entity)
+    private function createUserEditForm(Usuarios $entity)
     {
         $form = $this->createForm(new UsuariosType(), $entity, array('action' => $this->generateUrl('scalofrio_user_update',
             array('id' => $entity->getId())), 'method' => 'PUT'));
@@ -353,7 +351,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('ScalofrioBundle:Usuarios')->find($id);
 
-        if(!$user){
+        if (!$user) {
             $messageException = 'Usuario no encontrado.';
             throw $this->createNotFoundException($messageException);
         }
@@ -361,7 +359,7 @@ class UserController extends Controller
         $form = $this->createUserEditForm($user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
             $successMessage = 'Usuario actualizado correctamente';
             $this->addFlash('mensaje', $successMessage);
@@ -384,7 +382,7 @@ class UserController extends Controller
     {
         $form = $this->createForm(new ComercialType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_comercial_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -395,8 +393,7 @@ class UserController extends Controller
         $form = $this->createComercialCreateForm($comercial);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($comercial);
             $em->flush();
@@ -410,7 +407,6 @@ class UserController extends Controller
         }
         return $this->render('ScalofrioBundle:User:comercialAdd.html.twig', array('form' => $form->createView()));
     }
-
 
     /******** APARTADO DE CLIENTES **********/
 
@@ -441,25 +437,23 @@ class UserController extends Controller
         $cliente = $repository->find($id);
         $establecimientos = $em->getRepository('ScalofrioBundle:Establecimientos')->findBy(
             array(
-                'cliente' => $id
+                'cliente' => $id,
             )
         );
 
-        if(!$cliente){
+        if (!$cliente) {
             $messageException = 'Cliente no encontrado.';
             throw $this->createNotFoundException($messageException);
         }
 
-
         return $this->render('@Scalofrio/User/clienteView.html.twig', array('cliente' => $cliente, 'establecimientos' => $establecimientos));
     }
-
 
     private function createEstablecimientosCreateForm(Establecimientos $entity)
     {
         $form = $this->createForm(new EstablecimientosType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_establecimientos_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -470,8 +464,7 @@ class UserController extends Controller
         $form = $this->createEstablecimientosCreateForm($establecimiento);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($establecimiento);
             $em->flush();
@@ -498,7 +491,7 @@ class UserController extends Controller
     {
         $form = $this->createForm(new ClienteType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_cliente_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -509,8 +502,7 @@ class UserController extends Controller
         $form = $this->createClienteCreateForm($cliente);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($cliente);
             $em->flush();
@@ -525,13 +517,12 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:clienteAdd.html.twig', array('form' => $form->createView()));
     }
 
-
     public function clienteEditAction($id)
     {
         $em = $this->getDoctrine()->getManager();
         $cliente = $em->getRepository('ScalofrioBundle:Cliente')->find($id);
 
-        if(!$cliente){
+        if (!$cliente) {
             $messageException = 'Cliente no encontrado.';
             throw $this->createNotFoundException($messageException);
         }
@@ -541,7 +532,7 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:clienteEdit.html.twig', array('cliente' => $cliente, 'form' => $form->createView()));
     }
 
-    private function createClienteEditForm (Cliente $entity)
+    private function createClienteEditForm(Cliente $entity)
     {
         $form = $this->createForm(new ClienteType(), $entity, array('action' => $this->generateUrl('scalofrio_cliente_update',
             array('id' => $entity->getId())), 'method' => 'PUT'));
@@ -553,7 +544,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $cliente = $em->getRepository('ScalofrioBundle:Cliente')->find($id);
 
-        if(!$cliente){
+        if (!$cliente) {
             $messageException = 'Cliente no encontrado.';
             throw $this->createNotFoundException($messageException);
         }
@@ -561,7 +552,7 @@ class UserController extends Controller
         $form = $this->createClienteEditForm($cliente);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
             $successMessage = 'Cliente actualizado correctamente';
             $this->addFlash('mensaje', $successMessage);
@@ -599,25 +590,23 @@ class UserController extends Controller
         $maquina = $repository->find($id);
         $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
             array(
-                'maquinas' => $id
+                'maquinas' => $id,
             )
         );
 
-        if(!$maquina){
+        if (!$maquina) {
             $messageException = 'Máquina no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
 
-
         return $this->render('@Scalofrio/User/maquinasView.html.twig', array('maquina' => $maquina, 'repuestos' => $repuestos));
     }
-
 
     private function createRepuestosCreateForm(Repuestos $entity)
     {
         $form = $this->createForm(new RepuestosType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_repuestos_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -628,8 +617,7 @@ class UserController extends Controller
         $form = $this->createRepuestosCreateForm($repuesto);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($repuesto);
             $em->flush();
@@ -656,7 +644,7 @@ class UserController extends Controller
     {
         $form = $this->createForm(new MaquinasType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_maquinas_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -667,8 +655,7 @@ class UserController extends Controller
         $form = $this->createMaquinasCreateForm($maquina);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($maquina);
             $em->flush();
@@ -683,13 +670,12 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:maquinasAdd.html.twig', array('form' => $form->createView()));
     }
 
-
     public function maquinasEditAction($id)
     {
         $em = $this->getDoctrine()->getManager();
         $maquina = $em->getRepository('ScalofrioBundle:Maquinas')->find($id);
 
-        if(!$maquina){
+        if (!$maquina) {
             $messageException = 'Máquina no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
@@ -699,7 +685,7 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:maquinasEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
     }
 
-    private function createMaquinasEditForm (Maquinas $entity)
+    private function createMaquinasEditForm(Maquinas $entity)
     {
         $form = $this->createForm(new MaquinasType(), $entity, array('action' => $this->generateUrl('scalofrio_maquinas_update',
             array('id' => $entity->getId())), 'method' => 'PUT'));
@@ -711,7 +697,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $maquina = $em->getRepository('ScalofrioBundle:Maquinas')->find($id);
 
-        if(!$maquina){
+        if (!$maquina) {
             $messageException = 'Máquina no encontrada.';
             throw $this->createNotFoundException($messageException);
         }
@@ -719,7 +705,7 @@ class UserController extends Controller
         $form = $this->createMaquinasEditForm($maquina);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
             $successMessage = 'Máquina actualizada correctamente';
             $this->addFlash('mensaje', $successMessage);
@@ -727,7 +713,6 @@ class UserController extends Controller
         }
         return $this->render('ScalofrioBundle:User:maquinasEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
     }
-
 
     /******** APARTADO DE GESTIONES **********/
 
@@ -743,7 +728,7 @@ class UserController extends Controller
     {
         $form = $this->createForm(new GestionType(), $entity, array(
             'action' => $this->generateUrl('scalofrio_gestion_create'),
-            'method' => 'POST'
+            'method' => 'POST',
         ));
         return $form;
     }
@@ -754,8 +739,7 @@ class UserController extends Controller
         $form = $this->createGestionCreateForm($gestion);
         $form->handleRequest($request);
 
-        if($form->isValid())
-        {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($gestion);
             $em->flush();
@@ -770,8 +754,6 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:gestionAdd.html.twig', array('form' => $form->createView()));
     }
 
-
-
     /******** BÚSQUEDA **********/
 
     public function busquedaAction(Request $request)
@@ -783,8 +765,8 @@ class UserController extends Controller
 
         $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
         JOIN i.cliente c
-        WHERE c.nombre LIKE '%" .$busqueda. "%'
-        OR i.establecimiento LIKE '%" .$busqueda. "%' 
+        WHERE c.nombre LIKE '%" . $busqueda . "%'
+        OR i.establecimiento LIKE '%" . $busqueda . "%'
         ORDER BY i.fecha";
         $prod = $em->createQuery($dql);
 
@@ -807,7 +789,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $dql = "SELECT c FROM ScalofrioBundle:Cliente c
-        WHERE c.nombre LIKE '%" .$busqueda. "%'
+        WHERE c.nombre LIKE '%" . $busqueda . "%'
         ORDER BY c.nombre";
         $prod = $em->createQuery($dql);
 
@@ -827,7 +809,6 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
     }
 
-
     public function busquedaUserAction(Request $request)
     {
 
@@ -836,7 +817,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $dql = "SELECT u FROM ScalofrioBundle:Usuarios u
-        WHERE u.username LIKE '%" .$busqueda. "%'
+        WHERE u.username LIKE '%" . $busqueda . "%'
         ORDER BY u.username";
         $prod = $em->createQuery($dql);
 

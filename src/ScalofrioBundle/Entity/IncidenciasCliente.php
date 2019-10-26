@@ -53,6 +53,11 @@ class IncidenciasCliente
     private $fechaCreacion;
 
     /**
+     * @ORM\Column(name="estado", type="integer", length=1)
+     */
+    private $estado;
+
+    /**
      * @Assert\NotNull(
      *      message = "Debe elegir a un cliente"
      * )
@@ -214,6 +219,25 @@ class IncidenciasCliente
     public function setTitulo($titulo)
     {
         $this->titulo = $titulo;
+
+        return $this;
+    }
+    /**
+     * Get the value of titulo
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set the value of titulo
+     *
+     * @return  self
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
 
         return $this;
     }

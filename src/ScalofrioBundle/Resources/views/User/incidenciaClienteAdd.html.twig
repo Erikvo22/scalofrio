@@ -5,7 +5,6 @@
     {{ parent() }}
 
     <div class="main container">
-
         <div class="row well">
             <div class="col-md-6 col-md-offset-3">
                 <div class="page-header">
@@ -43,12 +42,15 @@
                     {{ form_widget(form.descripcion, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.descripcion) }}</span>
                 </div>
-                {% if  modo is defined and modo == 'nuevo' %}
                 <div class="form-group">   
+                {% if  modo is defined and modo == 'nuevo' %}
                      {{ form_widget(form.guardar) }}
                      <button type="button" onclick="location.href='{{ path("scalofrio_index") }}'" class="btn btn-dark">Cancelar</button>
-                </div>
                 {% endif %}
+                {% if  modo is defined and modo == 'lectura' %}
+                     <button type="button" onclick="location.href='{{ path("scalofrio_listarIncidencias") }}'" class="btn btn-success">Volver Atrás</button>
+                {% endif %}
+                </div>
             </div>
         </div>
     </div>

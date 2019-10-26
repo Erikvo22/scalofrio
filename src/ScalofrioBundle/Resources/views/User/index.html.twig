@@ -3,15 +3,12 @@
 {% block body %}
     {{ include('menu.html.twig') }}
     {{ parent() }}
-{#Mensaje de confirmación de operación#}
+
     {%  for flashMessage in app.session.flashbag.get('mensaje') %}
     <div class="alert alert-success" role="alert">
         <div class="container">{{ flashMessage }}</div>
     </div>
     {% endfor %}
-
-    {#Mensaje de confirmación de operación#}
-
 
     <div class="container">
         <div class="col-md-12">
@@ -58,42 +55,6 @@
                             <td class="actions">
                                 <a href="{{ path('scalofrio_incidencia_view', { id: incidencia.id}) }}" class="btn btn-sm btn-primary">Ver</a>
                                 <a href="{{ path('scalofrio_incidencia_edit', { id: incidencia.id}) }}" class="btn btn-sm btn-danger">Editar</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                {% endif %}
-                {% if is_granted('ROLE_USER') %}
-            <div class="page-header margin-none">
-                <h2><b>Incidencias</b></h2>
-                <a href="{{ path('scalofrio_incidenciaCliente_add') }}" class="btn btn-sm btn-warning padding-none">
-                    <span class="glyphicon glyphicon-ok-circle"></span>
-                    Nueva incidencia
-                </a>
-            </div>
-                 <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <tr>
-                        <th>ID</th>
-                        <th>CLIENTE</th>
-                        <th>TITULO</th>
-                        <th>TIPO</th>
-                        <th>PRIORIDAD</th>
-                        <th>FECHA INCIDENCIA</th>
-                        <th>FECHA CREACION</th>
-                        <th>ACCIONES</th>
-                    </tr>
-                    {% for incidencia in pagination %}
-                        <tr>
-                            <td>{{ incidencia.id }}</td>
-                            <td>{{ incidencia.cliente.nombre }}</td>
-                            <td>{{ incidencia.titulo}}</td>
-                            <td>{{ incidencia.tipo }}</td>
-                            <td>{{ incidencia.prioridad }}</td>
-                            <td>{{ incidencia.fechaIncidencia|date('d-m-Y') }}</td>
-                            <td>{{ incidencia.fechaCreacion|date('d-m-Y') }}</td>
-                            <td class="actions">
-                                <a href="{{ path('scalofrio_incidenciaCliente_show', { id: incidencia.id}) }}" class="btn btn-sm btn-primary">Ver</a>
                             </td>
                         </tr>
                     {% endfor %}
