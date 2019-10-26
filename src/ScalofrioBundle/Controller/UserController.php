@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Entity\Incidencias;
+use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Comercial;
 use ScalofrioBundle\Entity\Cliente;
 use ScalofrioBundle\Entity\Gestion;
@@ -20,17 +21,21 @@ class UserController extends Controller
 {
     public function homeAction(Request $request)
     {
+
         $em = $this->getDoctrine()->getManager();
+        $rol = $this->getUser()->getRoles();
+        if($rol[0] == 'ROLE_ADMIN'){
+            $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
+        } else {
+            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
+        }
 
-        $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
         $incidencias = $em->createQuery($dql);
-
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $incidencias, $request->query->getInt('page', 1),
             10
         );
-
 
         return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
     }
@@ -38,8 +43,13 @@ class UserController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $rol = $this->getUser()->getRoles();
+        if($rol[0] == 'ROLE_ADMIN'){
+            $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
+        } else {
+            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
+        }
 
-        $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
         $incidencias = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
@@ -47,7 +57,6 @@ class UserController extends Controller
           $incidencias, $request->query->getInt('page', 1),
           10
         );
-
 
         return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
     }

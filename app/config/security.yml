@@ -48,11 +48,10 @@ security:
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/index, roles: ROLE_ADMIN }
         - { path: ^/index/export, roles: ROLE_ADMIN }
         - { path: ^/user/add, roles: ROLE_ADMIN }
         - { path: ^/incidencia/add, roles: ROLE_ADMIN }
-        - { path: ^/incidenciaCliente/nueva, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/incidenciaCliente/*, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/incidencia/edit, roles: ROLE_ADMIN }
         - { path: ^/incidencia/view, roles: ROLE_ADMIN }
         - { path: ^/incidencia/delete, roles: ROLE_ADMIN }

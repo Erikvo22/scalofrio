@@ -5,6 +5,7 @@
     {{ parent() }}
 
     <div class="main container">
+
         <div class="row well">
             <div class="col-md-6 col-md-offset-3">
                 <div class="page-header">
@@ -42,10 +43,12 @@
                     {{ form_widget(form.descripcion, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.descripcion) }}</span>
                 </div>
-                <div class="form-gtoup">
+                {% if  modo is defined and modo == 'nuevo' %}
+                <div class="form-group">   
                      {{ form_widget(form.guardar) }}
                      <button type="button" onclick="location.href='{{ path("scalofrio_index") }}'" class="btn btn-dark">Cancelar</button>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

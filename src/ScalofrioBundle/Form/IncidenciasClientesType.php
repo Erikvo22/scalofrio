@@ -58,6 +58,14 @@ class IncidenciasClientesType extends AbstractType
                 )
             )
             ->add(
+                'editar', 
+                SubmitType::class, 
+                array(
+                    'attr' => array('class' => ' btn btn-success'),
+                    'label' => 'Editar'
+                )
+            )
+            ->add(
                 'cancelar',
                 ButtonType::class,
                 array(

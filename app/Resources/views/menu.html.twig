@@ -19,6 +19,8 @@
                     <span class="glyphicon glyphicon-plus-sign"></span> Acciones <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu col-md-2">
+                {% if is_granted('ROLE_ADMIN') %}
+
                     <li><a href="{{ path('scalofrio_incidencia_add') }}"><span class="glyphicon glyphicon-ok-circle"></span> Nueva incidencia</a></li>
                     <li><a href="#"><span class="glyphicon glyphicon-exclamation-sign"></span> Incidencias clientes </a></li>
                     <li><a href="{{ path('scalofrio_cliente_add') }}"><span class="glyphicon glyphicon-home"></span> Gestión clientes</a></li>
@@ -26,7 +28,10 @@
                     <li><a href="#"><span class="glyphicon glyphicon-print"></span> Gestión máquinas</a></li>
                     <li><a href="{{ path('scalofrio_comercial_add') }}"><span class="glyphicon glyphicon-star"></span> Añadir comercial</a></li>
                     <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Añadir tipo gestión</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
                     <li><a href="{{ path('scalofrio_incidenciaCliente_add') }}"><span class="glyphicon glyphicon-wrench"></span> Nueva incidencia Cliente</a></li>
+                {% endif %}
                 </ul>
             </li>
         </ul>
