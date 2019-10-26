@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    <div class="main container">
+
+        <div class="row well">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="page-header">
+                    <h2><b><span class="glyphicon glyphicon-ok-circle"></span>Nueva incidencia</b></h2>
+                </div>
+                {{ form_start(form) }}
+                {{ form_row(form._token) }}
+                <div class="form-group">
+                    {{ form_label(form.titulo) }}
+                    {{ form_widget(form.titulo, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.titulo) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.tipo) }}
+                    {{ form_widget(form.tipo, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.tipo) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.prioridad) }}
+                    {{ form_widget(form.prioridad, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.prioridad) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.fechaIncidencia) }}
+                    {{ form_widget(form.fechaIncidencia, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.fechaIncidencia) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.cliente) }}
+                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.descripcion) }}
+                    {{ form_widget(form.descripcion, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.descripcion) }}</span>
+                </div>
+                {% if  modo is defined and modo == 'nuevo' %}
+                <div class="form-group">   
+                     {{ form_widget(form.guardar) }}
+                     <button type="button" onclick="location.href='{{ path("scalofrio_index") }}'" class="btn btn-dark">Cancelar</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+{% endblock %}

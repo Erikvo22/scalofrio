@@ -263,6 +263,22 @@ scalofrio_busqueda_cliente:
 scalofrio_busqueda_user:
     path: /busquedaUsuario
     defaults: {_controller: ScalofrioBundle:User:busquedaUser }
+    
+scalofrio_incidenciaCliente_add:
+    path:     /incidenciaCliente/nueva
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteNew }
+    methods: GET
+
+scalofrio_incidenciaCliente_create:
+    path:     /incidenciaCliente/create
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteCreate }
+    methods: POST
+
+scalofrio_incidenciaCliente_show:
+    path:     /incidenciaCliente/mostrar/{id}
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteShow }
+    methods: GET
+
 
 
 
