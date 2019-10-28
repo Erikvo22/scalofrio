@@ -20,6 +20,7 @@ use ScalofrioBundle\Form\RepuestosType;
 use ScalofrioBundle\Form\UsuariosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -831,6 +832,23 @@ class UserController extends Controller
         );
 
         return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination));
+    }
+
+    //FUNCIONES PARA OBTENER ELEMENTOS EN SELECTS DEPENDIENTES
+    public function obtenerEstablecimientosAction($idcliente){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT e FROM ScalofrioBundle:Establecimientos e
+        WHERE e.cliente = '" . $idcliente . "'";
+        $query = $em->createQuery($dql);
+        $estab = $query->getResult();
+
+        $select = '';
+        foreach ($estab as $est){
+            $select .= '<option value="'.$est->getId().'">'.$est->getNombre().'</option>';
+        }
+        return new Response($select);
     }
 
 }

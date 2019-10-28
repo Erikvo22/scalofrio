@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group">
                     {{ form_label(form.establecimientos) }}
-                    {{ form_widget(form.establecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    {{ form_widget(form.establecimientos, { 'attr' : {'class' : 'form-control'} }) }}
                     <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
                 </div>
                 <div class="form-group">
@@ -101,11 +101,31 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        jQuery(document).ready(function () {
+        $(document).ready(function () {
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
             });
+
+            var select = document.getElementById('incidencias_cliente');
+            $("#incidencias_establecimientos").prop("disabled", true);
+            select.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[select.selectedIndex];
+                    CambioCliente(selectedOption.value);
+                    $("#incidencias_establecimientos").prop("disabled", true);
+                    $("#incidencias_establecimientos").empty();
+                });
+
         });
+
+        function CambioCliente(idcliente){
+            var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
+            ruta = ruta.replace('IDCLIENTE', idcliente);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_establecimientos").prop("disabled", false);
+                $("#incidencias_establecimientos").append(result);
+            });
+        }
 
         $(function () {
             var wrapper = document.getElementById("signature-pad"),

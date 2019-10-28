@@ -38,7 +38,7 @@ class IncidenciasType extends AbstractType
                 'LANZAROTE'=>'LANZAROTE', 'FUERTEVENTURA'=>'FUERTEVENTURA')))
             ->add('comercial')
             ->add('cliente')
-            ->add('establecimientos')
+            ->add('establecimientos','choice', array('choices' => array(''=>'')))
             ->add('gestion')
             ->add('maquinas')
             ->add('repuestos')

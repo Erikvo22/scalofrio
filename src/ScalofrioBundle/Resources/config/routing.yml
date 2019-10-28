@@ -295,3 +295,11 @@ scalofrio_listarIncidencias:
 
 
 
+############ OBTENCIÓN DE ELEMENTOS EN LOS SELECTS ###########
+
+obtener_establecimiento:
+    pattern: /obtenerEstablecimientos/{idcliente}
+    defaults: { _controller: ScalofrioBundle:User:obtenerEstablecimientos }
+
+
+
