@@ -264,6 +264,9 @@ scalofrio_busqueda_user:
     path: /busquedaUsuario
     defaults: {_controller: ScalofrioBundle:User:busquedaUser }
 
+
+############# INCIDENCIAS CLIENTES ################
+
 scalofrio_incidenciaCliente_add:
     path:     /incidenciaCliente/nueva
     defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteNew }

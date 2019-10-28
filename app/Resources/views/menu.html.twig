@@ -15,23 +15,23 @@
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
             <li class="dropdown">
+                {% if is_granted('ROLE_ADMIN') %}
                 <a href="#" id="titleHdr" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-plus-sign"></span> Acciones <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu col-md-2">
-                {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('scalofrio_incidencia_add') }}"><span class="glyphicon glyphicon-ok-circle"></span> Nueva incidencia</a></li>
-                    <li><a href="{{ path('scalofrio_listarIncidencias') }}"><span class="glyphicon glyphicon-exclamation-sign"></span> Incidencias clientes </a></li>
+                    <li><a href="{{ path('scalofrio_listarIncidencias') }}"><span class="glyphicon glyphicon-exclamation-sign"></span> Incid. recibidas </a></li>
                     <li><a href="{{ path('scalofrio_cliente_list') }}"><span class="glyphicon glyphicon-home"></span> Gestión clientes</a></li>
                     <li><a href="{{ path('scalofrio_user_list') }}"><span class="glyphicon glyphicon-user"></span> Gestión usuarios</a></li>
                     <li><a href="{{ path('scalofrio_maquinas_list') }}"><span class="glyphicon glyphicon-print"></span> Gestión máquinas</a></li>
                     <li><a href="{{ path('scalofrio_comercial_add') }}"><span class="glyphicon glyphicon-star"></span> Añadir comercial</a></li>
                     <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Añadir tipo gestión</a></li>
+                </ul>
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
-                    <li><a href="{{ path('scalofrio_incidenciaCliente_add') }}"><span class="glyphicon glyphicon-wrench"></span> Nueva incidencia Cliente</a></li>
+                    <p id="titleHdr" class="navbar-brand"> Bienvenido/a </p>
                 {% endif %}
-                </ul>
             </li>
         </ul>
         <ul class="nav navbar-nav">

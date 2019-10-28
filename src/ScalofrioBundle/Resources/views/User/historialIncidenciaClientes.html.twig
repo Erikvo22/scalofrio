@@ -13,11 +13,14 @@
     <div class="container">
         <div class="col-md-12">
             <div class="page-header margin-none">
-                <h2><b>Incidencias De Clientes</b></h2>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <h2><b><span class="glyphicon glyphicon-envelope"></span> Incidencias recibidas </b></h2>
+                {% endif %}
                 {% if is_granted('ROLE_USER') %}
+                <h2><b>Incidencias</b></h2>
                     <a href="{{ path('scalofrio_incidenciaCliente_add') }}" class="btn btn-sm btn-warning padding-none">
                         <span class="glyphicon glyphicon-ok-circle"></span>
-                        Nueva incidencia
+                        Reportar incidencia
                     </a>
                 {% endif %}
             </div>

@@ -196,7 +196,7 @@ class IncidenciasCliente
 
     /**
      * @param \ScalofrioBundle\Entity\Cliente $cliente
-     * @return Incidencias
+     * @return IncidenciasCliente
      */
     public function setCliente($cliente)
     {
