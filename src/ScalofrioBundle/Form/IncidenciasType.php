@@ -38,7 +38,10 @@ class IncidenciasType extends AbstractType
                 'LANZAROTE'=>'LANZAROTE', 'FUERTEVENTURA'=>'FUERTEVENTURA')))
             ->add('comercial')
             ->add('cliente')
-            ->add('establecimientos','choice', array('choices' => array(''=>'')))
+            ->add('establecimientos', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Establecimientos',
+                'empty_value' => '...'
+            ))
             ->add('gestion')
             ->add('maquinas')
             ->add('repuestos')
