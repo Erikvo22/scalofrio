@@ -70,10 +70,11 @@
                 </dd>
                 <br>
 
-                <dt>Gestión</dt>
+                <dt>Repuestos</dt>
                 <dd>
-                    {{ incidencia.repuestos.nombre }}
-                    &nbsp;
+                    {% for i in repuestos|keys %}
+                        {{ repuestos[i] }} <br>
+                    {% endfor %}
                 </dd>
                 <br>
 

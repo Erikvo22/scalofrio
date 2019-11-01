@@ -106,6 +106,7 @@
                 format: 'yyyy-mm-dd'
             });
 
+            //Control selects cliente>establecimiento
             var select = document.getElementById('incidencias_cliente');
             $("#incidencias_establecimientos").prop("disabled", true);
             select.addEventListener('change',
@@ -116,6 +117,17 @@
                     $("#incidencias_establecimientos").empty();
                 });
 
+            //Control selects maquinas>repuestos
+            var maquina  = document.getElementById('incidencias_maquinas');
+            $("#incidencias_repuestos").empty();
+            $("#incidencias_repuestos").prop("disabled", true);
+            maquina.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[maquina.selectedIndex];
+                    CambioMaquina(selectedOption.value);
+                    $("#incidencias_repuestos").prop("disabled", true);
+                    $("#incidencias_repuestos").empty();
+                });
         });
 
         function CambioCliente(idcliente){
@@ -124,6 +136,15 @@
             $.post(ruta, null, function(result) {
                 $("#incidencias_establecimientos").prop("disabled", false);
                 $("#incidencias_establecimientos").append(result);
+            });
+        }
+
+        function CambioMaquina(idmaquina){
+            var ruta = '{{ path('obtener_repuestos', {'idmaquina':'IDMAQUINA'}) }}';
+            ruta = ruta.replace('IDMAQUINA', idmaquina);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_repuestos").prop("disabled", false);
+                $("#incidencias_repuestos").append(result);
             });
         }
 

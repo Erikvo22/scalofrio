@@ -301,5 +301,10 @@ obtener_establecimiento:
     pattern: /obtenerEstablecimientos/{idcliente}
     defaults: { _controller: ScalofrioBundle:User:obtenerEstablecimientos }
 
+obtener_repuestos:
+    pattern: /obtenerRepuestos/{idmaquina}
+    defaults: { _controller: ScalofrioBundle:User:obtenerRepuestos }
+
+
 
 

@@ -48,7 +48,7 @@ class Incidencias
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Repuestos", inversedBy="incidencias")
+     * @ORM\ManyToMany(targetEntity="Repuestos", inversedBy="incidencias")
      * @ORM\JoinColumn(name="repuestos_id", referencedColumnName="id", onDelete="CASCADE")
      */
 

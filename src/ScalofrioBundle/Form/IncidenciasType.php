@@ -40,11 +40,17 @@ class IncidenciasType extends AbstractType
             ->add('cliente')
             ->add('establecimientos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Establecimientos',
-                'empty_value' => '...'
+                'empty_value' => '...',
+                'required'    => false
             ))
             ->add('gestion')
             ->add('maquinas')
-            ->add('repuestos')
+            ->add('repuestos', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Repuestos',
+                'multiple' => true,
+                'empty_value' => '...',
+                'required'    => false
+            ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
         ;
 

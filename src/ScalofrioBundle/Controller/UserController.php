@@ -30,9 +30,9 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
         if ($rol[0] == 'ROLE_ADMIN') {
-            $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
+            $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
-            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
+            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
         }
 
         $incidencias = $em->createQuery($dql);
@@ -54,9 +54,9 @@ class UserController extends Controller
         $rol = $this->getUser()->getRoles();
 
         if ($rol[0] == 'ROLE_ADMIN') {
-            $dql = "SELECT u FROM ScalofrioBundle:Incidencias u";
+            $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
-            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
+            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
         }
 
         $incidencias = $em->createQuery($dql);
@@ -107,7 +107,7 @@ class UserController extends Controller
             /*ENVÍO DE EMAIL*/
             try {
                 $message = \Swift_Message::newInstance()
-                    ->setSubject('INCIDENCIA SCALOF;RIO S.L.')
+                    ->setSubject('INCIDENCIA SCALOFRIO S.L.')
                     ->setFrom('erikvieraol22@gmail.com')
                     ->setTo('erik.viera@iecisa.com')
                     ->setBody('Prueba');
@@ -176,8 +176,21 @@ class UserController extends Controller
     /*VER*/
     public function incidenciaViewAction($id)
     {
-        $repository = $this->getDoctrine()->getRepository('ScalofrioBundle:Incidencias');
-        $incidencia = $repository->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
+        $repuestosIncidencia = $em->getRepository('ScalofrioBundle:Incidencias_repuestos')->findBy(
+            array(
+                'incidenciasId' => $id
+            )
+        );
+
+        $cont = 0;
+        $repuestos = [];
+        foreach ($repuestosIncidencia as $r) {
+            $b = $em->getRepository('ScalofrioBundle:Repuestos')->find($r->getRepuestosId());
+            $repuestos[$cont] = $b->getNombre();
+            $cont++;
+        }
 
         if (!$incidencia) {
             $messageException = 'Incidencia no encontrada.';
@@ -186,7 +199,7 @@ class UserController extends Controller
 
         $deleteForm = $this->createIncidenciaDeleteForm($incidencia);
 
-        return $this->render('@Scalofrio/User/incidenciaView.html.twig', array('incidencia' => $incidencia, 'delete_form' => $deleteForm->createView()));
+        return $this->render('@Scalofrio/User/incidenciaView.html.twig', array('incidencia' => $incidencia, 'repuestos' => $repuestos, 'delete_form' => $deleteForm->createView()));
     }
 
     /*ELIMINAR*/
@@ -766,9 +779,10 @@ class UserController extends Controller
 
         $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
         JOIN i.cliente c
+        JOIN i.establecimientos e
         WHERE c.nombre LIKE '%" . $busqueda . "%'
-        OR i.establecimiento LIKE '%" . $busqueda . "%'
-        ORDER BY i.fecha";
+        OR e.nombre LIKE '%" . $busqueda . "%'
+        ORDER BY i.id";
         $prod = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
@@ -779,6 +793,24 @@ class UserController extends Controller
             10
 
         );
+
+        if(count($pagination->getItems()) == 0){
+            $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
+                    JOIN i.cliente c             
+                    WHERE c.nombre LIKE '%" . $busqueda . "%'                   
+                    ORDER BY i.id";
+            $prod = $em->createQuery($dql);
+
+            $paginator = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+
+                $prod,
+                $request->query->getInt('page', 1),
+                10
+
+            );
+        }
+
         return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
     }
 
@@ -849,6 +881,22 @@ class UserController extends Controller
             $select .= '<option value="'.$est->getId().'">'.$est->getNombre().'</option>';
         }
         return new Response($select);
+    }
+
+    public function obtenerRepuestosAction($idmaquina){
+
+        $em = $this->getDoctrine()->getManager();
+        $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
+            array(
+                'maquinas' => $idmaquina
+            )
+        );
+
+        $option = '';
+        foreach ($repuestos as $r){
+            $option .= '<option value="'.$r->getId().'">'.$r->getNombre().'</option>';
+        }
+        return new Response($option);
     }
 
 }

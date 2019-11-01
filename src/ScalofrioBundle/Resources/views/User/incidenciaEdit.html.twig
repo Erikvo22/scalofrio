@@ -79,9 +79,9 @@
                     {{ form_widget(form.repuestos, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.repuestos) }}</span>
                 </div>
+                {#La firma no es necesaria en la edición#}
                 <div class="form-group">
-                    {{ form_label(form.firma) }}
-                    {{ form_widget(form.firma, { 'attr' : {'class' : 'form-control'}}) }}
+                    {{ form_widget(form.firma, { 'attr' : {'class' : 'invisible'}}) }}
                     <span class = "text-danger">{{ form_errors(form.firma) }}</span>
                 </div>
 
@@ -99,10 +99,52 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        jQuery(document).ready(function () {
+        $(document).ready(function () {
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
             });
+
+            //Control selects cliente>establecimiento
+            var select = document.getElementById('incidencias_cliente');
+            $("#incidencias_establecimientos").prop("disabled", true);
+            select.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[select.selectedIndex];
+                    CambioCliente(selectedOption.value);
+                    $("#incidencias_establecimientos").prop("disabled", true);
+                    $("#incidencias_establecimientos").empty();
+                });
+
+            //Control selects maquinas>repuestos
+            var maquina  = document.getElementById('incidencias_maquinas');
+            $("#incidencias_repuestos").prop("disabled", true);
+            maquina.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[maquina.selectedIndex];
+                    CambioMaquina(selectedOption.value);
+                    $("#incidencias_repuestos").prop("disabled", true);
+                    $("#incidencias_repuestos").empty();
+                });
         });
+
+        function CambioCliente(idcliente){
+            var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
+            ruta = ruta.replace('IDCLIENTE', idcliente);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_establecimientos").prop("disabled", false);
+                $("#incidencias_establecimientos").append(result);
+            });
+        }
+
+        function CambioMaquina(idmaquina){
+            var ruta = '{{ path('obtener_repuestos', {'idmaquina':'IDMAQUINA'}) }}';
+            ruta = ruta.replace('IDMAQUINA', idmaquina);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_repuestos").prop("disabled", false);
+                $("#incidencias_repuestos").append(result);
+            });
+        }
+
+
     </script>
 {% endblock %}
