@@ -154,7 +154,8 @@ class UserController extends Controller
                     ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
                     ->setFrom('erikvieraol22@gmail.com')
                     ->setTo('erik.viera@iecisa.com', $emailCliente, $emailPlus)
-                    ->setBody($texto);
+                    ->setBody($texto)
+                    ->attach(\Swift_Attachment::fromPath($incidencia->getFirma()));
 
                 $this->get('mailer')->send($message);
             } catch (\Exception $e) {
@@ -945,7 +946,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $dql = "SELECT e FROM ScalofrioBundle:Establecimientos e
-        WHERE e.clientes = '" . $idcliente . "'";
+        WHERE e.cliente = '" . $idcliente . "'";
         $query = $em->createQuery($dql);
         $estab = $query->getResult();
 
