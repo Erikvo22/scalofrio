@@ -104,13 +104,42 @@ class UserController extends Controller
             $em->persist($incidencia);
             $em->flush();
 
-            /*ENVÍO DE EMAIL*/
+            /* TEXTO PARA EL ENVÍO DE EMAIL*/
+            $texto = 'Resumen de la incidencia Nº ' . $incidencia->getId() . ':';
+            $texto .= 'Cliente: ' . $incidencia->getCliente();
+            if($incidencia->getEstablecimientos() != null) $texto .= ' > ' . $incidencia->getEstablecimientos()->getNombre();
+            $texto .= 'Comercial: ' . $incidencia->getComercial();
+            $texto .= 'Nombre de la persona que nos atendió: ' . $incidencia->getNombrecliente();
+            $texto .= 'Cargo: ' . $incidencia->getCargocliente();
+            $texto .= 'Gestión realizada: ' . $incidencia->getGestion();
+            $texto .= 'Duración (minutos): ' .$incidencia->getTiempo();
+            $texto .= 'Tipo de máquina: ' . $incidencia->getMaquinas()->getNombre();
+            if($incidencia->getRepuestos() != null){
+                $texto .= 'Repuestos: ';
+                $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
+                    array(
+                        'maquinas' => $incidencia->getMaquinas()->getId()
+                    )
+                );
+                foreach ($repuestos as $r){
+                    $texto .= $r->getNombre() . ' ';
+                }
+            }
+
+            /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */
+            $emailCliente = "";
+            $emailPlus = "";
+            if($incidencia->getCliente()->getEmail() != null)
+                $emailCliente = $incidencia->getCliente()->getEmail();
+            if($incidencia->getEmail() != null)
+                $emailPlus = $incidencia->getEmail();
+
             try {
                 $message = \Swift_Message::newInstance()
                     ->setSubject('INCIDENCIA SCALOFRIO S.L.')
                     ->setFrom('erikvieraol22@gmail.com')
-                    ->setTo('erik.viera@iecisa.com')
-                    ->setBody('Prueba');
+                    ->setTo('erik.viera@iecisa.com', $emailCliente, $emailPlus)
+                    ->setBody($texto);
 
                 $this->get('mailer')->send($message);
             } catch (\Exception $e) {

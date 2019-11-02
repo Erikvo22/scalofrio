@@ -51,6 +51,9 @@ class IncidenciasType extends AbstractType
                 'empty_value' => '...',
                 'required'    => false
             ))
+            ->add('email', 'email', array(
+                'required'    => false
+            ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
         ;
 

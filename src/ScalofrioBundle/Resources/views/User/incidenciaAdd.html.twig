@@ -83,9 +83,13 @@
                         <button type="button" class="btn btn-sm btn-secondary" data-action="clear">Clear</button>
                        {#<button type="button" class="btn btn-sm btn-info" data-action="save">Guardar</button>#}
                     </div>
-                </div>
+                </div><br>
 
-
+                <div class="form-group">
+                    {{ form_label(form.email) }} *Si el cliente tiene un email registrado, se le envía automáticamente.
+                    {{ form_widget(form.email, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.email) }}</span>
+                </div><br>
 
                 <p>
                     {{ form_widget(form.guardar, {'label' : 'Crear incidencia', 'attr': {'class': 'btn btn-success'}}) }}

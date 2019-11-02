@@ -123,6 +123,13 @@ class Incidencias
     private $resultado;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     */
+    private $email;
+
+    /**
      * Get id
      *
      * @return int
@@ -275,6 +282,22 @@ class Incidencias
     public function getResultado()
     {
         return $this->resultado;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 
     /**

@@ -79,10 +79,16 @@
                     {{ form_widget(form.repuestos, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.repuestos) }}</span>
                 </div>
+
                 {#La firma no es necesaria en la edición#}
                 <div class="form-group">
                     {{ form_widget(form.firma, { 'attr' : {'class' : 'invisible'}}) }}
                     <span class = "text-danger">{{ form_errors(form.firma) }}</span>
+                </div>
+                {#El Email no es necesario en la edición#}
+                <div class="form-group">
+                    {{ form_widget(form.email, { 'attr' : {'class' : 'invisible'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.email) }}</span>
                 </div>
 
                 <p>
