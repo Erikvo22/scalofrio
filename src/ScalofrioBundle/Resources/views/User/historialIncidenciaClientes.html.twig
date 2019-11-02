@@ -57,12 +57,7 @@
                             <td class="actions">
                                 <a href="{{ path('scalofrio_incidenciaCliente_show', { id: incidencia.id}) }}" class="btn btn-sm btn-primary">Ver</a>
                                 {% if is_granted('ROLE_ADMIN') %}
-                                    {% if incidencia.estado == 0 %}
-                                     <a href="{{ path('scalofrio_incidenciaActualizarEstado', { id: incidencia.id }) }}" class="btn btn-sm btn-danger">Pendiente</a>                                   
-                                    {% elseif incidencia.estado == 1 %}
-                                     <a href="{{ path('scalofrio_incidenciaActualizarEstado', { id: incidencia.id }) }}" class="btn btn-sm btn-success">Resuelto</a>                                   
-                                    {% else %}
-                                    {% endif %}
+                                     <a href="{{ path('scalofrio_incidenciaActualizarEstado', { id: incidencia.id }) }}" class="btn btn-sm btn-success">Cambiar Estado</a>
                                 {% endif %}
                             </td>
                         </tr>
