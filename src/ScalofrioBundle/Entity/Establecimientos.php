@@ -32,7 +32,7 @@ class Establecimientos
      * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="establecimientos")
      * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id")
      */
-    protected $clientes;
+    protected $cliente;
 
 
     /**

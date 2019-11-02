@@ -36,7 +36,6 @@
                         <th>ESTADO</th>
                         <th>ESTABLECIMIENTO</th>
                         <th>FECHA INCIDENCIA</th>
-                        <th>FECHA CREACION</th>
                         <th>ACCIONES</th>
                     </tr>
                     {% for incidencia in pagination %}
@@ -53,7 +52,6 @@
                             {% endif %}
                             <td>{{ incidencia.establecimiento }}</td>
                             <td>{{ incidencia.fechaIncidencia|date('d-m-Y') }}</td>
-                            <td>{{ incidencia.fechaCreacion|date('d-m-Y') }}</td>
                             <td class="actions">
                                 <a href="{{ path('scalofrio_incidenciaCliente_show', { id: incidencia.id}) }}" class="btn btn-sm btn-primary">Ver</a>
                                 {% if is_granted('ROLE_ADMIN') %}

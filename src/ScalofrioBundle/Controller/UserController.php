@@ -105,17 +105,32 @@ class UserController extends Controller
             $em->flush();
 
             /* TEXTO PARA EL ENVÍO DE EMAIL*/
-            $texto = 'Resumen de la incidencia Nº ' . $incidencia->getId() . ':';
-            $texto .= 'Cliente: ' . $incidencia->getCliente();
-            if($incidencia->getEstablecimientos() != null) $texto .= ' > ' . $incidencia->getEstablecimientos()->getNombre();
-            $texto .= 'Comercial: ' . $incidencia->getComercial();
-            $texto .= 'Nombre de la persona que nos atendió: ' . $incidencia->getNombrecliente();
-            $texto .= 'Cargo: ' . $incidencia->getCargocliente();
-            $texto .= 'Gestión realizada: ' . $incidencia->getGestion();
-            $texto .= 'Duración (minutos): ' .$incidencia->getTiempo();
-            $texto .= 'Tipo de máquina: ' . $incidencia->getMaquinas()->getNombre();
+            //Controlando si los campos son nulos.
+            $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
+
+            if($incidencia->getEstablecimientos() != null)
+                $establecimiento = $incidencia->getEstablecimientos()->getNombre();
+            if($incidencia->getComercial() != null)
+                $comercial = $incidencia->getComercial()->getNombre();
+            if($incidencia->getCliente() != null)
+                $cliente = $incidencia->getCliente()->getNombre();
+            if($incidencia->getGestion() != null)
+                $gestion = $incidencia->getGestion()->getNombre();
+            if($incidencia->getMaquinas() != null) {
+                $maquinas = $incidencia->getMaquinas()->getNombre();
+            }
+
+            $texto = 'Resumen de la incidencia: ';
+            $texto .= '<br> Cliente: ' . $cliente;
+            if($incidencia->getEstablecimientos() != null) $texto .= ' > ' . $establecimiento;
+            $texto .= '<br> Comercial: ' . $comercial;
+            $texto .= '<br> Nombre de la persona que nos atendió: ' . $incidencia->getNombrecliente();
+            $texto .= '<br> Cargo: ' . $incidencia->getCargocliente();
+            $texto .= '<br> Gestión realizada: ' . $gestion;
+            $texto .= '<br> Duración (minutos): ' .$incidencia->getTiempo();
+            $texto .= '<br> Tipo de máquina: ' . $maquinas;
             if($incidencia->getRepuestos() != null){
-                $texto .= 'Repuestos: ';
+                $texto .= '<br> Repuestos: ';
                 $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
                     array(
                         'maquinas' => $incidencia->getMaquinas()->getId()
@@ -136,7 +151,7 @@ class UserController extends Controller
 
             try {
                 $message = \Swift_Message::newInstance()
-                    ->setSubject('INCIDENCIA SCALOFRIO S.L.')
+                    ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
                     ->setFrom('erikvieraol22@gmail.com')
                     ->setTo('erik.viera@iecisa.com', $emailCliente, $emailPlus)
                     ->setBody($texto);
@@ -282,24 +297,53 @@ class UserController extends Controller
             'Gestion',
             'Resultado',
             'Tiempo(min)',
-            'Descripcion',
+            'Maquinas',
         ]);
 
         foreach ($incidencias as $incidencia) {
+            //Controlando si los campos son nulos.
+            $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
+
+            if($incidencia->getEstablecimientos() != null)
+                $establecimiento = $incidencia->getEstablecimientos()->getNombre();
+            if($incidencia->getComercial() != null)
+                $comercial = $incidencia->getComercial()->getNombre();
+            if($incidencia->getCliente() != null)
+                $cliente = $incidencia->getCliente()->getNombre();
+            if($incidencia->getGestion() != null)
+                $gestion = $incidencia->getGestion()->getNombre();
+            if($incidencia->getMaquinas() != null) {
+                $maquinas = $incidencia->getMaquinas()->getNombre();
+                //Las incidencias pueden tener mas de un repuesto
+                $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
+                    array(
+                        'maquinas' => $incidencia->getMaquinas()->getId()
+                    )
+                );
+            }
+
+            //Se escribe en el CSV.
             $csv->insertOne([
                 $incidencia->getId(),
                 $incidencia->getFecha()->format('d/m/y'),
-                $incidencia->getComercial()->getNombre(),
-                $incidencia->getCliente()->getNombre(),
-                $incidencia->getEstablecimiento(),
-                $incidencia->getRuta()->getNombre(),
+                $comercial,
+                $cliente,
+                $establecimiento,
+                $incidencia->getRuta(),
                 $incidencia->getNombrecliente(),
                 $incidencia->getCargocliente(),
-                $incidencia->getGestion(),
+                $gestion,
                 $incidencia->getResultado(),
                 $incidencia->getTiempo(),
-                $incidencia->getRepuestos(),
+                $maquinas
             ]);
+
+            foreach ($repuestos as $r){
+                $csv->insertOne([
+                    $incidencia->getId(),
+                    $r->getNombre(),
+                ]);
+            }
         }
         $csv->output('incidencias.csv');
         die;
@@ -901,7 +945,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $dql = "SELECT e FROM ScalofrioBundle:Establecimientos e
-        WHERE e.cliente = '" . $idcliente . "'";
+        WHERE e.clientes = '" . $idcliente . "'";
         $query = $em->createQuery($dql);
         $estab = $query->getResult();
 
