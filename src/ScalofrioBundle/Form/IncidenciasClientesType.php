@@ -52,7 +52,7 @@ class IncidenciasClientesType extends AbstractType
                 )
             )
             ->add(
-                'cliente',
+                'establecimiento',
                 'text',
                 array(
                     'read_only' => $this->modo,

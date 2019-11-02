@@ -2,6 +2,7 @@
 namespace ScalofrioBundle\Controller;
 
 use ScalofrioBundle\Entity\IncidenciasCliente;
+use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\IncidenciasClientesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class IncidenciasClientesController extends Controller
         );
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
             $em->persist($incidencia);
             $em->flush();
             $this->sendMail($parameters);

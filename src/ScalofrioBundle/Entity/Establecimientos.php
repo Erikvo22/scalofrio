@@ -29,12 +29,10 @@ class Establecimientos
     private $nombre;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="establecimientos")
-     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id")
      */
-
-    protected $cliente;
+    protected $clientes;
 
 
     /**
