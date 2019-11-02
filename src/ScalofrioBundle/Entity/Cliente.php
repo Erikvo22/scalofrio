@@ -3,7 +3,6 @@
 namespace ScalofrioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Cliente
@@ -13,6 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Cliente
 {
+    public function __construct()
+    {
+        $this->establecimientos = new ArrayCollection();
+    }
 
     /**
      * @var int
@@ -37,6 +40,10 @@ class Cliente
      */
     private $email;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Establecimientos", mappedBy="cliente")
+     */
+    private $establecimientos;
 
     /**
      * Get id
@@ -88,10 +95,28 @@ class Cliente
         $this->email = $email;
     }
 
-
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getNombre();
     }
 
-}
+    /**
+     * Get the value of establecimientos
+     */
+    public function getEstablecimientos()
+    {
+        return $this->establecimientos;
+    }
 
+    /**
+     * Set the value of establecimientos
+     *
+     * @return  self
+     */
+    public function setEstablecimientos($establecimientos)
+    {
+        $this->establecimientos = $establecimientos;
+
+        return $this;
+    }
+}

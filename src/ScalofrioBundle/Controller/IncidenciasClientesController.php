@@ -30,6 +30,8 @@ class IncidenciasClientesController extends Controller
         );
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+            $indicendia->setUsuario($usuario);
             $em->persist($incidencia);
             $em->flush();
             $this->sendMail($parameters);

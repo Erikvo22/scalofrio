@@ -5,14 +5,17 @@ namespace ScalofrioBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-
 /**
  * @ORM\Table(name="INCIDENCIAS_CLIENTES")
  * @ORM\Entity()
  */
 class IncidenciasCliente
 {
+    public function __construct()
+    {
+        $this->fechaCreacion = new \DateTime();
+    }
+
     /**
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
@@ -50,21 +53,21 @@ class IncidenciasCliente
     /**
      * @ORM\Column(name="FECHA_CREACION", type="datetime")
      */
-    private $fechaCreacion;
+    protected $fechaCreacion;
 
     /**
      * @ORM\Column(name="estado", type="integer", length=1)
      */
-    private $estado;
-
+    private $estado = 0;
     /**
-     * @Assert\NotNull(
-     *      message = "Debe elegir a un cliente"
-     * )
-     * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="incidenciasCliente")
-     * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\Column(name="establecimiento", type="string", length=80)
      */
-    private $cliente;
+    private $establecimiento;
+    /**
+     * @ORM\ManyToOne(targetEntity="Usuarios")
+     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     */
+    private $usuario;
 
     /**
      * Get the value of id
@@ -187,23 +190,6 @@ class IncidenciasCliente
     }
 
     /**
-     * @return \ScalofrioBundle\Entity\Cliente
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
-
-    /**
-     * @param \ScalofrioBundle\Entity\Cliente $cliente
-     * @return IncidenciasCliente
-     */
-    public function setCliente($cliente)
-    {
-        $this->cliente = $cliente;
-    }
-
-    /**
      * Get the value of titulo
      */
     public function getTitulo()
@@ -238,6 +224,46 @@ class IncidenciasCliente
     public function setEstado($estado)
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of usuario
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * Set the value of usuario
+     *
+     * @return  self
+     */
+    public function setUsuario($usuario)
+    {
+        $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of establecimiento
+     */
+    public function getEstablecimiento()
+    {
+        return $this->establecimiento;
+    }
+
+    /**
+     * Set the value of establecimiento
+     *
+     * @return  self
+     */
+    public function setEstablecimiento($establecimiento)
+    {
+        $this->establecimiento = $establecimiento;
 
         return $this;
     }
