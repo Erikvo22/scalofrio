@@ -44,9 +44,9 @@ class Usuarios implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="role", type="string", columnDefinition="ENUM('ROLE_ADMIN', 'ROLE_USER')", length=50)
+     * @ORM\Column(name="role", type="string", columnDefinition="ENUM('ROLE_ADMIN','ROLE_COMERCIAL','ROLE_USER')", length=50)
      * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"ROLE_ADMIN", "ROLE_USER"})
+     * @Assert\Choice(choices = {"ROLE_ADMIN","ROLE_COMERCIAL","ROLE_USER"})
      */
     private $role;
 
@@ -78,6 +78,14 @@ class Usuarios implements AdvancedUserInterface, \Serializable
       */
 
     protected $cliente;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Establecimientos", inversedBy="usuarios")
+     * @ORM\JoinColumn(name="establecimientos_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $establecimientos;
 
 
     public function __construct()
@@ -326,5 +334,21 @@ class Usuarios implements AdvancedUserInterface, \Serializable
     $this->cliente = $cliente;
      }
 
+    /**
+     * @return \ScalofrioBundle\Entity\Establecimientos
+     */
+    public function getEstablecimientos()
+    {
+        return $this->establecimientos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Establecimientos $establecimientos
+     * @return Usuarios
+     */
+    public function setEstablecimientos($establecimientos)
+    {
+        $this->establecimientos = $establecimientos;
+    }
 }
 

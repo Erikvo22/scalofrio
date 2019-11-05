@@ -25,6 +25,11 @@
                     <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
                 </div>
                 <div class="form-group">
+                    {{ form_label(form.establecimientos) }}
+                    {{ form_widget(form.establecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
+                </div>
+                <div class="form-group">
                     {{ form_label(form.username) }}
                     {{ form_widget(form.username, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.username) }}</span>
@@ -56,4 +61,33 @@
         </div>
     </div>
 
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $(document).ready(function () {
+
+        //Control selects cliente>establecimiento
+        var select = document.getElementById('username_cliente');
+        $("#username_establecimientos").prop("disabled", true);
+        select.addEventListener('change',
+            function () {
+                var selectedOption = this.options[select.selectedIndex];
+                CambioCliente(selectedOption.value);
+                $("#username_establecimientos").prop("disabled", true);
+                $("#username_establecimientos").empty();
+            });
+
+    });
+
+    function CambioCliente(idcliente){
+        var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
+        ruta = ruta.replace('IDCLIENTE', idcliente);
+        $.post(ruta, null, function(result) {
+            $("#username_establecimientos").prop("disabled", false);
+            $("#username_establecimientos").append(result);
+        });
+    }
+
+</script>
 {% endblock %}

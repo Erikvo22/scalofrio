@@ -53,7 +53,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
 
-        if ($rol[0] == 'ROLE_ADMIN') {
+        if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
             $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
@@ -66,10 +66,9 @@ class UserController extends Controller
             $incidencias, $request->query->getInt('page', 1),
             10
         );
-        if ($rol[0] == 'ROLE_ADMIN') {
+        if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
         } else {
-
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
         }
     }
@@ -347,6 +346,45 @@ class UserController extends Controller
             }
         }
         $csv->output('incidencias.csv');
+        die;
+    }
+
+
+    public function generateUserCsvAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $usuarios = $em->getRepository('ScalofrioBundle:Usuarios')->findAll();
+        #Writer
+        $writer = $this->container->get('egyg33k.csv.writer');
+        $csv = $writer::createFromFileObject(new \SplTempFileObject());
+        $csv->insertOne(['id',
+            'Cliente',
+            'Establecimiento',
+            'Nombre de usuario',
+            'Role',
+            'Activo',
+        ]);
+
+        foreach ($usuarios as $user) {
+            //Controlando si los campos son nulos.
+            $establecimiento = ''; $cliente = '';
+            if($user->getEstablecimientos() != null)
+                $establecimiento = $user->getEstablecimientos()->getNombre();
+            if($user->getCliente() != null)
+                $cliente = $user->getCliente()->getNombre();
+
+            //Se escribe en el CSV.
+            $csv->insertOne([
+                $user->getId(),
+                $cliente,
+                $establecimiento,
+                $user->getUsername(),
+                $user->getRole(),
+                $user->getIsActive(),
+            ]);
+
+        }
+        $csv->output('usuarios.csv');
         die;
     }
 

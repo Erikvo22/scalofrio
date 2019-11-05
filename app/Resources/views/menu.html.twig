@@ -29,7 +29,7 @@
                     <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Añadir tipo gestión</a></li>
                 </ul>
                 {% endif %}
-                {% if is_granted('ROLE_USER') %}
+                {% if is_granted('ROLE_USER') or is_granted('ROLE_COMERCIAL')%}
                     <p id="titleHdr" class="navbar-brand"> Bienvenido/a </p>
                 {% endif %}
             </li>

@@ -26,6 +26,10 @@
                 <a href="{{ path('scalofrio_user_add') }}" class="btn btn-sm btn-warning padding-none">
                     <span class="glyphicon glyphicon-user"></span>
                     Nuevo usuario</a>
+                <a href="{{ path('scalofrio_usuarios_export') }}" class="btn btn-sm btn-success padding-none">
+                    <span class="glyphicon glyphicon-file"></span>
+                    Exportar a CSV
+                </a>
 
             </div>
             <div class="table-responsive">
@@ -33,6 +37,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Cliente</th>
+                        <th>Establecimiento</th>
                         <th>Usuario</th>
                         <th>Role</th>
                         <th>Activo</th>
@@ -42,6 +47,7 @@
                         <tr>
                             <td>{{ user.id }}</td>
                             <td>{{ user.cliente }}</td>
+                            <td>{{ user.establecimientos }}</td>
                             <td>{{ user.username }}</td>
                             <td>{{ user.role }}</td>
                             <td>{{ user.isActive }}</td>

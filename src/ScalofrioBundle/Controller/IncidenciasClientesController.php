@@ -72,7 +72,7 @@ class IncidenciasClientesController extends Controller
         } else {
             $this->addFlash(
                 'mensaje',
-                'Se ha producido un errror al actualizar el estado.'
+                'Se ha producido un error al actualizar el estado.'
             );  
         }
         return $this->redirectToRoute('scalofrio_listarIncidencias');
@@ -114,7 +114,7 @@ class IncidenciasClientesController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u";
+        $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
 
         $incidencias = $em->createQuery($dql);
 
@@ -127,5 +127,40 @@ class IncidenciasClientesController extends Controller
         return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
 
     }
+
+    /* Exportar a CSV */
+/*    public function generateAvisoCsvAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $avisos = $em->getRepository('ScalofrioBundle:IncidenciasCliente')->findAll();
+        #Writer
+        $writer = $this->container->get('egyg33k.csv.writer');
+        $csv = $writer::createFromFileObject(new \SplTempFileObject());
+        $csv->insertOne(['id',
+            '',
+        ]);
+
+        foreach ($avisos as $a) {
+            //Controlando si los campos son nulos.
+            $establecimiento = ''; $cliente = '';
+            if($user->getEstablecimientos() != null)
+                $establecimiento = $user->getEstablecimientos()->getNombre();
+            if($user->getCliente() != null)
+                $cliente = $user->getCliente()->getNombre();
+
+            //Se escribe en el CSV.
+            $csv->insertOne([
+                $user->getId(),
+                $cliente,
+                $establecimiento,
+                $user->getUsername(),
+                $user->getRole(),
+                $user->getIsActive(),
+            ]);
+
+        }
+        $csv->output('avisos.csv');
+        die;
+    }*/
 
 }

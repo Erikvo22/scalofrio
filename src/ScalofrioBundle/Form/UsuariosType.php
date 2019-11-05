@@ -14,9 +14,10 @@ class UsuariosType extends AbstractType
     {
         $builder
             ->add('cliente')
+            ->add('establecimientos')
             ->add('username')
             ->add('password', 'password')
-            ->add('role', 'choice', array('choices' => array('ROLE_ADMIN' => 'Administrador', 'ROLE_USER' => 'Usuario'), 'placeholder' => 'Selecciona un role'))
+            ->add('role', 'choice', array('choices' => array('ROLE_ADMIN' => 'Administrador','ROLE_COMERCIAL' => 'Comercial', 'ROLE_USER' => 'Usuario'), 'placeholder' => 'Selecciona un role'))
             ->add('isActive', 'checkbox')
             ->add('guardar', 'submit')
         ;

@@ -53,6 +53,14 @@ scalofrio_export:
     path: /index/export
     defaults: { _controller: ScalofrioBundle:User:generateCsv }
 
+scalofrio_usuarios_export:
+    path: /user/export
+    defaults: { _controller: ScalofrioBundle:User:generateUserCsv }
+
+scalofrio_avisos_export:
+    path: /avisos/export
+    defaults: { _controller: ScalofrioBundle:User:generateAvisosCsv }
+
 
 
 ############# APARTADO DE USUARIOS ################
