@@ -9,10 +9,12 @@ use ScalofrioBundle\Entity\Gestion;
 use ScalofrioBundle\Entity\Incidencias;
 use ScalofrioBundle\Entity\Maquinas;
 use ScalofrioBundle\Entity\Repuestos;
+use ScalofrioBundle\Entity\Subestablecimientos;
 use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\ClienteType;
 use ScalofrioBundle\Form\ComercialType;
 use ScalofrioBundle\Form\EstablecimientosType;
+use ScalofrioBundle\Form\SubestablecimientosType;
 use ScalofrioBundle\Form\GestionType;
 use ScalofrioBundle\Form\IncidenciasType;
 use ScalofrioBundle\Form\MaquinasType;
@@ -551,9 +553,13 @@ class UserController extends Controller
 
         //Añadir nuevo establecimiento
         $establecimientos = new Establecimientos();
-        $form = $this->createEstablecimientosCreateForm($establecimientos);
+        $estab = $this->createEstablecimientosCreateForm($establecimientos);
 
-        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
+        //Añadir nuevo Subestablecimiento
+        $subestablecimientos = new Subestablecimientos();
+        $subestab = $this->createSubestablecimientosCreateForm($subestablecimientos);
+
+        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'estab' => $estab->createView(), 'subestab' => $subestab->createView()));
     }
 
     public function clienteViewAction($id)
@@ -566,13 +572,18 @@ class UserController extends Controller
                 'cliente' => $id,
             )
         );
+        $subestablecimientos = $em->getRepository('ScalofrioBundle:Subestablecimientos')->findBy(
+            array(
+                'cliente' => $id,
+            )
+        );
 
         if (!$cliente) {
             $messageException = 'Cliente no encontrado.';
             throw $this->createNotFoundException($messageException);
         }
 
-        return $this->render('@Scalofrio/User/clienteView.html.twig', array('cliente' => $cliente, 'establecimientos' => $establecimientos));
+        return $this->render('@Scalofrio/User/clienteView.html.twig', array('cliente' => $cliente, 'establecimientos' => $establecimientos, 'subestablecimientos' => $subestablecimientos));
     }
 
     private function createEstablecimientosCreateForm(Establecimientos $entity)
@@ -598,6 +609,36 @@ class UserController extends Controller
             $this->addFlash(
                 'mensaje',
                 'Establecimiento creado correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_cliente_list');
+        }
+        return $this->render('ScalofrioBundle:User:clienteView.html.twig', array('form' => $form->createView()));
+    }
+
+    private function createSubestablecimientosCreateForm(Subestablecimientos $entity)
+    {
+        $form = $this->createForm(new SubestablecimientosType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_subestablecimientos_create'),
+            'method' => 'POST',
+        ));
+        return $form;
+    }
+
+    public function createSubestablecimientosAction(Request $request)
+    {
+        $subestablecimientos = new Subestablecimientos();
+        $form = $this->createSubestablecimientosCreateForm($subestablecimientos);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($subestablecimientos);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Subestablecimiento creado correctamente'
             );
 
             return $this->redirectToRoute('scalofrio_cliente_list');
@@ -991,6 +1032,22 @@ class UserController extends Controller
         $select = '';
         foreach ($estab as $est){
             $select .= '<option value="'.$est->getId().'">'.$est->getNombre().'</option>';
+        }
+        return new Response($select);
+    }
+
+    public function obtenerSubestablecimientosAction($idestablecimiento){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT e FROM ScalofrioBundle:Subestablecimientos e
+        WHERE e.establecimientos = '" . $idestablecimiento . "'";
+        $query = $em->createQuery($dql);
+        $subestab = $query->getResult();
+
+        $select = '';
+        foreach ($subestab as $s){
+            $select .= '<option value="'.$s->getId().'">'.$s->getNombre().'</option>';
         }
         return new Response($select);
     }

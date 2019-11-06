@@ -33,6 +33,11 @@
                     <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
                 </div>
                 <div class="form-group">
+                    {{ form_label(form.subestablecimientos) }}
+                    {{ form_widget(form.subestablecimientos, { 'attr' : {'class' : 'form-control'} }) }}
+                    <span class = "text-danger">{{ form_errors(form.subestablecimientos) }}</span>
+                </div>
+                <div class="form-group">
                     {{ form_label(form.ruta) }}
                     {{ form_widget(form.ruta, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.ruta) }}</span>
@@ -126,6 +131,17 @@
                     CambioCliente(selectedOption.value);
                     $("#incidencias_establecimientos").prop("disabled", true);
                     $("#incidencias_establecimientos").empty();
+                });
+
+            //Control selects establecimiento>subestablecimiento
+            var estab = document.getElementById('incidencias_establecimientos');
+            $("#incidencias_subestablecimientos").prop("disabled", true);
+            estab.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[estab.selectedIndex];
+                    CambioEstablecimiento(selectedOption.value);
+                    $("#incidencias_subestablecimientos").prop("disabled", true);
+                    $("#incidencias_subestablecimientos").empty();
                 });
 
             //Control selects maquinas>repuestos
@@ -230,6 +246,15 @@
             $.post(ruta, null, function(result) {
                 $("#incidencias_establecimientos").prop("disabled", false);
                 $("#incidencias_establecimientos").append(result);
+            });
+        }
+
+        function CambioEstablecimiento(idestablecimiento){
+            var ruta = '{{ path('obtener_subestablecimiento', {'idestablecimiento':'IDESTABLECIMIENTO'}) }}';
+            ruta = ruta.replace('IDESTABLECIMIENTO', idestablecimiento);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_subestablecimientos").prop("disabled", false);
+                $("#incidencias_subestablecimientos").append(result);
             });
         }
 

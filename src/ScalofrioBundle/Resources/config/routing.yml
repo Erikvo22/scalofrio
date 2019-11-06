@@ -136,6 +136,11 @@ scalofrio_establecimientos_create:
     defaults: {_controller: ScalofrioBundle:User:createEstablecimientos }
     methods: POST
 
+scalofrio_subestablecimientos_create:
+    path: /subestablecimiento/create
+    defaults: {_controller: ScalofrioBundle:User:createSubestablecimientos }
+    methods: POST
+
 scalofrio_cliente_edit:
     path:   /cliente/edit{id}
     defaults: { _controller: ScalofrioBundle:User:clienteEdit }
@@ -308,6 +313,10 @@ scalofrio_listarIncidencias:
 obtener_establecimiento:
     pattern: /obtenerEstablecimientos/{idcliente}
     defaults: { _controller: ScalofrioBundle:User:obtenerEstablecimientos }
+
+obtener_subestablecimiento:
+    pattern: /obtenerSubestablecimientos/{idestablecimiento}
+    defaults: { _controller: ScalofrioBundle:User:obtenerSubestablecimientos }
 
 obtener_repuestos:
     pattern: /obtenerRepuestos/{idmaquina}

@@ -64,26 +64,83 @@
         </div>
 
             <div class="col-md-6">
+{#
+                Primero, opción a crear una nueva relación entre cliente y establecimiento
+#}
                 <div class="page-header margin-none">
-                    <h3><b>Nueva relación 'Cliente > Establecimiento'</b></h3>
+                    <h4><b>Nueva relación 'Cliente > Establecimiento'</b></h4>
                 </div>
-                {{ form_start(form) }}
+                {{ form_start(estab) }}
+                <div class="form-group col-md-6">
+                    <label>Cliente</label>
+                    {{ form_widget(estab.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(estab.cliente) }}</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Establecimiento</label>
+                    {{ form_widget(estab.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(estab.nombre) }}</span>
+                </div>
+                <p>
+                    {{ form_widget(estab.guardar, {'label' : 'Crear', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+                {{ form_end(estab) }}
+
+{#
+                Después, la relación entre cliente, establecimiento y subestablecimiento
+#}
+                <div class="page-header margin-none">
+                    <h4><b>Nueva relación 'Cliente > Establecimiento > Subestablecimiento'</b></h4>
+                </div>
+                {{ form_start(subestab) }}
                 <div class="form-group col-md-4">
                     <label>Cliente</label>
-                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class="text-danger">{{ form_errors(form.cliente) }}</span>
+                    {{ form_widget(subestab.cliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(subestab.cliente) }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label>Establecimiento</label>
-                    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class="text-danger">{{ form_errors(form.nombre) }}</span>
+                    {{ form_widget(subestab.establecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(subestab.establecimientos) }}</span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Subestablecimiento</label>
+                    {{ form_widget(subestab.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class="text-danger">{{ form_errors(subestab.nombre) }}</span>
                 </div>
                 <p class="col-md-2">
-                    {{ form_widget(form.guardar, {'label' : 'Crear', 'attr': {'class': 'btn btn-success'}}) }}
+                    {{ form_widget(subestab.guardar, {'label' : 'Crear', 'attr': {'class': 'btn btn-success'}}) }}
                 </p>
-                {{ form_end(form) }}
+                {{ form_end(subestab) }}
             </div>
         </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
 
+            //Control selects cliente>establecimiento
+            var select = document.getElementById('sub_cliente');
+            $("#sub_establecimientos").prop("disabled", true);
+            select.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[select.selectedIndex];
+                    CambioCliente(selectedOption.value);
+                    $("#sub_establecimientos").prop("disabled", true);
+                    $("#sub_establecimientos").empty();
+                });
+        });
+
+        function CambioCliente(idcliente) {
+            var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
+            ruta = ruta.replace('IDCLIENTE', idcliente);
+            $.post(ruta, null, function (result) {
+                $("#sub_establecimientos").prop("disabled", false);
+                $("#sub_establecimientos").append(result);
+            });
+        }
+
+    </script>
+{% endblock %}
 

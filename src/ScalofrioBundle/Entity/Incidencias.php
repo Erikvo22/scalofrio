@@ -62,6 +62,14 @@ class Incidencias
 
     protected $establecimientos;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Subestablecimientos", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="subestablecimientos_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $subestablecimientos;
+
 
     /**
      * @var int
@@ -418,6 +426,23 @@ class Incidencias
     public function setEstablecimientos($establecimientos)
     {
         $this->establecimientos = $establecimientos;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Subestablecimientos
+     */
+    public function getSubestablecimientos()
+    {
+        return $this->subestablecimientos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Subestablecimientos $subestablecimientos
+     * @return Incidencias
+     */
+    public function setSubestablecimientos($subestablecimientos)
+    {
+        $this->subestablecimientos = $subestablecimientos;
     }
 
 

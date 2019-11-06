@@ -33,7 +33,8 @@ class IncidenciasType extends AbstractType
                 'ECONOMATO' => 'ECONOMATO', 'SSTT CLIENTE' => 'SSTT CLIENTE')))
             ->add('nombrecliente')
             ->add('firma', FileType::class, array(
-                'required'    => true
+                'required'    => false,
+                "data_class" => null
             ))
             ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'PENDIENTE'=>'PENDIENTE',
                 'CAMBIO DE MÁQUINA'=>'CAMBIO DE MÁQUINA')))
@@ -43,6 +44,11 @@ class IncidenciasType extends AbstractType
             ->add('cliente')
             ->add('establecimientos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Establecimientos',
+                'empty_value' => '...',
+                'required'    => false
+            ))
+            ->add('subestablecimientos', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Subestablecimientos',
                 'empty_value' => '...',
                 'required'    => false
             ))
