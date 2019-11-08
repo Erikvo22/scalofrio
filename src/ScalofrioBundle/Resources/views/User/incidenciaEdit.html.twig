@@ -116,6 +116,7 @@
 
             //Control selects cliente>establecimiento
             var select = document.getElementById('incidencias_cliente');
+            CambioCliente(select.value);
             $("#incidencias_establecimientos").prop("disabled", true);
             select.addEventListener('change',
                 function () {
@@ -127,6 +128,7 @@
 
             //Control selects establecimiento>subestablecimiento
             var estab = document.getElementById('incidencias_establecimientos');
+            CambioEstablecimiento(estab.value);
             $("#incidencias_subestablecimientos").prop("disabled", true);
             estab.addEventListener('change',
                 function () {
@@ -139,6 +141,7 @@
 
             //Control selects maquinas>repuestos
             var maquina  = document.getElementById('incidencias_maquinas');
+            CambioMaquina(maquina.value);
             $("#incidencias_repuestos").prop("disabled", true);
             maquina.addEventListener('change',
                 function () {

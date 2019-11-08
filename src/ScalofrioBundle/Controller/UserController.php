@@ -488,12 +488,43 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
+            if(!empty($password))
+            {
+                $encoder = $this->container->get('security.password_encoder');
+                $encoded = $encoder->encodePassword($user, $password);
+                $user->setPassword($encoded);
+            }
+            else
+            {
+                $recoverPass = $this->recoverPass($id);
+                $user->setPassword($recoverPass[0]['password']);
+            }
+
+            if($form->get('role')->getData() == 'ROLE_ADMIN')
+            {
+                $user->setIsActive(1);
+            }
             $em->flush();
             $successMessage = 'Usuario actualizado correctamente';
             $this->addFlash('mensaje', $successMessage);
             return $this->redirectToRoute('scalofrio_user_list', array('id' => $user->getId()));
         }
         return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user, 'form' => $form->createView()));
+    }
+
+    private function recoverPass($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT u.password
+            FROM ScalofrioBundle:Usuarios u
+            WHERE u.id = :id'
+        )->setParameter('id', $id);
+
+        $currentPass = $query->getResult();
+
+        return $currentPass;
     }
 
     /******** APARTADO DE COMERCIALES **********/
@@ -1029,7 +1060,7 @@ class UserController extends Controller
         $query = $em->createQuery($dql);
         $estab = $query->getResult();
 
-        $select = '';
+        $select = '<option></option>';
         foreach ($estab as $est){
             $select .= '<option value="'.$est->getId().'">'.$est->getNombre().'</option>';
         }
@@ -1045,7 +1076,7 @@ class UserController extends Controller
         $query = $em->createQuery($dql);
         $subestab = $query->getResult();
 
-        $select = '';
+        $select = '<option></option>';
         foreach ($subestab as $s){
             $select .= '<option value="'.$s->getId().'">'.$s->getNombre().'</option>';
         }
