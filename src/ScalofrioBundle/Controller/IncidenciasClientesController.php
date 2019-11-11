@@ -6,6 +6,7 @@ use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\IncidenciasClientesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class IncidenciasClientesController extends Controller
 {
@@ -13,12 +14,17 @@ class IncidenciasClientesController extends Controller
     {
         $incidencia = new IncidenciasCliente();
         $form = $this->createIncidenciaCreateForm($incidencia);
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo"));
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo", "user" => $usuario->getCliente()->getId()));
     }
 
     public function incidenciaClienteCreateAction(Request $request)
     {
         $incidencia = new IncidenciasCliente();
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
         $parameters = array
@@ -42,7 +48,7 @@ class IncidenciasClientesController extends Controller
 
             return $this->redirectToRoute('scalofrio_index');
         }
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo"));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo", "user" => $usuario->getCliente()->getId()));
     }
 
     public function incidenciaClienteShowAction($id)
@@ -50,7 +56,9 @@ class IncidenciasClientesController extends Controller
         $em = $this->getDoctrine()->getManager();
         $incidencia = $em->getRepository(IncidenciasCliente::class)->findOneBy(array('id' => $id));
         $form = $this->mostrarIncidenciaForm($incidencia);
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "lectura"));
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "lectura", "user" => $usuario->getCliente()->getId()));
     }
 
     public function actualizarEstadoAction($id)
@@ -114,11 +122,19 @@ class IncidenciasClientesController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
-        $dql = "SELECT u FROM 
+        $rol = $this->getUser()->getRoles();
+
+        if ($rol[0] == 'ROLE_USER') {
+            $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+            $dql = "SELECT u FROM 
                 ScalofrioBundle:IncidenciasCliente u
-                WHERE u.usuario = '" . $usuario . "'
+                WHERE u.usuario = '" . $usuario->getId() . "'
                 ORDER BY u.id DESC";
+        } else {
+            $dql = "SELECT u FROM 
+                ScalofrioBundle:IncidenciasCliente u
+                ORDER BY u.id DESC";
+        }
 
         $incidencias = $em->createQuery($dql);
 
@@ -142,6 +158,7 @@ class IncidenciasClientesController extends Controller
         $csv = $writer::createFromFileObject(new \SplTempFileObject());
         $csv->insertOne(['id',
             'fecha',
+            'cliente',
             'subestablecimiento',
             'tipo gestion',
             'estado',
@@ -157,7 +174,8 @@ class IncidenciasClientesController extends Controller
             //Se escribe en el CSV.
             $csv->insertOne([
                 $a->getId(),
-                $a->getFechaIncidencia(),
+                $a->getFechaIncidencia()->format('d/m/y'),
+                $a->getUsuario()->getCliente()->getNombre(),
                 $subestablecimiento,
                 $a->getGestion()->getNombre(),
                 $a->getEstado(),
@@ -167,6 +185,33 @@ class IncidenciasClientesController extends Controller
         }
         $csv->output('avisos.csv');
         die;
+    }
+
+    /*OBTENCIÓN DE INFORMACIÓN EN LOS SELECTS*/
+    public function obtenerSubestablecimientosClienteAction($idcliente){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $dql = "SELECT e FROM ScalofrioBundle:Subestablecimientos e
+        WHERE e.cliente = '" . $idcliente . "'";
+        $query = $em->createQuery($dql);
+        $subestab = $query->getResult();
+
+        $select = '';
+        foreach ($subestab as $s){
+            $select .= '<option value="'.$s->getId().'">'.$s->getNombre().'</option>';
+        }
+        return new Response($select);
+
+    }
+
+    public function obtenerClienteAction(){
+
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $select = '<option value="'.$usuario->getId().'">'.$usuario->getUsername().'</option>';
+
+        return new Response($select);
     }
 
 }

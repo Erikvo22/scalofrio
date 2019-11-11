@@ -350,5 +350,11 @@ class Usuarios implements AdvancedUserInterface, \Serializable
     {
         $this->establecimientos = $establecimientos;
     }
+
+
+    public function __toString()
+    {
+        return $this->getCliente()->getNombre();
+    }
 }
 

@@ -28,13 +28,17 @@ class UserController extends Controller
 {
     public function homeAction(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
-        if ($rol[0] == 'ROLE_ADMIN') {
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+
+        if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
-            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
+            $dql = "SELECT u FROM 
+                ScalofrioBundle:IncidenciasCliente u
+                WHERE u.usuario = '" . $usuario->getId() . "'
+                ORDER BY u.id DESC";
         }
 
         $incidencias = $em->createQuery($dql);
@@ -43,7 +47,7 @@ class UserController extends Controller
             $incidencias, $request->query->getInt('page', 1),
             10
         );
-        if ($rol[0] == 'ROLE_ADMIN') {
+        if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
@@ -54,11 +58,15 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
-            $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
+            $dql = "SELECT u FROM 
+                ScalofrioBundle:IncidenciasCliente u
+                WHERE u.usuario = '" . $usuario->getId() . "'
+                ORDER BY u.id DESC";
         }
 
         $incidencias = $em->createQuery($dql);

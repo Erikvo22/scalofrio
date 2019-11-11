@@ -35,6 +35,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Fecha Incidencia</th>
+                        <th>Cliente</th>
                         <th>Subestablecimiento</th>
                         <th>Tipo gestión</th>
                         <th>Estado</th>
@@ -44,6 +45,7 @@
                         <tr>
                             <td>{{ incidencia.id }}</td>
                             <td>{{ incidencia.fechaIncidencia|date('d-m-Y') }}</td>
+                            <td>{{ incidencia.usuario.cliente }}</td>
                             <td>{{ incidencia.subestablecimientos }}</td>
                             <td>{{ incidencia.gestion }}</td>
                             {% if incidencia.estado == 0 %}

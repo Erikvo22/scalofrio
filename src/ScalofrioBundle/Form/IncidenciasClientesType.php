@@ -24,6 +24,12 @@ class IncidenciasClientesType extends AbstractType
         $this->modo = $options['attr']['modo'] === 'lectura' ? true : false;
 
         $builder
+            ->add('usuario', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Usuarios',
+                'empty_value' => '...',
+                'required' => true,
+                'read_only' => $this->modo,
+            ))
             ->add(
                 'fechaIncidencia',
                 DateType::class, array(
@@ -37,13 +43,12 @@ class IncidenciasClientesType extends AbstractType
                     'read_only' => $this->modo,
                 )
             )
-            ->add('gestion',
-                   'choice',
-                array(
-                    'required' => true,
-                    'read_only' => $this->modo,
-                )
-            )
+            ->add('gestion', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Gestion',
+                'empty_value' => '...',
+                'required'    => true,
+                'read_only' => $this->modo,
+            ))
             ->add('subestablecimientos',
                    'entity',
                 array(

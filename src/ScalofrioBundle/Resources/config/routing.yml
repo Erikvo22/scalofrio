@@ -59,7 +59,7 @@ scalofrio_usuarios_export:
 
 scalofrio_avisos_export:
     path: /avisos/export
-    defaults: { _controller: ScalofrioBundle:User:generateAvisosCsv }
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:generateAvisoCsv }
 
 
 
@@ -316,6 +316,14 @@ obtener_establecimiento:
 obtener_subestablecimiento:
     pattern: /obtenerSubestablecimientos/{idestablecimiento}
     defaults: { _controller: ScalofrioBundle:User:obtenerSubestablecimientos }
+
+obtener_subestablecimiento_cliente:
+    pattern: /obtenerSubestablecimientosCliente/{idcliente}
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:obtenerSubestablecimientosCliente }
+
+obtener_cliente:
+    pattern: /obtenerCliente/
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:obtenerCliente }
 
 obtener_repuestos:
     pattern: /obtenerRepuestos/{idmaquina}
