@@ -37,46 +37,28 @@ class IncidenciasClientesType extends AbstractType
                     'read_only' => $this->modo,
                 )
             )
-            ->add(
-                'titulo',
-                'text',
+            ->add('gestion',
+                   'choice',
                 array(
+                    'required' => true,
                     'read_only' => $this->modo,
                 )
             )
-            ->add(
-                'tipo',
-                'text',
+            ->add('subestablecimientos',
+                   'entity',
                 array(
-                    'read_only' => $this->modo,
-                )
+                'class' => 'ScalofrioBundle\Entity\Subestablecimientos',
+                'empty_value' => '...',
+                'required'    => false,
+                'read_only' => $this->modo,
             )
-            ->add(
-                'establecimiento',
-                'text',
-                array(
-                    'read_only' => $this->modo,
-                )
-            )
-            ->add(
-                'prioridad',
-                'choice',
-                array(
-                    'choices' => array(
-                        'BAJA' => 'BAJA',
-                        'MEDIA' => 'MEDIA',
-                        'ALTA' => 'ALTA',
-                        'URGENTE' => 'URGENTE',
-                    ),
-                    'choice_attr' => function ($val, $key, $index) {
-                        return $this->modo ? ['disabled' => 'disabled'] : [];
-                    },
-                    'read_only' => $this->modo
-                )
             )
             ->add('descripcion', TextareaType::class, array(
                 'attr' => array('class' => 'tinymce', 'placeholder' => 'Descripción de la incidencia...'),
-                'read_only' => $this->modo))
+                'required'  => true,
+                'read_only' => $this->modo,
+                )
+            )
             ->add(
                 'guardar',
                 SubmitType::class,

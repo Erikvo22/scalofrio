@@ -114,7 +114,11 @@ class IncidenciasClientesController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:IncidenciasCliente u ORDER BY u.id DESC";
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $dql = "SELECT u FROM 
+                ScalofrioBundle:IncidenciasCliente u
+                WHERE u.usuario = '" . $usuario . "'
+                ORDER BY u.id DESC";
 
         $incidencias = $em->createQuery($dql);
 
@@ -129,7 +133,7 @@ class IncidenciasClientesController extends Controller
     }
 
     /* Exportar a CSV */
-/*    public function generateAvisoCsvAction()
+    public function generateAvisoCsvAction()
     {
         $em = $this->getDoctrine()->getManager();
         $avisos = $em->getRepository('ScalofrioBundle:IncidenciasCliente')->findAll();
@@ -137,30 +141,32 @@ class IncidenciasClientesController extends Controller
         $writer = $this->container->get('egyg33k.csv.writer');
         $csv = $writer::createFromFileObject(new \SplTempFileObject());
         $csv->insertOne(['id',
-            '',
+            'fecha',
+            'subestablecimiento',
+            'tipo gestion',
+            'estado',
+            'descripcion'
         ]);
 
         foreach ($avisos as $a) {
             //Controlando si los campos son nulos.
-            $establecimiento = ''; $cliente = '';
-            if($user->getEstablecimientos() != null)
-                $establecimiento = $user->getEstablecimientos()->getNombre();
-            if($user->getCliente() != null)
-                $cliente = $user->getCliente()->getNombre();
+            $subestablecimiento = '';
+            if($a->getSubestablecimientos() != null)
+                $subestablecimiento = $a->getSubestablecimientos()->getNombre();
 
             //Se escribe en el CSV.
             $csv->insertOne([
-                $user->getId(),
-                $cliente,
-                $establecimiento,
-                $user->getUsername(),
-                $user->getRole(),
-                $user->getIsActive(),
+                $a->getId(),
+                $a->getFechaIncidencia(),
+                $subestablecimiento,
+                $a->getGestion()->getNombre(),
+                $a->getEstado(),
+                $a->getDescripcion(),
             ]);
 
         }
         $csv->output('avisos.csv');
         die;
-    }*/
+    }
 
 }

@@ -281,31 +281,30 @@ scalofrio_busqueda_user:
 ############# INCIDENCIAS CLIENTES ################
 
 scalofrio_incidenciaCliente_add:
-    path:     /incidenciaCliente/nueva
-    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteNew }
-    methods: GET
+  path: /incidenciaCliente/nueva
+  defaults:
+    { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteNew }
 
 scalofrio_incidenciaCliente_create:
-    path:     /incidenciaCliente/create
-    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteCreate }
-    methods: POST
+  path: /incidenciaCliente/create
+  defaults:
+    { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteCreate }
+  methods: POST
 
 scalofrio_incidenciaCliente_show:
-    path:     /incidenciaCliente/mostrar/{id}
-    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteShow }
-    methods: GET
+  path: /incidenciaCliente/mostrar/{id}
+  defaults:
+    { _controller: ScalofrioBundle:IncidenciasClientes:incidenciaClienteShow }
 
 scalofrio_incidenciaActualizarEstado:
-    path:     /incidenciaCliente/actualizarEstado/{id}
-    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:actualizarEstado }
-    methods: GET
+  path: /incidenciaCliente/actualizarEstado/{id}
+  defaults:
+    { _controller: ScalofrioBundle:IncidenciasClientes:actualizarEstado }
 
 scalofrio_listarIncidencias:
-    path: /incidenciaCliente/historial
-    defaults:
-        { _controller: ScalofrioBundle:IncidenciasClientes:listar }
-    methods: GET
-
+  path: /incidenciaCliente/historial
+  defaults:
+    { _controller: ScalofrioBundle:IncidenciasClientes:listar }
 
 
 ############ OBTENCIÓN DE ELEMENTOS EN LOS SELECTS ###########

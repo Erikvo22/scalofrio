@@ -52,9 +52,9 @@ security:
         - { path: ^/index/export, roles: ROLE_ADMIN }
         - { path: ^/user/*, roles: ROLE_ADMIN }
         - { path: ^/incidencia/*, roles: [ROLE_ADMIN, ROLE_COMERCIAL] }
-        - { path: ^/incidenciaCliente/*, roles: [ROLE_ADMIN, ROLE_USER] }
         - { path: ^/comercial/*, roles: ROLE_ADMIN }
         - { path: ^/cliente/*, roles: ROLE_ADMIN }
         - { path: ^/gestion/*, roles: ROLE_ADMIN }
         - { path: ^/maquinas/*, roles: ROLE_ADMIN }
         - { path: ^/busqueda, roles: [ROLE_ADMIN, ROLE_COMERCIAL] }
+        - { path: ^/incidenciaCliente/*, roles: IS_AUTHENTICATED_FULLY }

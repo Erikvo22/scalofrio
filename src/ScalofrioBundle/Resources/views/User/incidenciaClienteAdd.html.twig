@@ -8,34 +8,24 @@
         <div class="row well">
             <div class="col-md-6 col-md-offset-3">
                 <div class="page-header">
-                    <h2><b><span class="glyphicon glyphicon-ok-circle"></span>Nueva incidencia</b></h2>
+                    <h2><b><span class="glyphicon glyphicon-ok-circle"></span>Reporte de incidencia</b></h2>
                 </div>
                 {{ form_start(form) }}
                 {{ form_row(form._token) }}
-                <div class="form-group">
-                    {{ form_label(form.titulo) }}
-                    {{ form_widget(form.titulo, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.titulo) }}</span>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.tipo) }}
-                    {{ form_widget(form.tipo, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.tipo) }}</span>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.prioridad) }}
-                    {{ form_widget(form.prioridad, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.prioridad) }}</span>
-                </div>
                 <div class="form-group">
                     {{ form_label(form.fechaIncidencia) }}
                     {{ form_widget(form.fechaIncidencia, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.fechaIncidencia) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.establecimiento) }}
-                    {{ form_widget(form.establecimiento, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.establecimiento) }}</span>
+                    {{ form_label(form.subestablecimientos) }}
+                    {{ form_widget(form.subestablecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.subestablecimientos) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.gestion) }}
+                    {{ form_widget(form.gestion, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.gestion) }}</span>
                 </div>
                 <div class="form-group">
                     {{ form_label(form.descripcion) }}

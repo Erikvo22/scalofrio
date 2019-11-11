@@ -3,7 +3,6 @@
 namespace ScalofrioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="INCIDENCIAS_CLIENTES")
@@ -11,10 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class IncidenciasCliente
 {
-    public function __construct()
-    {
-        $this->fechaCreacion = new \DateTime();
-    }
 
     /**
      * @ORM\Id
@@ -24,21 +19,17 @@ class IncidenciasCliente
     protected $id;
 
     /**
-     * @Assert\NotBlank()
-     * @ORM\Column(name="TITULO", type="string", length=80)
+     *
+     * @ORM\ManyToOne(targetEntity="Gestion", inversedBy="incidenciasCliente")
+     * @ORM\JoinColumn(name="gestion_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $titulo;
+    protected $gestion;
 
     /**
-     * @ORM\Column(name="TIPO", type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="Subestablecimientos", inversedBy="incidenciasCliente")
+     * @ORM\JoinColumn(name="subestablecimientos_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $tipo;
-
-    /**
-     * @Assert\Choice(choices = {"BAJA", "MEDIA", "ALTA","URGENTE"})
-     * @ORM\Column(name="PRIORIDAD", type="string", length=25)
-     */
-    private $prioridad;
+    protected $subestablecimientos;
 
     /**
      * @ORM\Column(name="FECHA_INCIDENCIA", type="datetime")
@@ -51,18 +42,10 @@ class IncidenciasCliente
     private $descripcion;
 
     /**
-     * @ORM\Column(name="FECHA_CREACION", type="datetime")
-     */
-    protected $fechaCreacion;
-
-    /**
      * @ORM\Column(name="estado", type="integer", length=1)
      */
     private $estado = 0;
-    /**
-     * @ORM\Column(name="establecimiento", type="string", length=80)
-     */
-    private $establecimiento;
+
     /**
      * @ORM\ManyToOne(targetEntity="Usuarios")
      * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
@@ -110,44 +93,22 @@ class IncidenciasCliente
     }
 
     /**
-     * Get the value of tipo
+     * @return \ScalofrioBundle\Entity\Gestion
      */
-    public function getTipo()
+    public function getGestion()
     {
-        return $this->tipo;
+        return $this->gestion;
     }
 
     /**
-     * Set the value of tipo
-     *
-     * @return  self
+     * @param \ScalofrioBundle\Entity\Gestion $gestion
+     * @return IncidenciasCliente
      */
-    public function setTipo($tipo)
+    public function setGestion($gestion)
     {
-        $this->tipo = $tipo;
-
-        return $this;
+        $this->gestion = $gestion;
     }
 
-    /**
-     * Get the value of prioridad
-     */
-    public function getPrioridad()
-    {
-        return $this->prioridad;
-    }
-
-    /**
-     * Set the value of prioridad
-     *
-     * @return  self
-     */
-    public function setPrioridad($prioridad)
-    {
-        $this->prioridad = $prioridad;
-
-        return $this;
-    }
 
     /**
      * Get the value of fechaIncidencia
@@ -169,45 +130,6 @@ class IncidenciasCliente
         return $this;
     }
 
-    /**
-     * Get the value of fechaCreacion
-     */
-    public function getFechaCreacion()
-    {
-        return $this->fechaCreacion;
-    }
-
-    /**
-     * Set the value of fechaCreacion
-     *
-     * @return  self
-     */
-    public function setFechaCreacion($fechaCreacion)
-    {
-        $this->fechaCreacion = $fechaCreacion;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of titulo
-     */
-    public function getTitulo()
-    {
-        return $this->titulo;
-    }
-
-    /**
-     * Set the value of titulo
-     *
-     * @return  self
-     */
-    public function setTitulo($titulo)
-    {
-        $this->titulo = $titulo;
-
-        return $this;
-    }
     /**
      * Get the value of titulo
      */
@@ -249,22 +171,19 @@ class IncidenciasCliente
     }
 
     /**
-     * Get the value of establecimiento
+     * @return \ScalofrioBundle\Entity\Subestablecimientos
      */
-    public function getEstablecimiento()
+    public function getSubestablecimientos()
     {
-        return $this->establecimiento;
+        return $this->subestablecimientos;
     }
 
     /**
-     * Set the value of establecimiento
-     *
-     * @return  self
+     * @param \ScalofrioBundle\Entity\Subestablecimientos $subestablecimientos
+     * @return IncidenciasCliente
      */
-    public function setEstablecimiento($establecimiento)
+    public function setSubestablecimientos($subestablecimientos)
     {
-        $this->establecimiento = $establecimiento;
-
-        return $this;
+        $this->subestablecimientos = $subestablecimientos;
     }
 }
