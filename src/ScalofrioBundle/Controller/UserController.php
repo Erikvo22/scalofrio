@@ -1049,9 +1049,13 @@ class UserController extends Controller
 
         //Añadir nuevo establecimiento
         $establecimientos = new Establecimientos();
-        $form = $this->createEstablecimientosCreateForm($establecimientos);
+        $estab = $this->createEstablecimientosCreateForm($establecimientos);
 
-        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'form' => $form->createView()));
+        //Añadir nuevo Subestablecimiento
+        $subestablecimientos = new Subestablecimientos();
+        $subestab = $this->createSubestablecimientosCreateForm($subestablecimientos);
+
+        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'estab' => $estab->createView(), 'subestab' => $subestab->createView()));
     }
 
     public function busquedaUserAction(Request $request)

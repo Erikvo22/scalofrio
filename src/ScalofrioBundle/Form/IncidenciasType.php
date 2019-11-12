@@ -33,31 +33,47 @@ class IncidenciasType extends AbstractType
                 'ECONOMATO' => 'ECONOMATO', 'SSTT CLIENTE' => 'SSTT CLIENTE')))
             ->add('nombrecliente')
             ->add('firma', FileType::class, array(
-                'required'    => false,
+                'required'    => true,
                 "data_class" => null
             ))
             ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'PENDIENTE'=>'PENDIENTE',
                 'CAMBIO DE MÁQUINA'=>'CAMBIO DE MÁQUINA')))
             ->add('ruta','choice', array('choices' => array(''=>'','GC NORTE'=>'GC NORTE', 'GC SUR'=>'GC SUR',
                 'LANZAROTE'=>'LANZAROTE', 'FUERTEVENTURA'=>'FUERTEVENTURA')))
-            ->add('comercial')
-            ->add('cliente')
+            ->add('comercial', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Comercial',
+                'empty_value' => '',
+                'required'    => true
+            ))
+            ->add('cliente', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Cliente',
+                'empty_value' => '',
+                'required'    => true
+            ))
             ->add('establecimientos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Establecimientos',
-                'empty_value' => '...',
+                'empty_value' => '',
                 'required'    => false
             ))
             ->add('subestablecimientos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Subestablecimientos',
-                'empty_value' => '...',
+                'empty_value' => '',
                 'required'    => false
             ))
-            ->add('gestion')
-            ->add('maquinas')
+            ->add('gestion', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Gestion',
+                'empty_value' => '',
+                'required'    => true
+            ))
+            ->add('maquinas', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Maquinas',
+                'empty_value' => '',
+                'required'    => true
+            ))
             ->add('repuestos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Repuestos',
                 'multiple' => true,
-                'empty_value' => '...',
+                'empty_value' => '',
                 'required'    => false
             ))
             ->add('email', 'email', array(

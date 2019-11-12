@@ -114,40 +114,37 @@
                 format: 'yyyy-mm-dd'
             });
 
+            //El campo FIRMA no es obligatorio
+            $('#incidencias_firma').removeAttr("required");
+
             //Control selects cliente>establecimiento
             var select = document.getElementById('incidencias_cliente');
-            CambioCliente(select.value);
             $("#incidencias_establecimientos").prop("disabled", true);
             select.addEventListener('change',
                 function () {
                     var selectedOption = this.options[select.selectedIndex];
                     CambioCliente(selectedOption.value);
-                    $("#incidencias_establecimientos").prop("disabled", true);
                     $("#incidencias_establecimientos").empty();
                 });
 
             //Control selects establecimiento>subestablecimiento
             var estab = document.getElementById('incidencias_establecimientos');
-            CambioEstablecimiento(estab.value);
             $("#incidencias_subestablecimientos").prop("disabled", true);
             estab.addEventListener('change',
                 function () {
                     var selectedOption = this.options[estab.selectedIndex];
                     CambioEstablecimiento(selectedOption.value);
-                    $("#incidencias_subestablecimientos").prop("disabled", true);
                     $("#incidencias_subestablecimientos").empty();
                 });
 
 
             //Control selects maquinas>repuestos
             var maquina  = document.getElementById('incidencias_maquinas');
-            CambioMaquina(maquina.value);
             $("#incidencias_repuestos").prop("disabled", true);
             maquina.addEventListener('change',
                 function () {
                     var selectedOption = this.options[maquina.selectedIndex];
                     CambioMaquina(selectedOption.value);
-                    $("#incidencias_repuestos").prop("disabled", true);
                     $("#incidencias_repuestos").empty();
                 });
         });
