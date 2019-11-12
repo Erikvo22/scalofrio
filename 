@@ -1,0 +1,326 @@
+[1mdiff --git a/src/ScalofrioBundle/Controller/UserController.php b/src/ScalofrioBundle/Controller/UserController.php[m
+[1mindex 86a6ad5..7f86e57 100644[m
+[1m--- a/src/ScalofrioBundle/Controller/UserController.php[m
+[1m+++ b/src/ScalofrioBundle/Controller/UserController.php[m
+[36m@@ -14,11 +14,11 @@[m [muse ScalofrioBundle\Entity\Usuarios;[m
+ use ScalofrioBundle\Form\ClienteType;[m
+ use ScalofrioBundle\Form\ComercialType;[m
+ use ScalofrioBundle\Form\EstablecimientosType;[m
+[31m-use ScalofrioBundle\Form\SubestablecimientosType;[m
+ use ScalofrioBundle\Form\GestionType;[m
+ use ScalofrioBundle\Form\IncidenciasType;[m
+ use ScalofrioBundle\Form\MaquinasType;[m
+ use ScalofrioBundle\Form\RepuestosType;[m
+[32m+[m[32muse ScalofrioBundle\Form\SubestablecimientosType;[m
+ use ScalofrioBundle\Form\UsuariosType;[m
+ use Symfony\Bundle\FrameworkBundle\Controller\Controller;[m
+ use Symfony\Component\HttpFoundation\Request;[m
+[36m@@ -35,7 +35,7 @@[m [mclass UserController extends Controller[m
+         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {[m
+             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";[m
+         } else {[m
+[31m-            $dql = "SELECT u FROM [m
+[32m+[m[32m            $dql = "SELECT u FROM[m
+                 ScalofrioBundle:IncidenciasCliente u[m
+                 WHERE u.usuario = '" . $usuario->getId() . "'[m
+                 ORDER BY u.id DESC";[m
+[36m@@ -63,7 +63,7 @@[m [mclass UserController extends Controller[m
+         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {[m
+             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";[m
+         } else {[m
+[31m-            $dql = "SELECT u FROM [m
+[32m+[m[32m            $dql = "SELECT u FROM[m
+                 ScalofrioBundle:IncidenciasCliente u[m
+                 WHERE u.usuario = '" . $usuario->getId() . "'[m
+                 ORDER BY u.id DESC";[m
+[36m@@ -115,37 +115,53 @@[m [mclass UserController extends Controller[m
+ [m
+             /* TEXTO PARA EL ENVÍO DE EMAIL*/[m
+             //Controlando si los campos son nulos.[m
+[31m-            $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';[m
+[31m-[m
+[31m-            if($incidencia->getEstablecimientos() != null)[m
+[32m+[m[32m            $establecimiento = '';[m
+[32m+[m[32m            $comercial = '';[m
+[32m+[m[32m            $cliente = '';[m
+[32m+[m[32m            $gestion = '';[m
+[32m+[m[32m            $maquinas = '';[m
+[32m+[m[32m            $repuestos = '';[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getEstablecimientos() != null) {[m
+                 $establecimiento = $incidencia->getEstablecimientos()->getNombre();[m
+[31m-            if($incidencia->getComercial() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getComercial() != null) {[m
+                 $comercial = $incidencia->getComercial()->getNombre();[m
+[31m-            if($incidencia->getCliente() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getCliente() != null) {[m
+                 $cliente = $incidencia->getCliente()->getNombre();[m
+[31m-            if($incidencia->getGestion() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getGestion() != null) {[m
+                 $gestion = $incidencia->getGestion()->getNombre();[m
+[31m-            if($incidencia->getMaquinas() != null) {[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getMaquinas() != null) {[m
+                 $maquinas = $incidencia->getMaquinas()->getNombre();[m
+             }[m
+ [m
+             $texto = 'Resumen de la incidencia: ';[m
+             $texto .= '<br> Cliente: ' . $cliente;[m
+[31m-            if($incidencia->getEstablecimientos() != null) $texto .= ' > ' . $establecimiento;[m
+[32m+[m[32m            if ($incidencia->getEstablecimientos() != null) {[m
+[32m+[m[32m                $texto .= ' > ' . $establecimiento;[m
+[32m+[m[32m            }[m
+[32m+[m
+             $texto .= '<br> Comercial: ' . $comercial;[m
+             $texto .= '<br> Nombre de la persona que nos atendió: ' . $incidencia->getNombrecliente();[m
+             $texto .= '<br> Cargo: ' . $incidencia->getCargocliente();[m
+             $texto .= '<br> Gestión realizada: ' . $gestion;[m
+[31m-            $texto .= '<br> Duración (minutos): ' .$incidencia->getTiempo();[m
+[32m+[m[32m            $texto .= '<br> Duración (minutos): ' . $incidencia->getTiempo();[m
+             $texto .= '<br> Tipo de máquina: ' . $maquinas;[m
+[31m-            if($incidencia->getRepuestos() != null){[m
+[32m+[m[32m            if ($incidencia->getRepuestos() != null) {[m
+                 $texto .= '<br> Repuestos: ';[m
+                 $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy([m
+                     array([m
+[31m-                        'maquinas' => $incidencia->getMaquinas()->getId()[m
+[32m+[m[32m                        'maquinas' => $incidencia->getMaquinas()->getId(),[m
+                     )[m
+                 );[m
+[31m-                foreach ($repuestos as $r){[m
+[32m+[m[32m                foreach ($repuestos as $r) {[m
+                     $texto .= $r->getNombre() . ' ';[m
+                 }[m
+             }[m
+[36m@@ -153,16 +169,19 @@[m [mclass UserController extends Controller[m
+             /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */[m
+             $emailCliente = "";[m
+             $emailPlus = "";[m
+[31m-            if($incidencia->getCliente()->getEmail() != null)[m
+[32m+[m[32m            if ($incidencia->getCliente()->getEmail() != null) {[m
+                 $emailCliente = $incidencia->getCliente()->getEmail();[m
+[31m-            if($incidencia->getEmail() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getEmail() != null) {[m
+                 $emailPlus = $incidencia->getEmail();[m
+[32m+[m[32m            }[m
+ [m
+             try {[m
+                 $message = \Swift_Message::newInstance()[m
+                     ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))[m
+[31m-                    ->setFrom('erikvieraol22@gmail.com')[m
+[31m-                    ->setTo('erik.viera@iecisa.com', $emailCliente, $emailPlus)[m
+[32m+[m[32m                    ->setFrom('lcs.arjones@gmail.com')[m
+[32m+[m[32m                    ->setTo('lcs.arjones@gmail.com', $emailCliente, $emailPlus)[m
+                     ->setBody($texto)[m
+                     ->attach(\Swift_Attachment::fromPath($incidencia->getFirma()));[m
+ [m
+[36m@@ -234,7 +253,7 @@[m [mclass UserController extends Controller[m
+         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);[m
+         $repuestosIncidencia = $em->getRepository('ScalofrioBundle:Incidencias_repuestos')->findBy([m
+             array([m
+[31m-                'incidenciasId' => $id[m
+[32m+[m[32m                'incidenciasId' => $id,[m
+             )[m
+         );[m
+ [m
+[36m@@ -312,22 +331,35 @@[m [mclass UserController extends Controller[m
+ [m
+         foreach ($incidencias as $incidencia) {[m
+             //Controlando si los campos son nulos.[m
+[31m-            $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';[m
+[31m-[m
+[31m-            if($incidencia->getEstablecimientos() != null)[m
+[32m+[m[32m            $establecimiento = '';[m
+[32m+[m[32m            $comercial = '';[m
+[32m+[m[32m            $cliente = '';[m
+[32m+[m[32m            $gestion = '';[m
+[32m+[m[32m            $maquinas = '';[m
+[32m+[m[32m            $repuestos = '';[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getEstablecimientos() != null) {[m
+                 $establecimiento = $incidencia->getEstablecimientos()->getNombre();[m
+[31m-            if($incidencia->getComercial() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getComercial() != null) {[m
+                 $comercial = $incidencia->getComercial()->getNombre();[m
+[31m-            if($incidencia->getCliente() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getCliente() != null) {[m
+                 $cliente = $incidencia->getCliente()->getNombre();[m
+[31m-            if($incidencia->getGestion() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getGestion() != null) {[m
+                 $gestion = $incidencia->getGestion()->getNombre();[m
+[31m-            if($incidencia->getMaquinas() != null) {[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($incidencia->getMaquinas() != null) {[m
+                 $maquinas = $incidencia->getMaquinas()->getNombre();[m
+                 //Las incidencias pueden tener mas de un repuesto[m
+                 $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy([m
+                     array([m
+[31m-                        'maquinas' => $incidencia->getMaquinas()->getId()[m
+[32m+[m[32m                        'maquinas' => $incidencia->getMaquinas()->getId(),[m
+                     )[m
+                 );[m
+             }[m
+[36m@@ -345,10 +377,10 @@[m [mclass UserController extends Controller[m
+                 $gestion,[m
+                 $incidencia->getResultado(),[m
+                 $incidencia->getTiempo(),[m
+[31m-                $maquinas[m
+[32m+[m[32m                $maquinas,[m
+             ]);[m
+ [m
+[31m-            foreach ($repuestos as $r){[m
+[32m+[m[32m            foreach ($repuestos as $r) {[m
+                 $csv->insertOne([[m
+                     $incidencia->getId(),[m
+                     $r->getNombre(),[m
+[36m@@ -359,7 +391,6 @@[m [mclass UserController extends Controller[m
+         die;[m
+     }[m
+ [m
+[31m-[m
+     public function generateUserCsvAction()[m
+     {[m
+         $em = $this->getDoctrine()->getManager();[m
+[36m@@ -377,11 +408,15 @@[m [mclass UserController extends Controller[m
+ [m
+         foreach ($usuarios as $user) {[m
+             //Controlando si los campos son nulos.[m
+[31m-            $establecimiento = ''; $cliente = '';[m
+[31m-            if($user->getEstablecimientos() != null)[m
+[32m+[m[32m            $establecimiento = '';[m
+[32m+[m[32m            $cliente = '';[m
+[32m+[m[32m            if ($user->getEstablecimientos() != null) {[m
+                 $establecimiento = $user->getEstablecimientos()->getNombre();[m
+[31m-            if($user->getCliente() != null)[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            if ($user->getCliente() != null) {[m
+                 $cliente = $user->getCliente()->getNombre();[m
+[32m+[m[32m            }[m
+ [m
+             //Se escribe en el CSV.[m
+             $csv->insertOne([[m
+[36m@@ -497,20 +532,16 @@[m [mclass UserController extends Controller[m
+ [m
+         if ($form->isSubmitted() && $form->isValid()) {[m
+             $password = $form->get('password')->getData();[m
+[31m-            if(!empty($password))[m
+[31m-            {[m
+[32m+[m[32m            if (!empty($password)) {[m
+                 $encoder = $this->container->get('security.password_encoder');[m
+                 $encoded = $encoder->encodePassword($user, $password);[m
+                 $user->setPassword($encoded);[m
+[31m-            }[m
+[31m-            else[m
+[31m-            {[m
+[32m+[m[32m            } else {[m
+                 $recoverPass = $this->recoverPass($id);[m
+                 $user->setPassword($recoverPass[0]['password']);[m
+             }[m
+ [m
+[31m-            if($form->get('role')->getData() == 'ROLE_ADMIN')[m
+[31m-            {[m
+[32m+[m[32m            if ($form->get('role')->getData() == 'ROLE_ADMIN') {[m
+                 $user->setIsActive(1);[m
+             }[m
+             $em->flush();[m
+[36m@@ -986,10 +1017,10 @@[m [mclass UserController extends Controller[m
+ [m
+         );[m
+ [m
+[31m-        if(count($pagination->getItems()) == 0){[m
+[32m+[m[32m        if (count($pagination->getItems()) == 0) {[m
+             $dql = "SELECT i FROM ScalofrioBundle:Incidencias i[m
+[31m-                    JOIN i.cliente c             [m
+[31m-                    WHERE c.nombre LIKE '%" . $busqueda . "%'                   [m
+[32m+[m[32m                    JOIN i.cliente c[m
+[32m+[m[32m                    WHERE c.nombre LIKE '%" . $busqueda . "%'[m
+                     ORDER BY i.id";[m
+             $prod = $em->createQuery($dql);[m
+ [m
+[36m@@ -1059,7 +1090,8 @@[m [mclass UserController extends Controller[m
+     }[m
+ [m
+     //FUNCIONES PARA OBTENER ELEMENTOS EN SELECTS DEPENDIENTES[m
+[31m-    public function obtenerEstablecimientosAction($idcliente){[m
+[32m+[m[32m    public function obtenerEstablecimientosAction($idcliente)[m
+[32m+[m[32m    {[m
+ [m
+         $em = $this->getDoctrine()->getManager();[m
+ [m
+[36m@@ -1069,13 +1101,14 @@[m [mclass UserController extends Controller[m
+         $estab = $query->getResult();[m
+ [m
+         $select = '<option></option>';[m
+[31m-        foreach ($estab as $est){[m
+[31m-            $select .= '<option value="'.$est->getId().'">'.$est->getNombre().'</option>';[m
+[32m+[m[32m        foreach ($estab as $est) {[m
+[32m+[m[32m            $select .= '<option value="' . $est->getId() . '">' . $est->getNombre() . '</option>';[m
+         }[m
+         return new Response($select);[m
+     }[m
+ [m
+[31m-    public function obtenerSubestablecimientosAction($idestablecimiento){[m
+[32m+[m[32m    public function obtenerSubestablecimientosAction($idestablecimiento)[m
+[32m+[m[32m    {[m
+ [m
+         $em = $this->getDoctrine()->getManager();[m
+ [m
+[36m@@ -1085,24 +1118,25 @@[m [mclass UserController extends Controller[m
+         $subestab = $query->getResult();[m
+ [m
+         $select = '<option></option>';[m
+[31m-        foreach ($subestab as $s){[m
+[31m-            $select .= '<option value="'.$s->getId().'">'.$s->getNombre().'</option>';[m
+[32m+[m[32m        foreach ($subestab as $s) {[m
+[32m+[m[32m            $select .= '<option value="' . $s->getId() . '">' . $s->getNombre() . '</option>';[m
+         }[m
+         return new Response($select);[m
+     }[m
+ [m
+[31m-    public function obtenerRepuestosAction($idmaquina){[m
+[32m+[m[32m    public function obtenerRepuestosAction($idmaquina)[m
+[32m+[m[32m    {[m
+ [m
+         $em = $this->getDoctrine()->getManager();[m
+         $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy([m
+             array([m
+[31m-                'maquinas' => $idmaquina[m
+[32m+[m[32m                'maquinas' => $idmaquina,[m
+             )[m
+         );[m
+ [m
+         $option = '';[m
+[31m-        foreach ($repuestos as $r){[m
+[31m-            $option .= '<option value="'.$r->getId().'">'.$r->getNombre().'</option>';[m
+[32m+[m[32m        foreach ($repuestos as $r) {[m
+[32m+[m[32m            $option .= '<option value="' . $r->getId() . '">' . $r->getNombre() . '</option>';[m
+         }[m
+         return new Response($option);[m
+     }[m
+[1mdiff --git a/src/ScalofrioBundle/Resources/views/Email/registrarIncidencia.html.twig b/src/ScalofrioBundle/Resources/views/Email/registrarIncidencia.html.twig[m
+[1mindex ed34603..22f7925 100644[m
+[1m--- a/src/ScalofrioBundle/Resources/views/Email/registrarIncidencia.html.twig[m
+[1m+++ b/src/ScalofrioBundle/Resources/views/Email/registrarIncidencia.html.twig[m
+[36m@@ -1,4 +1,5 @@[m
+ <h3><b>Nueva incidencia</b></h3>[m
+[32m+[m[32m{{dump(data)}}[m
+ <p>El cliente {{ data['userName'] }} ha generado la siguiente incidencia:</p>[m
+ <ul>[m
+     <li>Fecha Incidencia: {{data['data'].fechaIncidencia | date("d/m/Y")}}</li>[m

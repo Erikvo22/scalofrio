@@ -1,0 +1,26 @@
+<h3><b>Resumen de la incidencia</b></h3>
+<ul>
+    <li>Cliente: {{datos['cliente']}}</li>
+    {% if datos['establecimientos'] is defined  %}
+        <li>Establecimiento: {{ datos['establecimientos'] }} </li>
+    {% endif %}
+    {% if datos['comercial'] is defined %}
+        <li>Comercial: {{datos['comercial']}} </li>
+    {% endif %}
+    <li>Nombre de la persona que nos atendió: {{datos['incidencia'].getNombrecliente}}</li>
+    <li>Cargo: {{datos['incidencia'].getCargocliente}}</li>
+    {% if datos['gestion'] is defined %}
+        <li>Gestión Realizada: {{datos['gestion']}} </li>
+    {% endif %}
+    <li>Duracion: {{datos['incidencia'].getTiempo}}</li>
+    {% if datos['maquinas'] is defined %}
+        <li>Tipo de máquinas: {{datos['maquinas']}} </li>
+    {% endif %}
+    {% if datos['repuestos'] is defined %}
+    <ul>
+        {% for repuesto in datos['repuestos'] %}
+            <li>{{repuesto.getNombre}}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</ul>
