@@ -14,11 +14,11 @@ use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\ClienteType;
 use ScalofrioBundle\Form\ComercialType;
 use ScalofrioBundle\Form\EstablecimientosType;
-use ScalofrioBundle\Form\SubestablecimientosType;
 use ScalofrioBundle\Form\GestionType;
 use ScalofrioBundle\Form\IncidenciasType;
 use ScalofrioBundle\Form\MaquinasType;
 use ScalofrioBundle\Form\RepuestosType;
+use ScalofrioBundle\Form\SubestablecimientosType;
 use ScalofrioBundle\Form\UsuariosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class UserController extends Controller
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
-            $dql = "SELECT u FROM 
+            $dql = "SELECT u FROM
                 ScalofrioBundle:IncidenciasCliente u
                 WHERE u.usuario = '" . $usuario->getId() . "'
                 ORDER BY u.id DESC";
@@ -63,7 +63,7 @@ class UserController extends Controller
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
         } else {
-            $dql = "SELECT u FROM 
+            $dql = "SELECT u FROM
                 ScalofrioBundle:IncidenciasCliente u
                 WHERE u.usuario = '" . $usuario->getId() . "'
                 ORDER BY u.id DESC";
@@ -115,55 +115,63 @@ class UserController extends Controller
 
             /* TEXTO PARA EL ENVÍO DE EMAIL*/
             //Controlando si los campos son nulos.
-            $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
-
-            if($incidencia->getEstablecimientos() != null)
-                $establecimiento = $incidencia->getEstablecimientos()->getNombre();
-            if($incidencia->getComercial() != null)
-                $comercial = $incidencia->getComercial()->getNombre();
-            if($incidencia->getCliente() != null)
-                $cliente = $incidencia->getCliente()->getNombre();
-            if($incidencia->getGestion() != null)
-                $gestion = $incidencia->getGestion()->getNombre();
-            if($incidencia->getMaquinas() != null) {
-                $maquinas = $incidencia->getMaquinas()->getNombre();
+            // $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
+            $datos = array();
+            if ($incidencia->getEstablecimientos() != null) {
+                $datos["establecimientos"] = $incidencia->getEstablecimientos()->getNombre();
             }
 
-            $texto = 'Resumen de la incidencia: ';
-            $texto .= '<br> Cliente: ' . $cliente;
-            if($incidencia->getEstablecimientos() != null) $texto .= ' > ' . $establecimiento;
-            $texto .= '<br> Comercial: ' . $comercial;
-            $texto .= '<br> Nombre de la persona que nos atendió: ' . $incidencia->getNombrecliente();
-            $texto .= '<br> Cargo: ' . $incidencia->getCargocliente();
-            $texto .= '<br> Gestión realizada: ' . $gestion;
-            $texto .= '<br> Duración (minutos): ' .$incidencia->getTiempo();
-            $texto .= '<br> Tipo de máquina: ' . $maquinas;
-            if($incidencia->getRepuestos() != null){
-                $texto .= '<br> Repuestos: ';
+            if ($incidencia->getComercial() != null) {
+                $datos["comerial"] = $incidencia->getComercial()->getNombre();
+            }
+
+            if ($incidencia->getCliente() != null) {
+                $datos["cliente"] = $incidencia->getCliente()->getNombre();
+            }
+
+            if ($incidencia->getGestion() != null) {
+                $datos["gestion"] = $incidencia->getGestion()->getNombre();
+            }
+
+            if ($incidencia->getMaquinas() != null) {
+                $datos["maquinas"] = $incidencia->getMaquinas()->getNombre();
+            }
+
+            if ($incidencia->getRepuestos() != null) {
                 $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
                     array(
-                        'maquinas' => $incidencia->getMaquinas()->getId()
+                        'maquinas' => $incidencia->getMaquinas(),
                     )
                 );
-                foreach ($repuestos as $r){
-                    $texto .= $r->getNombre() . ' ';
-                }
+                $datos["repuestos"] = $repuestos;
             }
-
+            $datos["incidencia"] = $incidencia;
+    
             /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */
             $emailCliente = "";
             $emailPlus = "";
-            if($incidencia->getCliente()->getEmail() != null)
+            if ($incidencia->getCliente()->getEmail() != null) {
                 $emailCliente = $incidencia->getCliente()->getEmail();
-            if($incidencia->getEmail() != null)
+            }
+
+            if ($incidencia->getEmail() != null) {
                 $emailPlus = $incidencia->getEmail();
+            }
 
             try {
                 $message = \Swift_Message::newInstance()
                     ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
-                    ->setFrom('erikvieraol22@gmail.com')
-                    ->setTo('erik.viera@iecisa.com', $emailCliente, $emailPlus)
-                    ->setBody($texto)
+                    ->setFrom('lcs.arjones@gmail.com')
+                    ->setTo('lcs.arjones@gmail.com', $emailCliente, $emailPlus)
+                    ->setBody(
+                        $this->renderView(
+                            'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',
+                            array(
+                                "datos" => $datos
+                            )
+                        ),
+                        'text/html'
+                    )
                     ->attach(\Swift_Attachment::fromPath($incidencia->getFirma()));
 
                 $this->get('mailer')->send($message);
@@ -234,7 +242,7 @@ class UserController extends Controller
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
         $repuestosIncidencia = $em->getRepository('ScalofrioBundle:Incidencias_repuestos')->findBy(
             array(
-                'incidenciasId' => $id
+                'incidenciasId' => $id,
             )
         );
 
@@ -312,22 +320,35 @@ class UserController extends Controller
 
         foreach ($incidencias as $incidencia) {
             //Controlando si los campos son nulos.
-            $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
+            $establecimiento = '';
+            $comercial = '';
+            $cliente = '';
+            $gestion = '';
+            $maquinas = '';
+            $repuestos = '';
 
-            if($incidencia->getEstablecimientos() != null)
+            if ($incidencia->getEstablecimientos() != null) {
                 $establecimiento = $incidencia->getEstablecimientos()->getNombre();
-            if($incidencia->getComercial() != null)
+            }
+
+            if ($incidencia->getComercial() != null) {
                 $comercial = $incidencia->getComercial()->getNombre();
-            if($incidencia->getCliente() != null)
+            }
+
+            if ($incidencia->getCliente() != null) {
                 $cliente = $incidencia->getCliente()->getNombre();
-            if($incidencia->getGestion() != null)
+            }
+
+            if ($incidencia->getGestion() != null) {
                 $gestion = $incidencia->getGestion()->getNombre();
-            if($incidencia->getMaquinas() != null) {
+            }
+
+            if ($incidencia->getMaquinas() != null) {
                 $maquinas = $incidencia->getMaquinas()->getNombre();
                 //Las incidencias pueden tener mas de un repuesto
                 $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
                     array(
-                        'maquinas' => $incidencia->getMaquinas()->getId()
+                        'maquinas' => $incidencia->getMaquinas()->getId(),
                     )
                 );
             }
@@ -345,10 +366,10 @@ class UserController extends Controller
                 $gestion,
                 $incidencia->getResultado(),
                 $incidencia->getTiempo(),
-                $maquinas
+                $maquinas,
             ]);
 
-            foreach ($repuestos as $r){
+            foreach ($repuestos as $r) {
                 $csv->insertOne([
                     $incidencia->getId(),
                     $r->getNombre(),
@@ -358,7 +379,6 @@ class UserController extends Controller
         $csv->output('incidencias.csv');
         die;
     }
-
 
     public function generateUserCsvAction()
     {
@@ -377,11 +397,15 @@ class UserController extends Controller
 
         foreach ($usuarios as $user) {
             //Controlando si los campos son nulos.
-            $establecimiento = ''; $cliente = '';
-            if($user->getEstablecimientos() != null)
+            $establecimiento = '';
+            $cliente = '';
+            if ($user->getEstablecimientos() != null) {
                 $establecimiento = $user->getEstablecimientos()->getNombre();
-            if($user->getCliente() != null)
+            }
+
+            if ($user->getCliente() != null) {
                 $cliente = $user->getCliente()->getNombre();
+            }
 
             //Se escribe en el CSV.
             $csv->insertOne([
@@ -497,20 +521,16 @@ class UserController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $form->get('password')->getData();
-            if(!empty($password))
-            {
+            if (!empty($password)) {
                 $encoder = $this->container->get('security.password_encoder');
                 $encoded = $encoder->encodePassword($user, $password);
                 $user->setPassword($encoded);
-            }
-            else
-            {
+            } else {
                 $recoverPass = $this->recoverPass($id);
                 $user->setPassword($recoverPass[0]['password']);
             }
 
-            if($form->get('role')->getData() == 'ROLE_ADMIN')
-            {
+            if ($form->get('role')->getData() == 'ROLE_ADMIN') {
                 $user->setIsActive(1);
             }
             $em->flush();
@@ -986,10 +1006,10 @@ class UserController extends Controller
 
         );
 
-        if(count($pagination->getItems()) == 0){
+        if (count($pagination->getItems()) == 0) {
             $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
-                    JOIN i.cliente c             
-                    WHERE c.nombre LIKE '%" . $busqueda . "%'                   
+                    JOIN i.cliente c
+                    WHERE c.nombre LIKE '%" . $busqueda . "%'
                     ORDER BY i.id";
             $prod = $em->createQuery($dql);
 
@@ -1059,7 +1079,8 @@ class UserController extends Controller
     }
 
     //FUNCIONES PARA OBTENER ELEMENTOS EN SELECTS DEPENDIENTES
-    public function obtenerEstablecimientosAction($idcliente){
+    public function obtenerEstablecimientosAction($idcliente)
+    {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1069,13 +1090,14 @@ class UserController extends Controller
         $estab = $query->getResult();
 
         $select = '<option></option>';
-        foreach ($estab as $est){
-            $select .= '<option value="'.$est->getId().'">'.$est->getNombre().'</option>';
+        foreach ($estab as $est) {
+            $select .= '<option value="' . $est->getId() . '">' . $est->getNombre() . '</option>';
         }
         return new Response($select);
     }
 
-    public function obtenerSubestablecimientosAction($idestablecimiento){
+    public function obtenerSubestablecimientosAction($idestablecimiento)
+    {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1085,24 +1107,25 @@ class UserController extends Controller
         $subestab = $query->getResult();
 
         $select = '<option></option>';
-        foreach ($subestab as $s){
-            $select .= '<option value="'.$s->getId().'">'.$s->getNombre().'</option>';
+        foreach ($subestab as $s) {
+            $select .= '<option value="' . $s->getId() . '">' . $s->getNombre() . '</option>';
         }
         return new Response($select);
     }
 
-    public function obtenerRepuestosAction($idmaquina){
+    public function obtenerRepuestosAction($idmaquina)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
             array(
-                'maquinas' => $idmaquina
+                'maquinas' => $idmaquina,
             )
         );
 
         $option = '';
-        foreach ($repuestos as $r){
-            $option .= '<option value="'.$r->getId().'">'.$r->getNombre().'</option>';
+        foreach ($repuestos as $r) {
+            $option .= '<option value="' . $r->getId() . '">' . $r->getNombre() . '</option>';
         }
         return new Response($option);
     }
