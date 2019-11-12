@@ -47,12 +47,25 @@ security:
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/$, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/index, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/index/export, roles: ROLE_ADMIN }
-        - { path: ^/user/add, roles: ROLE_ADMIN }
-        - { path: ^/incidencia/add, roles: ROLE_ADMIN }
-        - { path: ^/incidenciaCliente/*, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/incidencia/edit, roles: ROLE_ADMIN }
-        - { path: ^/incidencia/view, roles: ROLE_ADMIN }
-        - { path: ^/incidencia/delete, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_ADMIN }
+        - { path: ^/user/*, roles: ROLE_ADMIN }
+        - { path: ^/incidencia/*, roles: [ROLE_ADMIN, ROLE_COMERCIAL] }
+        - { path: ^/incidenciaCliente/nueva, roles: ROLE_USER }
+        - { path: ^/incidenciaCliente/create, roles: ROLE_USER }
+        - { path: ^/incidenciaCliente/mostrar/*, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: ^/incidenciaCliente/historial/*, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: ^/incidenciaCliente/actualizarEstado/*, roles: ROLE_ADMIN }
+        - { path: ^/avisos/export, roles: ROLE_ADMIN }
+        - { path: ^/busqueda, roles: [ROLE_ADMIN, ROLE_COMERCIAL] }
+        - { path: ^/busquedaCliente, roles: ROLE_ADMIN }
+        - { path: ^/busquedaUsuario, roles: ROLE_ADMIN }
+        - { path: ^/comercial/*, roles: ROLE_ADMIN }
+        - { path: ^/cliente/*, roles: ROLE_ADMIN }
+        - { path: ^/establecimiento/*, roles: ROLE_ADMIN }
+        - { path: ^/subestablecimiento/*, roles: ROLE_ADMIN }
+        - { path: ^/gestion/*, roles: ROLE_ADMIN }
+        - { path: ^/maquinas/*, roles: ROLE_ADMIN }
+        - { path: ^/repuestos/*, roles: ROLE_ADMIN }

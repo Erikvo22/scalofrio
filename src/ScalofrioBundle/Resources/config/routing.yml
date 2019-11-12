@@ -2,6 +2,10 @@ scalofrio_index:
     path:     /index
     defaults: { _controller: ScalofrioBundle:User:index }
 
+scalofrio_homepage:
+    path: /
+    defaults: {_controller: ScalofrioBundle:User:home}
+
 ############# APARTADO DE INCIDENCIAS ################
 
 scalofrio_incidencia_add:
@@ -245,10 +249,6 @@ scalofrio_maquinas_redirect_add:
 
 
 ############# AUTENTIFICACIÓN ################
-
-scalofrio_homepage:
-    path: /
-    defaults: {_controller: ScalofrioBundle:User:home}
 
 scalofrio_login:
     path: /login
