@@ -5,7 +5,9 @@
 
     <div class = "container well">
         <div class="col-md-9">
-            <h2>{{ incidencia.cliente.nombre }} > {{ incidencia.establecimiento }}</h2>
+            <h2>{{ incidencia.cliente.nombre }}</h2>
+            <h2>{{ incidencia.establecimientos }}</h2>
+            <h4>{{ incidencia.subestablecimientos }}</h4>
             <br>
             <dl>
                 <dt>Fecha</dt>
@@ -22,16 +24,9 @@
                 </dd>
                 <br>
 
-                <dt>Establecimiento</dt>
-                <dd>
-                    {{ incidencia.establecimiento }}
-                    &nbsp;
-                </dd>
-                <br>
-
                 <dt>Ruta</dt>
                 <dd>
-                    {{ incidencia.ruta.nombre }}
+                    {{ incidencia.ruta }}
                     &nbsp;
                 </dd>
                 <br>
@@ -70,12 +65,28 @@
                 </dd>
                 <br>
 
-                <dt>Descripción de la incidencia</dt>
+                <dt>Máquina</dt>
                 <dd>
-                    {{ incidencia.repuestos }}
+                    {{ incidencia.maquinas.nombre }}
                     &nbsp;
                 </dd>
+                <br>
 
+                <dt>Repuestos</dt>
+                <dd>
+                    {% for i in repuestos|keys %}
+                        {{ repuestos[i] }} <br>
+                    {% endfor %}
+                </dd>
+                <br>
+
+
+                <dt>Direcciones de email: </dt>
+                <dd>
+                    {{ incidencia.cliente.email }}
+                    {{ incidencia.email }}
+                </dd>
+                <br>
 
             </dl>
         </div>
@@ -93,5 +104,4 @@
         </div>
     </div>
 
-    {% include 'footer.html.twig' %}
 {% endblock %}

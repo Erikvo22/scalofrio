@@ -1,0 +1,8 @@
+<h3><b>Nueva incidencia</b></h3>
+<p>El cliente {{ data['userName'] }} ha generado la siguiente incidencia:</p>
+<ul>
+    <li>Fecha Incidencia: {{data['data'].fechaIncidencia | date("d/m/Y")}}</li>
+    <li>Subestablecimiento: {{data['data'].subestablecimientos}}</li>
+    <li>Tipo de gestión: {{data['data'].gestion}}</li>
+    <li>Descripción: {{data['data'].descripcion}}</li>
+</ul>

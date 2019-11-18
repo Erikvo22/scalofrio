@@ -35,9 +35,14 @@
                     <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.establecimiento) }}
-                    {{ form_widget(form.establecimiento, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.establecimiento) }}</span>
+                    {{ form_label(form.establecimientos) }}
+                    {{ form_widget(form.establecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.subestablecimientos) }}
+                    {{ form_widget(form.subestablecimientos, { 'attr' : {'class' : 'form-control'} }) }}
+                    <span class = "text-danger">{{ form_errors(form.subestablecimientos) }}</span>
                 </div>
                 <div class="form-group">
                     {{ form_label(form.ruta) }}
@@ -45,12 +50,12 @@
                     <span class = "text-danger">{{ form_errors(form.ruta) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.nombrecliente) }}
+                    <label>Nombre del cliente</label>
                     {{ form_widget(form.nombrecliente, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.nombrecliente) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.cargocliente) }}
+                    <label>Cargo del cliente</label>
                     {{ form_widget(form.cargocliente, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.cargocliente) }}</span>
                 </div>
@@ -70,14 +75,25 @@
                     <span class = "text-danger">{{ form_errors(form.tiempo) }}</span>
                 </div>
                 <div class="form-group">
+                    {{ form_label(form.maquinas) }}
+                    {{ form_widget(form.maquinas, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.maquinas) }}</span>
+                </div>
+                <div class="form-group">
                     {{ form_label(form.repuestos) }}
                     {{ form_widget(form.repuestos, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.repuestos) }}</span>
                 </div>
+
+                {#La firma no es necesaria en la edición#}
                 <div class="form-group">
-                    {{ form_label(form.firma) }}
-                    {{ form_widget(form.firma, { 'attr' : {'class' : 'form-control'}}) }}
+                    {{ form_widget(form.firma, { 'attr' : {'class' : 'invisible'}}) }}
                     <span class = "text-danger">{{ form_errors(form.firma) }}</span>
+                </div>
+                {#El Email no es necesario en la edición#}
+                <div class="form-group">
+                    {{ form_widget(form.email, { 'attr' : {'class' : 'invisible'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.email) }}</span>
                 </div>
 
                 <p>
@@ -89,15 +105,77 @@
         </div>
     </div>
 
-    {% include 'footer.html.twig' %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script>
-        jQuery(document).ready(function () {
+        $(document).ready(function () {
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
             });
+
+            //El campo FIRMA no es obligatorio
+            $('#incidencias_firma').removeAttr("required");
+
+            //Control selects cliente>establecimiento
+            var select = document.getElementById('incidencias_cliente');
+            $("#incidencias_establecimientos").prop("disabled", true);
+            select.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[select.selectedIndex];
+                    CambioCliente(selectedOption.value);
+                    $("#incidencias_establecimientos").empty();
+                });
+
+            //Control selects establecimiento>subestablecimiento
+            var estab = document.getElementById('incidencias_establecimientos');
+            $("#incidencias_subestablecimientos").prop("disabled", true);
+            estab.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[estab.selectedIndex];
+                    CambioEstablecimiento(selectedOption.value);
+                    $("#incidencias_subestablecimientos").empty();
+                });
+
+
+            //Control selects maquinas>repuestos
+            var maquina  = document.getElementById('incidencias_maquinas');
+            $("#incidencias_repuestos").prop("disabled", true);
+            maquina.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[maquina.selectedIndex];
+                    CambioMaquina(selectedOption.value);
+                    $("#incidencias_repuestos").empty();
+                });
         });
+
+        function CambioCliente(idcliente){
+            var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
+            ruta = ruta.replace('IDCLIENTE', idcliente);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_establecimientos").prop("disabled", false);
+                $("#incidencias_establecimientos").append(result);
+            });
+        }
+
+        function CambioEstablecimiento(idestablecimiento){
+            var ruta = '{{ path('obtener_subestablecimiento', {'idestablecimiento':'IDESTABLECIMIENTO'}) }}';
+            ruta = ruta.replace('IDESTABLECIMIENTO', idestablecimiento);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_subestablecimientos").prop("disabled", false);
+                $("#incidencias_subestablecimientos").append(result);
+            });
+        }
+
+        function CambioMaquina(idmaquina){
+            var ruta = '{{ path('obtener_repuestos', {'idmaquina':'IDMAQUINA'}) }}';
+            ruta = ruta.replace('IDMAQUINA', idmaquina);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_repuestos").prop("disabled", false);
+                $("#incidencias_repuestos").append(result);
+            });
+        }
+
+
     </script>
 {% endblock %}

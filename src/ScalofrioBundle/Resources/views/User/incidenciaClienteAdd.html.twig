@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="page-header">
+                    <h2><b><span class="glyphicon glyphicon-ok-circle"></span>Reporte de incidencia</b></h2>
+                </div>
+                {{ form_start(form) }}
+                {{ form_row(form._token) }}
+                <div class="form-group">
+                    {{ form_label(form.fechaIncidencia) }}
+                    {{ form_widget(form.fechaIncidencia, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.fechaIncidencia) }}</span>
+                </div>
+                <div class="form-group">
+                    <label>Cliente</label>
+                    {{ form_widget(form.usuario, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.usuario) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.subestablecimientos) }}
+                    {{ form_widget(form.subestablecimientos, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.subestablecimientos) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.gestion) }}
+                    {{ form_widget(form.gestion, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.gestion) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.descripcion) }}
+                    {{ form_widget(form.descripcion, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.descripcion) }}</span>
+                </div>
+                <div class="form-group">   
+                {% if  modo is defined and modo == 'nuevo' %}
+                     {{ form_widget(form.guardar) }}
+                     <button type="button" onclick="location.href='{{ path("scalofrio_index") }}'" class="btn btn-dark">Cancelar</button>
+                {% endif %}
+                {% if  modo is defined and modo == 'lectura' %}
+                     <button type="button" onclick="location.href='{{ path("scalofrio_listarIncidencias") }}'" class="btn btn-success">Volver Atrás</button>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+
+            var tipo = '{{ modo }}';
+            //En modo lectura dejamos los selects deshabilitados
+            if( tipo === 'lectura'){
+                $("#incidencias_clientes_subestablecimientos").prop("disabled", true);
+                $("#incidencias_clientes_gestion").prop("disabled", true);
+                $("#incidencias_clientes_usuario").prop("disabled", true);
+            }
+
+            //A la hora de crear la incidencia, hay que mirar si existen subestablecimientos.
+            if( tipo === 'nuevo'){
+                $("#incidencias_clientes_subestablecimientos").prop("disabled", true);
+                $("#incidencias_clientes_usuario").prop("disabled", true);
+                obtenerCliente();
+                obtenerSubestablecimientos({{ user }});
+            }
+
+        });
+
+        function obtenerSubestablecimientos(idcliente){
+            var ruta = '{{ path('obtener_subestablecimiento_cliente', {'idcliente':'IDCLIENTE'}) }}';
+            ruta = ruta.replace('IDCLIENTE', idcliente);
+            $.post(ruta, null, function(result) {
+                $("#incidencias_clientes_subestablecimientos").empty();
+                $("#incidencias_clientes_subestablecimientos").prop("disabled", false);
+                $("#incidencias_clientes_subestablecimientos").append(result);
+            });
+        }
+
+        function obtenerCliente(){
+            var ruta = '{{ path('obtener_cliente') }}';
+            $.post(ruta, null, function(result) {
+                $("#incidencias_clientes_usuario").empty();
+                $("#incidencias_clientes_usuario").prop("disabled", false);
+                $("#incidencias_clientes_usuario").append(result);
+            });
+        }
+
+    </script>
+{% endblock %}

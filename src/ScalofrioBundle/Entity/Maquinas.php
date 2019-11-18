@@ -5,12 +5,12 @@ namespace ScalofrioBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Ruta
+ * Maquinas
  *
- * @ORM\Table(name="ruta")
- * @ORM\Entity(repositoryClass="ScalofrioBundle\Repository\RutaRepository")
+ * @ORM\Table(name="maquinas")
+ * @ORM\Entity(repositoryClass="ScalofrioBundle\Repository\MaquinasRepository")
  */
-class Ruta
+class Maquinas
 {
     /**
      * @var int
@@ -24,7 +24,7 @@ class Ruta
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", length=255)
+     * @ORM\Column(name="Nombre", type="string", length=255)
      */
     private $nombre;
 
@@ -44,7 +44,7 @@ class Ruta
      *
      * @param string $nombre
      *
-     * @return Ruta
+     * @return Maquinas
      */
     public function setNombre($nombre)
     {

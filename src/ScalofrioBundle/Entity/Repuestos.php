@@ -5,14 +5,13 @@ namespace ScalofrioBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Cliente
+ * Repuestos
  *
- * @ORM\Table(name="cliente")
- * @ORM\Entity(repositoryClass="ScalofrioBundle\Repository\ClienteRepository")
+ * @ORM\Table(name="repuestos")
+ * @ORM\Entity(repositoryClass="ScalofrioBundle\Repository\RepuestosRepository")
  */
-class Cliente
+class Repuestos
 {
-
     /**
      * @var int
      *
@@ -25,16 +24,17 @@ class Cliente
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", length=255)
+     * @ORM\Column(name="Nombre", type="string", length=255)
      */
     private $nombre;
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Maquinas", inversedBy="repuestos")
+     * @ORM\JoinColumn(name="maquinas_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $email;
+
+    protected $maquinas;
 
 
     /**
@@ -52,7 +52,7 @@ class Cliente
      *
      * @param string $nombre
      *
-     * @return Cliente
+     * @return Repuestos
      */
     public function setNombre($nombre)
     {
@@ -72,23 +72,24 @@ class Cliente
     }
 
     /**
-     * @return string
+     * @return \ScalofrioBundle\Entity\Maquinas
      */
-    public function getEmail()
+    public function getMaquinas()
     {
-        return $this->email;
+        return $this->maquinas;
     }
 
     /**
-     * @param string $email
+     * @param \ScalofrioBundle\Entity\Maquinas $maquinas
+     * @return Repuestos
      */
-    public function setEmail($email)
+    public function setMaquinas($maquinas)
     {
-        $this->email = $email;
+        $this->maquinas = $maquinas;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getNombre();
     }
 }
+

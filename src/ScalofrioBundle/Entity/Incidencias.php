@@ -12,13 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Incidencias
 {
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="Ruta", inversedBy="incidencias")
-     * @ORM\JoinColumn(name="ruta_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-
-    protected $ruta;
 
     /**
      *
@@ -45,6 +38,38 @@ class Incidencias
 
     protected $gestion;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Maquinas", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="maquinas_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $maquinas;
+
+    /**
+     *
+     * @ORM\ManyToMany(targetEntity="Repuestos", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="repuestos_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $repuestos;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Establecimientos", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="establecimientos_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $establecimientos;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Subestablecimientos", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="subestablecimientos_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $subestablecimientos;
+
 
     /**
      * @var int
@@ -63,18 +88,19 @@ class Incidencias
     private $fecha;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ruta", type="string", length=255)
+     */
+
+    private $ruta;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="tiempo", type="integer")
      */
     private $tiempo;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="establecimiento", type="string", length=255, nullable=true)
-     */
-    private $establecimiento;
 
     /**
      * @var string
@@ -107,11 +133,9 @@ class Incidencias
     /**
      * @var string
      *
-     * @ORM\Column(name="repuestos", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
-    private $repuestos;
-
-
+    private $email;
 
     /**
      * Get id
@@ -197,31 +221,6 @@ class Incidencias
 
 
     /**
-     * Set establecimiento
-     *
-     * @param string $establecimiento
-     *
-     * @return Incidencias
-     */
-    public function setEstablecimiento($establecimiento)
-    {
-        $this->establecimiento = $establecimiento;
-
-        return $this;
-    }
-
-    /**
-     * Get establecimiento
-     *
-     * @return string
-     */
-    public function getEstablecimiento()
-    {
-        return $this->establecimiento;
-    }
-
-
-    /**
      * Set nombrecliente
      *
      * @param string $nombrecliente
@@ -294,27 +293,19 @@ class Incidencias
     }
 
     /**
-     * Set repuestos
-     *
-     * @param string $repuestos
-     *
-     * @return Incidencias
+     * @return string
      */
-    public function setRepuestos($repuestos)
+    public function getEmail()
     {
-        $this->repuestos = $repuestos;
-
-        return $this;
+        return $this->email;
     }
 
     /**
-     * Get repuestos
-     *
-     * @return string
+     * @param string $email
      */
-    public function getRepuestos()
+    public function setEmail($email)
     {
-        return $this->repuestos;
+        $this->email = $email;
     }
 
     /**
@@ -384,6 +375,74 @@ class Incidencias
     public function setGestion($gestion)
     {
         $this->gestion = $gestion;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Maquinas
+     */
+    public function getMaquinas()
+    {
+        return $this->maquinas;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Maquinas $maquinas
+     * @return Incidencias
+     */
+    public function setMaquinas($maquinas)
+    {
+        $this->maquinas = $maquinas;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Repuestos
+     */
+    public function getRepuestos()
+    {
+        return $this->repuestos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Repuestos $repuestos
+     * @return Incidencias
+     */
+    public function setRepuestos($repuestos)
+    {
+        $this->repuestos = $repuestos;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Establecimientos
+     */
+    public function getEstablecimientos()
+    {
+        return $this->establecimientos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Establecimientos $establecimientos
+     * @return Incidencias
+     */
+    public function setEstablecimientos($establecimientos)
+    {
+        $this->establecimientos = $establecimientos;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Subestablecimientos
+     */
+    public function getSubestablecimientos()
+    {
+        return $this->subestablecimientos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Subestablecimientos $subestablecimientos
+     * @return Incidencias
+     */
+    public function setSubestablecimientos($subestablecimientos)
+    {
+        $this->subestablecimientos = $subestablecimientos;
     }
 
 

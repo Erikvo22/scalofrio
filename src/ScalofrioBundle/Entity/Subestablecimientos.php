@@ -5,12 +5,12 @@ namespace ScalofrioBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Establecimientos
+ * Subestablecimientos
  *
- * @ORM\Table(name="establecimientos")
- * @ORM\Entity(repositoryClass="ScalofrioBundle\Repository\EstablecimientosRepository")
+ * @ORM\Table(name="subestablecimientos")
+ * @ORM\Entity(repositoryClass="ScalofrioBundle\Repository\SubestablecimientosRepository")
  */
-class Establecimientos
+class Subestablecimientos
 {
     /**
      * @var int
@@ -24,15 +24,21 @@ class Establecimientos
     /**
      * @var string
      *
-     * @ORM\Column(name="Nombre", type="string", length=255)
+     * @ORM\Column(name="nombre", type="string", length=255)
      */
     private $nombre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="establecimientos")
+     * @ORM\ManyToOne(targetEntity="Cliente", inversedBy="subestablecimientos")
      * @ORM\JoinColumn(name="cliente_id", referencedColumnName="id")
      */
     protected $cliente;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Establecimientos", inversedBy="subestablecimientos")
+     * @ORM\JoinColumn(name="establecimientos_id", referencedColumnName="id")
+     */
+    protected $establecimientos;
 
 
     /**
@@ -50,7 +56,7 @@ class Establecimientos
      *
      * @param string $nombre
      *
-     * @return Establecimientos
+     * @return Subestablecimientos
      */
     public function setNombre($nombre)
     {
@@ -79,13 +85,29 @@ class Establecimientos
 
     /**
      * @param \ScalofrioBundle\Entity\Cliente $cliente
-     * @return Establecimientos
+     * @return Subestablecimientos
      */
     public function setCliente($cliente)
     {
         $this->cliente = $cliente;
     }
 
+    /**
+     * @return \ScalofrioBundle\Entity\Establecimientos
+     */
+    public function getEstablecimientos()
+    {
+        return $this->establecimientos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Establecimientos $establecimientos
+     * @return Subestablecimientos
+     */
+    public function setEstablecimientos($establecimientos)
+    {
+        $this->establecimientos = $establecimientos;
+    }
 
     public function __toString() {
         return $this->getNombre();

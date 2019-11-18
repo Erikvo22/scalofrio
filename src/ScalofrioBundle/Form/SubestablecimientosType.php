@@ -4,7 +4,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UsuariosType extends AbstractType
+class SubestablecimientosType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -13,12 +13,9 @@ class UsuariosType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('nombre')
             ->add('cliente')
             ->add('establecimientos')
-            ->add('username')
-            ->add('password', 'password')
-            ->add('role', 'choice', array('choices' => array('ROLE_ADMIN' => 'Administrador','ROLE_COMERCIAL' => 'Comercial', 'ROLE_USER' => 'Usuario'), 'placeholder' => 'Selecciona un role'))
-            ->add('isActive', 'checkbox')
             ->add('guardar', 'submit')
         ;
     }
@@ -29,7 +26,7 @@ class UsuariosType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'ScalofrioBundle\Entity\Usuarios'
+            'data_class' => 'ScalofrioBundle\Entity\Subestablecimientos'
         ));
     }
     /**
@@ -37,6 +34,6 @@ class UsuariosType extends AbstractType
      */
     public function getName()
     {
-        return 'username';
+        return 'sub';
     }
 }

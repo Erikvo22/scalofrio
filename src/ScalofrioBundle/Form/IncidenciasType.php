@@ -2,13 +2,12 @@
 
 namespace ScalofrioBundle\Form;
 
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class IncidenciasType extends AbstractType
 {
@@ -29,17 +28,57 @@ class IncidenciasType extends AbstractType
                 ],
             ))
             ->add('tiempo')
-            ->add('cargocliente')
+            ->add('cargocliente','choice', array('choices' => array(''=>'','JEFE/A DE BARES'=>'JEFE/A DE BARES',
+                'MAITRE'=>'MAITRE', 'SEGUNDO/A'=>'SEGUNDO/A', 'JEFE/A SECTOR'=>'JEFE/A SECTOR', 'CAMARERO/A'=>'CAMARERO/A',
+                'ECONOMATO' => 'ECONOMATO', 'SSTT CLIENTE' => 'SSTT CLIENTE')))
             ->add('nombrecliente')
-            ->add('firma')
-            ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'NO RESUELTO'=>'NO RESUELTO')))
-            ->add('repuestos',TextareaType::class, array(
-                'attr' => array('class' => 'tinymce', 'placeholder' => 'Descripción de la incidencia...')))
-            ->add('ruta')
-            ->add('comercial')
-            ->add('cliente')
-            ->add('establecimiento','text', array('required' => false))
-            ->add('gestion')
+            ->add('firma', FileType::class, array(
+                'required'    => true,
+                "data_class" => null
+            ))
+            ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'PENDIENTE'=>'PENDIENTE',
+                'CAMBIO DE MÁQUINA'=>'CAMBIO DE MÁQUINA')))
+            ->add('ruta','choice', array('choices' => array(''=>'','GC NORTE'=>'GC NORTE', 'GC SUR'=>'GC SUR',
+                'LANZAROTE'=>'LANZAROTE', 'FUERTEVENTURA'=>'FUERTEVENTURA')))
+            ->add('comercial', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Comercial',
+                'empty_value' => '',
+                'required'    => true
+            ))
+            ->add('cliente', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Cliente',
+                'empty_value' => '',
+                'required'    => true
+            ))
+            ->add('establecimientos', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Establecimientos',
+                'empty_value' => '',
+                'required'    => false
+            ))
+            ->add('subestablecimientos', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Subestablecimientos',
+                'empty_value' => '',
+                'required'    => false
+            ))
+            ->add('gestion', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Gestion',
+                'empty_value' => '',
+                'required'    => true
+            ))
+            ->add('maquinas', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Maquinas',
+                'empty_value' => '',
+                'required'    => true
+            ))
+            ->add('repuestos', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\Repuestos',
+                'multiple' => true,
+                'empty_value' => '',
+                'required'    => false
+            ))
+            ->add('email', 'email', array(
+                'required'    => false
+            ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
         ;
 

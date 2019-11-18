@@ -22,10 +22,19 @@
                     {% endfor %}
 
                 </dd>
+                <br>
+
+                <dt>Subestablecimientos</dt>
+                <dd>
+
+                    {% for i in subestablecimientos|keys %}
+                        {{ subestablecimientos[i].nombre }} <br>
+                    {% endfor %}
+
+                </dd>
             </dl>
         </div>
     </div>
 
 
-    {% include 'footer.html.twig' %}
 {% endblock %}

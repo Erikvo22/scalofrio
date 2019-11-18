@@ -4,11 +4,18 @@
     {{ include('menu.html.twig') }}
     {{ parent() }}
 
+    {#Mensaje de confirmación de operación#}
+    {%  for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
     <div class="main container">
         <div class="row well">
             <div class="col-md-6">
                 <div class="page-header">
-                    <h2><b><span class="glyphicon glyphicon-user"></span> Nuevo usuario</b></h2>
+                    <h2><b>Editar usuario</b></h2>
                 </div>
                 {{ form_start(form) }}
 
@@ -40,13 +47,13 @@
 
                 <div class="checkbox">
                     <label>
-                    {{ form_widget(form.isActive) }} Activo
-                    <span class = "text-danger">{{ form_errors(form.isActive) }}</span>
+                        {{ form_widget(form.isActive) }} Activo
+                        <span class = "text-danger">{{ form_errors(form.isActive) }}</span>
                     </label>
                 </div>
 
                 <p>
-                    {{ form_widget(form.guardar, {'label' : 'Crear usuario', 'attr': {'class': 'btn btn-success'}}) }}
+                    {{ form_widget(form.guardar, {'label' : 'Actualizar usuario', 'attr': {'class': 'btn btn-success'}}) }}
                 </p>
 
                 {{ form_end(form) }}
@@ -56,30 +63,32 @@
 
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }}
-    <script>
-        $(document).ready(function () {
+{{ parent() }}
+<script>
+    $(document).ready(function () {
 
-            //Control selects cliente>establecimiento
-            var select = document.getElementById('username_cliente');
-            $("#username_establecimientos").prop("disabled", true);
-            select.addEventListener('change',
-                function () {
-                    var selectedOption = this.options[select.selectedIndex];
-                    CambioCliente(selectedOption.value);
-                    $("#username_establecimientos").prop("disabled", true);
-                    $("#username_establecimientos").empty();
-                });
+        //Control selects cliente>establecimiento
+        var select = document.getElementById('username_cliente');
+        CambioCliente(select.value);
+        $("#username_establecimientos").prop("disabled", true);
+        select.addEventListener('change',
+            function () {
+                var selectedOption = this.options[select.selectedIndex];
+                CambioCliente(selectedOption.value);
+                $("#username_establecimientos").prop("disabled", true);
+                $("#username_establecimientos").empty();
+            });
+
+    });
+
+    function CambioCliente(idcliente){
+        var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
+        ruta = ruta.replace('IDCLIENTE', idcliente);
+        $.post(ruta, null, function(result) {
+            $("#username_establecimientos").prop("disabled", false);
+            $("#username_establecimientos").append(result);
         });
+    }
 
-            function CambioCliente(idcliente) {
-                var ruta = '{{ path('obtener_establecimiento', {'idcliente':'IDCLIENTE'}) }}';
-                ruta = ruta.replace('IDCLIENTE', idcliente);
-                $.post(ruta, null, function (result) {
-                    $("#username_establecimientos").prop("disabled", false);
-                    $("#username_establecimientos").append(result);
-                });
-            }
-
-    </script>
+</script>
 {% endblock %}
