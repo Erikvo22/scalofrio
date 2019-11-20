@@ -161,8 +161,8 @@ class UserController extends Controller
             try {
                 $message = \Swift_Message::newInstance()
                     ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
-                    ->setFrom('lcs.arjones@gmail.com')
-                    ->setTo('lcs.arjones@gmail.com', $emailCliente, $emailPlus)
+                    ->setFrom('incidencias@controlweb.es')
+                    ->setTo('incidenciascomerciales@controlweb.es', $emailCliente, $emailPlus)
                     ->setBody(
                         $this->renderView(
                             'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',

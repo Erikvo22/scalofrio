@@ -104,9 +104,10 @@ class IncidenciasClientesController extends Controller
     }
     private function sendMail($parameters)
     {
-        $message = (new \Swift_Message('Hello Email'))
-            ->setFrom('lcs.arjones@gmail.com')
-            ->setTo('lcs.arjones@gmail.com')
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Incidencia del cliente')
+            ->setFrom('incidencias@controlweb.es')
+            ->setTo('incidenciasclientes@controlweb.es')
             ->setBody(
                 $this->renderView(
                     'ScalofrioBundle:Email:registrarIncidencia.html.twig',
