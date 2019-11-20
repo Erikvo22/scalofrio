@@ -5,7 +5,7 @@ namespace ScalofrioBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="INCIDENCIAS_CLIENTES")
+ * @ORM\Table(name="incidencias_clientes")
  * @ORM\Entity()
  */
 class IncidenciasCliente

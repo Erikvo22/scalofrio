@@ -90,7 +90,7 @@ class UserController extends Controller
         $incidencia = new Incidencias();
         $form = $this->createIncidenciaCreateForm($incidencia);
 
-        return $this->render('ScalofrioBundle:User:IncidenciaAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView()));
     }
 
     private function createIncidenciaCreateForm(Incidencias $entity)
@@ -186,7 +186,7 @@ class UserController extends Controller
 
             return $this->redirectToRoute('scalofrio_index');
         }
-        return $this->render('ScalofrioBundle:User:IncidenciaAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView()));
     }
 
     /*/# EDICIÓN #/*/

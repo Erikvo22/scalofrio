@@ -10,7 +10,7 @@ scalofrio_homepage:
 
 scalofrio_incidencia_add:
     path:     /incidencia/add
-    defaults: { _controller: ScalofrioBundle:User:IncidenciaAdd }
+    defaults: { _controller: ScalofrioBundle:User:incidenciaAdd }
 
 scalofrio_incidencia_create:
     path: /incidencia/create
