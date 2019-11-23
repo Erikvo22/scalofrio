@@ -172,7 +172,7 @@ class UserController extends Controller
                         ),
                         'text/html'
                     )
-                    ->attach(\Swift_Attachment::fromPath($incidencia->getFirma()));
+                    ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
 
                 $this->get('mailer')->send($message);
             } catch (\Exception $e) {
