@@ -120,9 +120,16 @@ class UserController extends Controller
             if ($incidencia->getEstablecimientos() != null) {
                 $datos["establecimientos"] = $incidencia->getEstablecimientos()->getNombre();
             }
+            if ($incidencia->getSubestablecimientos() != null) {
+                $datos["subestablecimientos"] = $incidencia->getSubestablecimientos()->getNombre();
+            }
+
+            if ($incidencia->getRuta() != null) {
+                $datos["ruta"] = $incidencia->getRuta();
+            }
 
             if ($incidencia->getComercial() != null) {
-                $datos["comerial"] = $incidencia->getComercial()->getNombre();
+                $datos["comercial"] = $incidencia->getComercial()->getNombre();
             }
 
             if ($incidencia->getCliente() != null) {
@@ -131,6 +138,10 @@ class UserController extends Controller
 
             if ($incidencia->getGestion() != null) {
                 $datos["gestion"] = $incidencia->getGestion()->getNombre();
+            }
+
+            if ($incidencia->getResultado() != null) {
+                $datos["resultado"] = $incidencia->getResultado();
             }
 
             if ($incidencia->getMaquinas() != null) {

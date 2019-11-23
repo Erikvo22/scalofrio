@@ -4,6 +4,12 @@
     {% if datos['establecimientos'] is defined  %}
         <li>Establecimiento: {{ datos['establecimientos'] }} </li>
     {% endif %}
+    {% if datos['subestablecimientos'] is defined  %}
+        <li>SubEstablecimiento: {{ datos['subestablecimientos'] }} </li>
+    {% endif %}
+    {% if datos['ruta'] is defined  %}
+        <li>Ruta: {{ datos['ruta'] }} </li>
+    {% endif %}
     {% if datos['comercial'] is defined %}
         <li>Comercial: {{datos['comercial']}} </li>
     {% endif %}
@@ -13,6 +19,7 @@
         <li>Gestión Realizada: {{datos['gestion']}} </li>
     {% endif %}
     <li>Duracion: {{datos['incidencia'].getTiempo}}</li>
+    <li>Resultado: {{datos['resultado']}}</li>
     {% if datos['maquinas'] is defined %}
         <li>Tipo de máquinas: {{datos['maquinas']}} </li>
     {% endif %}
