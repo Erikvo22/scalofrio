@@ -1,7 +1,7 @@
 body {
-    padding-top: 100px;
-    padding-bottom: 40px;
-    background-image: url(../images/background-photo.jpg);
+    padding-top: 8em;
+    padding-bottom: 3em;
+    background-image: url(../images/playa.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -10,8 +10,8 @@ body {
 }
 
 .form-signin {
-    max-width: 420px;
-    padding: 15px;
+    max-width: 500px;
+    padding: 10px;
     margin: 0 auto;
     background-color: #eee;
     border-radius: 5px;
@@ -46,8 +46,9 @@ body {
     border-top-right-radius: 0;
 }
 
-@media only screen and (max-width: 1020px) {
+
+@media only screen and (max-width: 1000px) {
     body {
-        background-image: url(../images/background-photo-mobile-devices.jpg);
+        height: 140em;
     }
 }
