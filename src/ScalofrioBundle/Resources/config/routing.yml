@@ -317,6 +317,10 @@ obtener_subestablecimiento:
     pattern: /obtenerSubestablecimientos/{idestablecimiento}
     defaults: { _controller: ScalofrioBundle:User:obtenerSubestablecimientos }
 
+obtener_establecimiento_cliente:
+    pattern: /obtenerEstablecimientosCliente/{idcliente}
+    defaults: { _controller: ScalofrioBundle:IncidenciasClientes:obtenerEstablecimiento }
+
 obtener_subestablecimiento_cliente:
     pattern: /obtenerSubestablecimientosCliente/{idcliente}
     defaults: { _controller: ScalofrioBundle:IncidenciasClientes:obtenerSubestablecimientosCliente }

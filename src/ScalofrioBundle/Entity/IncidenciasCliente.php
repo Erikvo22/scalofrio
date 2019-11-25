@@ -26,6 +26,12 @@ class IncidenciasCliente
     protected $gestion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Establecimientos", inversedBy="incidenciasCliente")
+     * @ORM\JoinColumn(name="establecimientos_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $establecimientos;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Subestablecimientos", inversedBy="incidenciasCliente")
      * @ORM\JoinColumn(name="subestablecimientos_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -185,5 +191,22 @@ class IncidenciasCliente
     public function setSubestablecimientos($subestablecimientos)
     {
         $this->subestablecimientos = $subestablecimientos;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Establecimientos
+     */
+    public function getEstablecimientos()
+    {
+        return $this->establecimientos;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Establecimientos $establecimientos
+     * @return IncidenciasCliente
+     */
+    public function setEstablecimientos($establecimientos)
+    {
+        $this->establecimientos = $establecimientos;
     }
 }

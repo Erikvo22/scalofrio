@@ -90,7 +90,7 @@
                 Después, la relación entre cliente, establecimiento y subestablecimiento
 #}
                 <div class="page-header margin-none">
-                    <h4><b>Nueva relación 'Cliente > Establecimiento > Subestablecimiento'</b></h4>
+                    <h4><b>Nueva relación 'Cliente > Establecimiento > Bar'</b></h4>
                 </div>
                 {{ form_start(subestab) }}
                 <div class="form-group col-md-4">
@@ -104,7 +104,7 @@
                     <span class="text-danger">{{ form_errors(subestab.establecimientos) }}</span>
                 </div>
                 <div class="form-group col-md-4">
-                    <label>Subestablecimiento</label>
+                    <label>Bar</label>
                     {{ form_widget(subestab.nombre, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class="text-danger">{{ form_errors(subestab.nombre) }}</span>
                 </div>

@@ -3,6 +3,7 @@ namespace ScalofrioBundle\Controller;
 
 use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Usuarios;
+use ScalofrioBundle\Entity\Cliente;
 use ScalofrioBundle\Form\IncidenciasClientesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -160,7 +161,8 @@ class IncidenciasClientesController extends Controller
         $csv->insertOne(['id',
             'fecha',
             'cliente',
-            'subestablecimiento',
+            'establecimiento',
+            'bar',
             'tipo gestion',
             'estado',
             'descripcion'
@@ -168,15 +170,15 @@ class IncidenciasClientesController extends Controller
 
         foreach ($avisos as $a) {
             //Controlando si los campos son nulos.
-            $subestablecimiento = '';
-            if($a->getSubestablecimientos() != null)
-                $subestablecimiento = $a->getSubestablecimientos()->getNombre();
-
+            $subestablecimiento = ''; $establecimiento = '';
+            if($a->getSubestablecimientos() != null) $subestablecimiento = $a->getSubestablecimientos()->getNombre();
+            if($a->getEstablecimientos() != null) $establecimiento = $a->getEstablecimientos()->getNombre();
             //Se escribe en el CSV.
             $csv->insertOne([
                 $a->getId(),
                 $a->getFechaIncidencia()->format('d/m/y'),
                 $a->getUsuario()->getCliente()->getNombre(),
+                $establecimiento,
                 $subestablecimiento,
                 $a->getGestion()->getNombre(),
                 $a->getEstado(),
@@ -192,13 +194,18 @@ class IncidenciasClientesController extends Controller
     public function obtenerSubestablecimientosClienteAction($idcliente){
 
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
         $dql = "SELECT e FROM ScalofrioBundle:Subestablecimientos e
         WHERE e.cliente = '" . $idcliente . "'";
+
+        if($usuario->getEstablecimientos() != null)
+            $dql .= " AND e.establecimientos = '" . $usuario->getEstablecimientos()->getId() . "'";
+
         $query = $em->createQuery($dql);
         $subestab = $query->getResult();
 
-        $select = '';
+        $select = '<option></option>';
         foreach ($subestab as $s){
             $select .= '<option value="'.$s->getId().'">'.$s->getNombre().'</option>';
         }
@@ -210,8 +217,29 @@ class IncidenciasClientesController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
-        $select = '<option value="'.$usuario->getId().'">'.$usuario->getUsername().'</option>';
+        $select = '<option value="'.$usuario->getId().'">'.$usuario->getCliente()->getNombre().'</option>';
 
+        return new Response($select);
+    }
+
+    public function obtenerEstablecimientoAction($idcliente){
+
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $select = '';
+        if($usuario->getEstablecimientos() != null) {
+            $select .= '<option value="' . $usuario->getEstablecimientos()->getId() . '">' . $usuario->getEstablecimientos() . '</option>';
+        }else{
+            $dql = "SELECT e FROM ScalofrioBundle:Establecimientos e
+                    WHERE e.cliente = '" . $idcliente . "'";
+            $query = $em->createQuery($dql);
+            $estab = $query->getResult();
+
+            $select = '<option></option>';
+            foreach ($estab as $est) {
+                $select .= '<option value="' . $est->getId() . '">' . $est->getNombre() . '</option>';
+            }
+        }
         return new Response($select);
     }
 

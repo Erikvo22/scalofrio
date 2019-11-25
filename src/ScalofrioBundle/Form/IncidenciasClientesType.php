@@ -49,6 +49,14 @@ class IncidenciasClientesType extends AbstractType
                 'required'    => true,
                 'read_only' => $this->modo,
             ))
+            ->add('establecimientos',
+                'entity',
+                array(
+                    'class' => 'ScalofrioBundle\Entity\Establecimientos',
+                    'empty_value' => '...',
+                    'required'    => false,
+                    'read_only' => $this->modo,
+                ))
             ->add('subestablecimientos',
                    'entity',
                 array(
@@ -56,8 +64,7 @@ class IncidenciasClientesType extends AbstractType
                 'empty_value' => '...',
                 'required'    => false,
                 'read_only' => $this->modo,
-            )
-            )
+            ))
             ->add('descripcion', TextareaType::class, array(
                 'attr' => array('class' => 'tinymce', 'placeholder' => 'Descripción de la incidencia...'),
                 'required'  => true,

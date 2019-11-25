@@ -320,6 +320,7 @@ class UserController extends Controller
             'Comercial',
             'Cliente',
             'Establecimiento',
+            'Bar',
             'Ruta',
             'Nombre cliente',
             'Cargo cliente',
@@ -332,6 +333,7 @@ class UserController extends Controller
         foreach ($incidencias as $incidencia) {
             //Controlando si los campos son nulos.
             $establecimiento = '';
+            $subestablecimiento = '';
             $comercial = '';
             $cliente = '';
             $gestion = '';
@@ -340,6 +342,10 @@ class UserController extends Controller
 
             if ($incidencia->getEstablecimientos() != null) {
                 $establecimiento = $incidencia->getEstablecimientos()->getNombre();
+            }
+
+            if ($incidencia->getSubestablecimientos() != null) {
+                $subestablecimiento = $incidencia->getSubestablecimientos()->getNombre();
             }
 
             if ($incidencia->getComercial() != null) {
@@ -371,6 +377,7 @@ class UserController extends Controller
                 $comercial,
                 $cliente,
                 $establecimiento,
+                $subestablecimiento,
                 $incidencia->getRuta(),
                 $incidencia->getNombrecliente(),
                 $incidencia->getCargocliente(),
