@@ -3,7 +3,6 @@ namespace ScalofrioBundle\Controller;
 
 use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Usuarios;
-use ScalofrioBundle\Entity\Cliente;
 use ScalofrioBundle\Form\IncidenciasClientesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
