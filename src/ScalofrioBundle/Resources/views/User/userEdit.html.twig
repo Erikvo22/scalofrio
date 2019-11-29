@@ -69,7 +69,6 @@
 
         //Control selects cliente>establecimiento
         var select = document.getElementById('username_cliente');
-        $("#username_establecimientos").prop("disabled", true);
         select.addEventListener('change',
             function () {
                 var selectedOption = this.options[select.selectedIndex];

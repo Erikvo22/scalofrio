@@ -119,7 +119,6 @@
 
             //Control selects cliente>establecimiento
             var select = document.getElementById('incidencias_cliente');
-            $("#incidencias_establecimientos").prop("disabled", true);
             select.addEventListener('change',
                 function () {
                     var selectedOption = this.options[select.selectedIndex];
@@ -129,7 +128,6 @@
 
             //Control selects establecimiento>subestablecimiento
             var estab = document.getElementById('incidencias_establecimientos');
-            $("#incidencias_subestablecimientos").prop("disabled", true);
             estab.addEventListener('change',
                 function () {
                     var selectedOption = this.options[estab.selectedIndex];
@@ -140,7 +138,6 @@
 
             //Control selects maquinas>repuestos
             var maquina  = document.getElementById('incidencias_maquinas');
-            $("#incidencias_repuestos").prop("disabled", true);
             maquina.addEventListener('change',
                 function () {
                     var selectedOption = this.options[maquina.selectedIndex];

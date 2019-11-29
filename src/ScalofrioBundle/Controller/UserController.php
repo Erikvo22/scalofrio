@@ -149,15 +149,11 @@ class UserController extends Controller
             }
 
             if ($incidencia->getRepuestos() != null) {
-                $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
-                    array(
-                        'maquinas' => $incidencia->getMaquinas(),
-                    )
-                );
-                $datos["repuestos"] = $repuestos;
+                $datos["repuestos"] = $incidencia->getRepuestos();
             }
+
             $datos["incidencia"] = $incidencia;
-    
+
             /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */
             $emailCliente = "";
             $emailPlus = "";
@@ -173,7 +169,7 @@ class UserController extends Controller
                 $message = \Swift_Message::newInstance()
                     ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
                     ->setFrom('incidencias@controlweb.es')
-                    ->setTo('incidenciascomerciales@controlweb.es', $emailCliente, $emailPlus)
+                    ->setTo('incidenciascomerciales@controlweb.es')
                     ->setBody(
                         $this->renderView(
                             'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',
@@ -186,6 +182,45 @@ class UserController extends Controller
                     ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
 
                 $this->get('mailer')->send($message);
+
+                if($emailCliente != ""){
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
+                        ->setFrom('incidencias@controlweb.es')
+                        ->setTo($emailCliente)
+                        ->setBody(
+                            $this->renderView(
+                                'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',
+                                array(
+                                    "datos" => $datos
+                                )
+                            ),
+                            'text/html'
+                        )
+                        ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
+
+                    $this->get('mailer')->send($message);
+                }
+
+                if($emailPlus != ""){
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
+                        ->setFrom('incidencias@controlweb.es')
+                        ->setTo($emailPlus)
+                        ->setBody(
+                            $this->renderView(
+                                'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',
+                                array(
+                                    "datos" => $datos
+                                )
+                            ),
+                            'text/html'
+                        )
+                        ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
+
+                    $this->get('mailer')->send($message);
+                }
+
             } catch (\Exception $e) {
                 throw $e;
             }
@@ -363,11 +398,7 @@ class UserController extends Controller
             if ($incidencia->getMaquinas() != null) {
                 $maquinas = $incidencia->getMaquinas()->getNombre();
                 //Las incidencias pueden tener mas de un repuesto
-                $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->findBy(
-                    array(
-                        'maquinas' => $incidencia->getMaquinas()->getId(),
-                    )
-                );
+                $repuestos = $incidencia->getRepuestos();
             }
 
             //Se escribe en el CSV.
@@ -514,7 +545,7 @@ class UserController extends Controller
         $form = $this->createUserEditForm($user);
 
         return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user
-            , 'form' => $form->createView()));
+        , 'form' => $form->createView()));
     }
 
     private function createUserEditForm(Usuarios $entity)

@@ -29,7 +29,7 @@ class IncidenciasClientesController extends Controller
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
         $parameters = array
-            (
+        (
             "data" => array
             (
                 "userName" => $this->getUser()->getUserName(),
@@ -41,7 +41,10 @@ class IncidenciasClientesController extends Controller
             $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
             $em->persist($incidencia);
             $em->flush();
-            $this->sendMail($parameters);
+            $this->sendMail($parameters, 'incidenciasclientes@controlweb.es');
+            if($usuario->getCliente()->getEmail() != null){
+                $this->sendMail($parameters, $usuario->getCliente()->getEmail());
+            }
             $this->addFlash(
                 'mensaje',
                 'Incidencia creada correctamente.'
@@ -82,7 +85,7 @@ class IncidenciasClientesController extends Controller
             $this->addFlash(
                 'mensaje',
                 'Se ha producido un error al actualizar el estado.'
-            );  
+            );
         }
         return $this->redirectToRoute('scalofrio_listarIncidencias');
     }
@@ -103,12 +106,12 @@ class IncidenciasClientesController extends Controller
         $form = $this->createForm(new IncidenciasClientesType(), $entity, array("attr" => array("modo" => "lectura")));
         return $form;
     }
-    private function sendMail($parameters)
+    private function sendMail($parameters, $mailto)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject('Incidencia del cliente')
             ->setFrom('incidencias@controlweb.es')
-            ->setTo('incidenciasclientes@controlweb.es')
+            ->setTo($mailto)
             ->setBody(
                 $this->renderView(
                     'ScalofrioBundle:Email:registrarIncidencia.html.twig',
