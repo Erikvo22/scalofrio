@@ -1,5 +1,8 @@
 <h3><b>Resumen de la incidencia</b></h3>
 <ul>
+    {% if datos['numinccliente'] is defined  %}
+        <li>Nº de incidencia del cliente: {{ datos['numinccliente'] }} </li>
+    {% endif %}
     <li>Cliente: {{datos['cliente']}}</li>
     {% if datos['establecimientos'] is defined  %}
         <li>Establecimiento: {{ datos['establecimientos'] }} </li>

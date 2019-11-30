@@ -19,6 +19,11 @@
                 </div>
                 {{ form_start(form) }}
 
+                <div class="form-group invisible">
+                    <label style="color: blue">Nº incidencia cliente</label> *Dejar vacío si no corresponde
+                    {{ form_widget(form.numinccliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.numinccliente) }}</span>
+                </div>
                 <div class="form-group" style="width: 200px">
                     {{ form_label(form.fecha) }}
                     {{ form_widget(form.fecha) }}

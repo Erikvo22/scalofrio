@@ -148,7 +148,8 @@ class IncidenciasClientesController extends Controller
             10
         );
 
-        return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
+        return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
+            array('pagination' => $pagination, 'user' => $usuario));
 
     }
 

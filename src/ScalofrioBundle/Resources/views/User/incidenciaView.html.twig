@@ -10,6 +10,15 @@
             <h4>{{ incidencia.subestablecimientos }}</h4>
             <br>
             <dl>
+                <dt>Nº incidencia cliente: </dt>
+                <dd>
+                    {{ incidencia.numinccliente }}
+                    {% if incidencia.numinccliente is null %}
+                        No
+                    {% endif %}
+                </dd>
+                <br>
+
                 <dt>Fecha</dt>
                 <dd>
                     {{ incidencia.fecha|date('d-m-Y') }}

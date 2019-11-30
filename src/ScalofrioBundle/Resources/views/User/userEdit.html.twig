@@ -30,12 +30,12 @@
                     <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.username) }}
+                    <label>Nombre de usuario</label>
                     {{ form_widget(form.username, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.username) }}</span>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.password) }}
+                    <label>Contraseña</label> (Si se deja vacío, se mantiene la contraseña anterior)
                     {{ form_widget(form.password, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.password) }}</span>
                 </div>

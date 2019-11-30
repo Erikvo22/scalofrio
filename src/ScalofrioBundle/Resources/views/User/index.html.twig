@@ -32,10 +32,23 @@
                     </a>
                 {% endif %}
             </div>
+
+           {# Textos de estado#}
+            {% if incCliPend > 0 %}
+            <p style="color: red">Ojo, hay incidencias de clientes pendientes.</p>
+            {% endif %}
+            {% if incRev > 0 %}
+                <p style="color: orange">Se han generado nuevas incidencias de comercial relacionadas con las incidencias remitidas por el cliente.</p>
+            {% endif %}
+            {% if incRev == 0 and incCliPend == 0%}
+                <p style="color: limegreen">No hay incidencias de clientes pendientes.</p>
+            {% endif %}
+
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <tr>
-                        <th>Id</th>
+                        <th></th>
+                        <th>Nº</th>
                         <th>Fecha</th>
                         <th>Ruta</th>
                         <th>Cliente</th>
@@ -47,6 +60,12 @@
                     </tr>
                     {% for incidencia in pagination %}
                         <tr>
+                            <td>
+                                {% if incidencia.numinccliente is not null  %}
+                                    <b>Nº {{ incidencia.numinccliente.id }}</b>
+                                    <span class="glyphicon glyphicon-user" style="color: darkslategrey"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ incidencia.id }}</td>
                             <td>{{ incidencia.fecha|date('d-m-Y') }}</td>
                             <td>{{ incidencia.ruta }}</td>
@@ -57,7 +76,9 @@
                             <td>{{ incidencia.resultado }}</td>
                             <td class="actions">
                                 <a href="{{ path('scalofrio_incidencia_view', { id: incidencia.id}) }}" class="btn btn-sm btn-primary">Ver</a>
+                                {% if is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('scalofrio_incidencia_edit', { id: incidencia.id}) }}" class="btn btn-sm btn-danger">Editar</a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

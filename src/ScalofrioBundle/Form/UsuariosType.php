@@ -20,7 +20,9 @@ class UsuariosType extends AbstractType
                 'required' => false,
             ))
             ->add('role', 'choice', array('choices' => array('ROLE_ADMIN' => 'Administrador','ROLE_COMERCIAL' => 'Comercial', 'ROLE_USER' => 'Usuario'), 'placeholder' => 'Selecciona un role'))
-            ->add('isActive', 'checkbox')
+            ->add('isActive', 'checkbox', array(
+                'required' => false,
+            ))
             ->add('guardar', 'submit')
         ;
     }

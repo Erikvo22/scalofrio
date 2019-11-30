@@ -33,7 +33,8 @@
                  <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <tr>
-                        <th>Id</th>
+                        <th></th>
+                        <th>Nº</th>
                         <th>Fecha Incidencia</th>
                         <th>Cliente</th>
                         <th>Establecimiento</th>
@@ -43,7 +44,16 @@
                         <th>Acciones</th>
                     </tr>
                     {% for incidencia in pagination %}
-                        <tr>
+                        {% if incidencia.estado == 0 %}
+                        <tr style="background-color:#F8C58C;">
+                        {% else %}
+                         <tr>
+                        {% endif %}
+                            <td>
+                                {% if incidencia.testigo == 1  %}
+                                    <span class="glyphicon glyphicon-file" style="color: darkslategrey"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ incidencia.id }}</td>
                             <td>{{ incidencia.fechaIncidencia|date('d-m-Y') }}</td>
                             <td>{{ incidencia.usuario.cliente }}</td>

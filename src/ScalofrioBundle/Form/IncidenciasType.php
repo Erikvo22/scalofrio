@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Doctrine\ORM\EntityRepository;
 
 class IncidenciasType extends AbstractType
 {
@@ -78,6 +79,16 @@ class IncidenciasType extends AbstractType
             ))
             ->add('email', 'email', array(
                 'required'    => false
+            ))
+            ->add('numinccliente', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\IncidenciasCliente',
+                'empty_value' => '',
+                'required'    => false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.estado = 0')
+                        ->orderBy('u.id', 'ASC');
+                },
             ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
         ;

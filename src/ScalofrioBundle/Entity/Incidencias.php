@@ -70,6 +70,13 @@ class Incidencias
 
     protected $subestablecimientos;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="IncidenciasCliente", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="numinccliente", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $numinccliente;
+
 
     /**
      * @var int
@@ -443,6 +450,23 @@ class Incidencias
     public function setSubestablecimientos($subestablecimientos)
     {
         $this->subestablecimientos = $subestablecimientos;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\IncidenciasCliente
+     */
+    public function getNumIncCliente()
+    {
+        return $this->numinccliente;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\IncidenciasCliente $numinccliente
+     * @return Incidencias
+     */
+    public function setNumIncCliente($numinccliente)
+    {
+        $this->numinccliente = $numinccliente;
     }
 
 

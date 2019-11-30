@@ -53,6 +53,11 @@ class IncidenciasCliente
     private $estado = 0;
 
     /**
+     * @ORM\Column(name="testigo", type="integer", length=1)
+     */
+    private $testigo = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Usuarios")
      * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
      */
@@ -157,6 +162,26 @@ class IncidenciasCliente
     }
 
     /**
+     * Get the value of testigo
+     */
+    public function getTestigo()
+    {
+        return $this->testigo;
+    }
+
+    /**
+     * Set the value of testigo
+     *
+     * @return  self
+     */
+    public function setTestigo($testigo)
+    {
+        $this->testigo = $testigo;
+
+        return $this;
+    }
+
+    /**
      * Get the value of usuario
      */
     public function getUsuario()
@@ -208,5 +233,19 @@ class IncidenciasCliente
     public function setEstablecimientos($establecimientos)
     {
         $this->establecimientos = $establecimientos;
+    }
+
+    public function __toString()
+    {
+        $id = (string)$this->getId();
+        $cli = $this->getUsuario();
+        if($this->getEstablecimientos()!=null) {
+            $est = $this->getEstablecimientos()->getNombre();
+            $devolver = $id . ' - ' . $cli . ' - ' . $est;
+        }else{
+            $devolver = $id . ' - ' . $cli;
+        }
+
+        return $devolver;
     }
 }

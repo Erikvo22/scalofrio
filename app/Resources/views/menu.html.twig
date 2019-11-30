@@ -29,14 +29,17 @@
                     <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Añadir tipo gestión</a></li>
                 </ul>
                 {% endif %}
-                {% if is_granted('ROLE_USER') or is_granted('ROLE_COMERCIAL')%}
-                    <p id="titleHdr" class="navbar-brand"> Bienvenido/a </p>
+                {% if is_granted('ROLE_USER')%}
+                <a href="#" id="titleHdr" class="navbar-brand">
+                    <span class="glyphicon glyphicon-user"></span>
+                    Mi perfil
+                </a>
                 {% endif %}
             </li>
         </ul>
         <ul class="nav navbar-nav">
             <li class="dropdown">
-            <a href="{{ path('scalofrio_logout') }}" id="titleHdr"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
+            <a href="{{ path('scalofrio_logout') }}" id="titleHdr"><span class="glyphicon glyphicon-log-out"></span> Salir</a>
             </li>
         </ul>
     </div>

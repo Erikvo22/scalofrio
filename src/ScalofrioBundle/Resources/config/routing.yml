@@ -333,6 +333,10 @@ obtener_repuestos:
     pattern: /obtenerRepuestos/{idmaquina}
     defaults: { _controller: ScalofrioBundle:User:obtenerRepuestos }
 
+obtener_incidencias_clientes:
+    pattern: /obtenerIncidenciasClientes/
+    defaults: { _controller: ScalofrioBundle:User:obtenerIncidenciasClientes }
+
 
 
 

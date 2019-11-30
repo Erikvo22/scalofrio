@@ -7,6 +7,7 @@ use ScalofrioBundle\Entity\Comercial;
 use ScalofrioBundle\Entity\Establecimientos;
 use ScalofrioBundle\Entity\Gestion;
 use ScalofrioBundle\Entity\Incidencias;
+use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Maquinas;
 use ScalofrioBundle\Entity\Repuestos;
 use ScalofrioBundle\Entity\Subestablecimientos;
@@ -31,6 +32,13 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => 0
+        ));
+        $incRev = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => 0,
+            'testigo' => 1
+        ));
 
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
@@ -48,9 +56,11 @@ class UserController extends Controller
             10
         );
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
-            return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+            return $this->render('ScalofrioBundle:User:index.html.twig',
+                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev)));
         } else {
-            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
+            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
+                array('pagination' => $pagination, 'user' => $usuario));
         }
     }
 
@@ -59,6 +69,13 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => 0
+        ));
+        $incRev = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => 0,
+            'testigo' => 1
+        ));
 
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
@@ -77,9 +94,11 @@ class UserController extends Controller
             10
         );
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
-            return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+            return $this->render('ScalofrioBundle:User:index.html.twig',
+                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev)));
         } else {
-            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig', array('pagination' => $pagination));
+            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
+                array('pagination' => $pagination, 'user' => $usuario));
         }
     }
 
@@ -104,12 +123,20 @@ class UserController extends Controller
 
     public function createIncidenciaAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $incidencia = new Incidencias();
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
 
+        //Modificamos el valor del campo 'testigo' en incidencias_clientes en caso de que se haya puesto un número de incidencia.
+        if($incidencia->getNumIncCliente()!=null){
+            $incCliente = $em->getRepository('ScalofrioBundle:IncidenciasCliente')->find($incidencia->getNumIncCliente()->getId());
+            $incCliente->setTestigo(1);
+            $em->persist($incCliente);
+            $em->flush();
+        }
+
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($incidencia);
             $em->flush();
 
@@ -117,9 +144,14 @@ class UserController extends Controller
             //Controlando si los campos son nulos.
             // $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
             $datos = array();
+            if($incidencia->getNumIncCliente() != null){
+                $datos["numinccliente"] = $incidencia->getNumIncCliente()->getId();
+            }
+
             if ($incidencia->getEstablecimientos() != null) {
                 $datos["establecimientos"] = $incidencia->getEstablecimientos()->getNombre();
             }
+
             if ($incidencia->getSubestablecimientos() != null) {
                 $datos["subestablecimientos"] = $incidencia->getSubestablecimientos()->getNombre();
             }
@@ -335,6 +367,20 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em->remove($incidencia);
             $em->flush();
+
+            /*Comprobamos si existe otra incidencia con el numinccliente, si no, testigo = 0 */
+            $incNum = $em->getRepository('ScalofrioBundle:Incidencias')->findBy(
+                array(
+                    'numinccliente' => $incidencia->getNumIncCliente()->getId(),
+                )
+            );
+            if(count($incNum) == 0){
+                $incCliente = $em->getRepository('ScalofrioBundle:IncidenciasCliente')->find($incidencia->getNumIncCliente()->getId());
+                $incCliente->setTestigo(0);
+                $em->persist($incCliente);
+                $em->flush();
+            }
+
             $successMessage = 'Incidencia eliminada correctamente';
             $this->addFlash('mensaje', $successMessage);
             return $this->redirectToRoute('scalofrio_index');
@@ -456,14 +502,28 @@ class UserController extends Controller
                 $cliente = $user->getCliente()->getNombre();
             }
 
+            if ($user->getIsActive() == 0) {
+                $activo = 'No';
+            } else{
+                $activo = 'Si';
+            }
+
+            if ($user->getRole() == 'ROLE_ADMIN') {
+                $role = 'Administrador';
+            } else if($user->getRole() == 'ROLE_COMERCIAL'){
+                $role = 'Comercial';
+            } else{
+                $role = 'Usuario';
+            }
+
             //Se escribe en el CSV.
             $csv->insertOne([
                 $user->getId(),
                 $cliente,
                 $establecimiento,
                 $user->getUsername(),
-                $user->getRole(),
-                $user->getIsActive(),
+                $role,
+                $activo,
             ]);
 
         }
