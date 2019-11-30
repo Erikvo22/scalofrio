@@ -238,7 +238,7 @@ class IncidenciasCliente
     public function __toString()
     {
         $id = (string)$this->getId();
-        $cli = $this->getUsuario();
+        $cli = $this->getUsuario()->getCliente();
         if($this->getEstablecimientos()!=null) {
             $est = $this->getEstablecimientos()->getNombre();
             $devolver = $id . ' - ' . $cli . ' - ' . $est;
