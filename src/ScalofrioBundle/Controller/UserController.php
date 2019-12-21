@@ -1128,6 +1128,13 @@ class UserController extends Controller
         $busqueda = trim($_POST['buscar']);
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => 0
+        ));
+        $incRev = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => 0,
+            'testigo' => 1
+        ));
 
         $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
         JOIN i.cliente c
@@ -1163,7 +1170,8 @@ class UserController extends Controller
             );
         }
 
-        return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination, 'user' => $usuario));
+        return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination,
+            'user' => $usuario, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev)));
     }
 
     public function busquedaClienteAction(Request $request)
