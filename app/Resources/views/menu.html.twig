@@ -30,9 +30,19 @@
                 </ul>
                 {% endif %}
                 {% if is_granted('ROLE_USER')%}
+                <a href="{{ path('scalofrio_user_edit', { id: user.id }) }}" id="titleHdr" class="navbar-brand">
+                    <span class="glyphicon glyphicon-user"></span>
+                    {% filter upper %}
+                        {{ user.username }}
+                    {% endfilter %}
+                </a>
+                {% endif %}
+                {% if is_granted('ROLE_COMERCIAL')%}
                 <a href="#" id="titleHdr" class="navbar-brand">
                     <span class="glyphicon glyphicon-user"></span>
-                    Mi perfil
+                    {% filter upper %}
+                    {{ user.username }}
+                    {% endfilter %}
                 </a>
                 {% endif %}
             </li>

@@ -57,7 +57,7 @@ class UserController extends Controller
         );
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             return $this->render('ScalofrioBundle:User:index.html.twig',
-                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev)));
+                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev), 'user' => $usuario));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
                 array('pagination' => $pagination, 'user' => $usuario));
@@ -95,7 +95,7 @@ class UserController extends Controller
         );
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             return $this->render('ScalofrioBundle:User:index.html.twig',
-                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev)));
+                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev), 'user' => $usuario));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
                 array('pagination' => $pagination, 'user' => $usuario));
@@ -595,6 +595,7 @@ class UserController extends Controller
     public function userEditAction($id)
     {
         $em = $this->getDoctrine()->getManager();
+        $rol = $this->getUser()->getRoles();
         $user = $em->getRepository('ScalofrioBundle:Usuarios')->find($id);
 
         if (!$user) {
@@ -604,8 +605,17 @@ class UserController extends Controller
 
         $form = $this->createUserEditForm($user);
 
-        return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user
-        , 'form' => $form->createView()));
+        if ($rol[0] == 'ROLE_USER') {
+            if($id == $this->getUser()->getId()) {
+                return $this->render('ScalofrioBundle:User:userUserEdit.html.twig', array('user' => $user
+                , 'form' => $form->createView()));
+            }else{
+                return $this->redirectToRoute('scalofrio_index');
+            }
+        }else {
+            return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user
+            , 'form' => $form->createView()));
+        }
     }
 
     private function createUserEditForm(Usuarios $entity)
@@ -618,6 +628,7 @@ class UserController extends Controller
     public function userUpdateAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $rol = $this->getUser()->getRoles();
         $user = $em->getRepository('ScalofrioBundle:Usuarios')->find($id);
 
         if (!$user) {
@@ -643,9 +654,15 @@ class UserController extends Controller
                 $user->setIsActive(1);
             }
             $em->flush();
-            $successMessage = 'Usuario actualizado correctamente';
-            $this->addFlash('mensaje', $successMessage);
-            return $this->redirectToRoute('scalofrio_user_list', array('id' => $user->getId()));
+            if($rol[0] == 'ROLE_USER'){
+                $successMessage = 'Se ha actualizado su perfil correctamente';
+                $this->addFlash('mensaje', $successMessage);
+                return $this->redirectToRoute('scalofrio_index');
+            }else{
+                $successMessage = 'Usuario actualizado correctamente';
+                $this->addFlash('mensaje', $successMessage);
+                return $this->redirectToRoute('scalofrio_user_list', array('id' => $user->getId()));
+            }
         }
         return $this->render('ScalofrioBundle:User:userEdit.html.twig', array('user' => $user, 'form' => $form->createView()));
     }

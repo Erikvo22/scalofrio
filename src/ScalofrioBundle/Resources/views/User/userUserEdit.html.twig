@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    {#Mensaje de confirmación de operación#}
+    {%  for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h2><b>Editar usuario</b></h2>
+                </div>
+                {{ form_start(form) }}
+
+                <div class="form-group">
+                    <label>Nombre de usuario</label>
+                    {{ form_widget(form.username, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.username) }}</span>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label> (Si se deja vacío, se mantiene la contraseña anterior)
+                    {{ form_widget(form.password, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.password) }}</span>
+                </div>
+
+                <p>
+                    {{ form_widget(form.guardar, {'label' : 'Actualizar usuario', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+
+                {#Los demás campos no deben ser vistos por el usuario normal#}
+                <div class="form-group">
+                    {{ form_widget(form.cliente, { 'attr' : {'class' : 'invisible'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.cliente) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.establecimientos, { 'attr' : {'class' : 'invisible'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.establecimientos) }}</span>
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.role, { 'attr' : {'class' : 'invisible'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.role) }}</span>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        {{ form_widget(form.isActive, { 'attr' : {'class' : 'invisible'}}) }}
+                        <span class = "text-danger">{{ form_errors(form.isActive) }}</span>
+                    </label>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
