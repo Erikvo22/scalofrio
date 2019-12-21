@@ -106,10 +106,12 @@ class UserController extends Controller
 
     public function incidenciaAddAction()
     {
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $incidencia = new Incidencias();
         $form = $this->createIncidenciaCreateForm($incidencia);
 
-        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView(), 'user' => $usuario));
     }
 
     private function createIncidenciaCreateForm(Incidencias $entity)
@@ -124,6 +126,7 @@ class UserController extends Controller
     public function createIncidenciaAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $incidencia = new Incidencias();
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
@@ -264,7 +267,7 @@ class UserController extends Controller
 
             return $this->redirectToRoute('scalofrio_index');
         }
-        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView(), 'user' => $usuario));
     }
 
     /*/# EDICIÓN #/*/
@@ -272,6 +275,7 @@ class UserController extends Controller
     public function incidenciaEditAction($id)
     {
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
 
         if (!$incidencia) {
@@ -281,7 +285,8 @@ class UserController extends Controller
 
         $form = $this->createIncidenciaEditForm($incidencia);
 
-        return $this->render('ScalofrioBundle:User:incidenciaEdit.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaEdit.html.twig', array('incidencia' => $incidencia,
+                            'form' => $form->createView(), 'user' => $usuario));
     }
 
     private function createIncidenciaEditForm(Incidencias $entity)
@@ -294,6 +299,7 @@ class UserController extends Controller
     public function incidenciaUpdateAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
 
         if (!$incidencia) {
@@ -310,13 +316,15 @@ class UserController extends Controller
             $this->addFlash('mensaje', $successMessage);
             return $this->redirectToRoute('scalofrio_index');
         }
-        return $this->render('ScalofrioBundle:User:incidenciaEdit.html.twig', array('incidencia' => $incidencia, 'form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:incidenciaEdit.html.twig', array('incidencia' => $incidencia,
+                            'form' => $form->createView(), 'user' => $usuario));
     }
 
     /*VER*/
     public function incidenciaViewAction($id)
     {
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $incidencia = $em->getRepository('ScalofrioBundle:Incidencias')->find($id);
         $repuestosIncidencia = $em->getRepository('ScalofrioBundle:Incidencias_repuestos')->findBy(
             array(
@@ -339,7 +347,8 @@ class UserController extends Controller
 
         $deleteForm = $this->createIncidenciaDeleteForm($incidencia);
 
-        return $this->render('@Scalofrio/User/incidenciaView.html.twig', array('incidencia' => $incidencia, 'repuestos' => $repuestos, 'delete_form' => $deleteForm->createView()));
+        return $this->render('@Scalofrio/User/incidenciaView.html.twig', array('incidencia' => $incidencia,
+                            'repuestos' => $repuestos, 'delete_form' => $deleteForm->createView(), 'user' => $usuario));
     }
 
     /*ELIMINAR*/
@@ -536,7 +545,7 @@ class UserController extends Controller
     public function userListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $dql = "SELECT u FROM ScalofrioBundle:Usuarios u";
         $usuarios = $em->createQuery($dql);
 
@@ -546,15 +555,19 @@ class UserController extends Controller
             10
         );
 
-        return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination));
+        return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination,
+                                'user' => $usuario));
     }
 
     public function userAddAction()
     {
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $user = new Usuarios();
         $form = $this->createUserCreateForm($user);
 
-        return $this->render('ScalofrioBundle:User:userAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:userAdd.html.twig', array('form' => $form->createView(),
+                                'user' => $usuario));
     }
 
     private function createUserCreateForm(Usuarios $entity)
@@ -568,6 +581,8 @@ class UserController extends Controller
 
     public function createUserAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
         $user = new Usuarios();
         $form = $this->createUserCreateForm($user);
         $form->handleRequest($request);
@@ -577,8 +592,6 @@ class UserController extends Controller
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $password);
             $user->setPassword($encoded);
-
-            $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
@@ -589,7 +602,8 @@ class UserController extends Controller
 
             return $this->redirectToRoute('scalofrio_user_list');
         }
-        return $this->render('ScalofrioBundle:User:userAdd.html.twig', array('form' => $form->createView()));
+        return $this->render('ScalofrioBundle:User:userAdd.html.twig', array('form' => $form->createView(),
+                                'user' => $usuario));
     }
 
     public function userEditAction($id)
@@ -1112,8 +1126,8 @@ class UserController extends Controller
     {
 
         $busqueda = trim($_POST['buscar']);
-
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
         $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
         JOIN i.cliente c
@@ -1149,15 +1163,15 @@ class UserController extends Controller
             );
         }
 
-        return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination));
+        return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination, 'user' => $usuario));
     }
 
     public function busquedaClienteAction(Request $request)
     {
 
         $busqueda = trim($_POST['buscar']);
-
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
         $dql = "SELECT c FROM ScalofrioBundle:Cliente c
         WHERE c.nombre LIKE '%" . $busqueda . "%'
@@ -1181,15 +1195,16 @@ class UserController extends Controller
         $subestablecimientos = new Subestablecimientos();
         $subestab = $this->createSubestablecimientosCreateForm($subestablecimientos);
 
-        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination, 'estab' => $estab->createView(), 'subestab' => $subestab->createView()));
+        return $this->render('ScalofrioBundle:User:clienteList.html.twig', array('pagination' => $pagination,
+                            'estab' => $estab->createView(), 'subestab' => $subestab->createView(), 'user' => $usuario));
     }
 
     public function busquedaUserAction(Request $request)
     {
 
         $busqueda = trim($_POST['buscar']);
-
         $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
         $dql = "SELECT u FROM ScalofrioBundle:Usuarios u
         WHERE u.username LIKE '%" . $busqueda . "%'
@@ -1205,7 +1220,7 @@ class UserController extends Controller
 
         );
 
-        return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination));
+        return $this->render('ScalofrioBundle:User:userList.html.twig', array('pagination' => $pagination, 'user' => $usuario));
     }
 
     //FUNCIONES PARA OBTENER ELEMENTOS EN SELECTS DEPENDIENTES
