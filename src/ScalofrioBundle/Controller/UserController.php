@@ -1139,8 +1139,10 @@ class UserController extends Controller
         $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
         JOIN i.cliente c
         JOIN i.establecimientos e
+        JOIN i.comercial co
         WHERE c.nombre LIKE '%" . $busqueda . "%'
         OR e.nombre LIKE '%" . $busqueda . "%'
+        OR co.nombre LIKE '%" . $busqueda . "%'
         ORDER BY i.id";
         $prod = $em->createQuery($dql);
 
