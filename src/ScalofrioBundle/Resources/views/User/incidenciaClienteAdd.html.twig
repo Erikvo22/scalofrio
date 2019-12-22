@@ -78,8 +78,8 @@
                 $("#incidencias_clientes_establecimientos").prop("disabled", true);
                 $("#incidencias_clientes_usuario").prop("disabled", true);
                 obtenerCliente();
-                obtenerEstablecimiento({{ user }});
-                obtenerSubestablecimientos({{ user }});
+                obtenerEstablecimiento({{ cliente }});
+                obtenerSubestablecimientos({{ cliente }});
             }
 
         });

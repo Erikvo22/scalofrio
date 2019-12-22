@@ -17,7 +17,8 @@ class IncidenciasClientesController extends Controller
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo", "user" => $usuario->getCliente()->getId()));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo",
+                            "cliente" => $usuario->getCliente()->getId(), 'user' => $usuario));
     }
 
     public function incidenciaClienteCreateAction(Request $request)
@@ -51,7 +52,8 @@ class IncidenciasClientesController extends Controller
 
             return $this->redirectToRoute('scalofrio_index');
         }
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo", "user" => $usuario->getCliente()->getId()));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "nuevo",
+                                'cliente' => $usuario->getCliente()->getId(), 'user' => $usuario));
     }
 
     public function incidenciaClienteShowAction($id)
@@ -61,7 +63,8 @@ class IncidenciasClientesController extends Controller
         $form = $this->mostrarIncidenciaForm($incidencia);
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
 
-        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "lectura", "user" => $usuario->getCliente()->getId()));
+        return $this->render('ScalofrioBundle:User:incidenciaClienteAdd.html.twig', array('form' => $form->createView(), "modo" => "lectura",
+                                'cliente' => $usuario->getCliente()->getId(), 'user' => $usuario));
     }
 
     public function actualizarEstadoAction($id)

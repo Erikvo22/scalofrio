@@ -29,19 +29,11 @@
                     <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Añadir tipo gestión</a></li>
                 </ul>
                 {% endif %}
-                {% if is_granted('ROLE_USER')%}
+                {% if is_granted('ROLE_USER') or is_granted('ROLE_COMERCIAL')%}
                 <a href="{{ path('scalofrio_user_edit', { id: user.id }) }}" id="titleHdr" class="navbar-brand">
                     <span class="glyphicon glyphicon-user"></span>
                     {% filter upper %}
                         {{ user.username }}
-                    {% endfilter %}
-                </a>
-                {% endif %}
-                {% if is_granted('ROLE_COMERCIAL')%}
-                <a href="#" id="titleHdr" class="navbar-brand">
-                    <span class="glyphicon glyphicon-user"></span>
-                    {% filter upper %}
-                    {{ user.username }}
                     {% endfilter %}
                 </a>
                 {% endif %}

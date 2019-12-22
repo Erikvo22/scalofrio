@@ -619,7 +619,7 @@ class UserController extends Controller
 
         $form = $this->createUserEditForm($user);
 
-        if ($rol[0] == 'ROLE_USER') {
+        if ($rol[0] == 'ROLE_USER' || $rol[0] == 'ROLE_COMERCIAL') {
             if($id == $this->getUser()->getId()) {
                 return $this->render('ScalofrioBundle:User:userUserEdit.html.twig', array('user' => $user
                 , 'form' => $form->createView()));
@@ -668,7 +668,7 @@ class UserController extends Controller
                 $user->setIsActive(1);
             }
             $em->flush();
-            if($rol[0] == 'ROLE_USER'){
+            if($rol[0] == 'ROLE_USER' || $rol[0] == 'ROLE_COMERCIAL'){
                 $successMessage = 'Se ha actualizado su perfil correctamente';
                 $this->addFlash('mensaje', $successMessage);
                 return $this->redirectToRoute('scalofrio_index');
