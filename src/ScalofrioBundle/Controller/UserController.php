@@ -1143,7 +1143,7 @@ class UserController extends Controller
         WHERE c.nombre LIKE '%" . $busqueda . "%'
         OR e.nombre LIKE '%" . $busqueda . "%'
         OR co.nombre LIKE '%" . $busqueda . "%'
-        ORDER BY i.id";
+        ORDER BY i.id DESC";
         $prod = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
