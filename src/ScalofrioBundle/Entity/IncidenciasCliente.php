@@ -235,17 +235,17 @@ class IncidenciasCliente
         $this->establecimientos = $establecimientos;
     }
 
-    public function __toString()
-    {
-        $id = (string)$this->getId();
-        $cli = $this->getUsuario()->getCliente();
-        if($this->getEstablecimientos()!=null) {
-            $est = $this->getEstablecimientos()->getNombre();
-            $devolver = $id . ' - ' . $cli . ' - ' . $est;
-        }else{
-            $devolver = $id . ' - ' . $cli;
-        }
+    // public function __toString()
+    // {
+    //     $id = (string)$this->getId();
+    //     $cli = $this->getUsuario()->getCliente();
+    //     if($this->getEstablecimientos()!=null) {
+    //         $est = $this->getEstablecimientos()->getNombre();
+    //         $devolver = $id . ' - ' . $cli . ' - ' . $est;
+    //     }else{
+    //         $devolver = $id . ' - ' . $cli;
+    //     }
 
-        return $devolver;
-    }
+    //     return $devolver;
+    // }
 }
