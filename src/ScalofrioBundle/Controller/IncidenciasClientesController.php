@@ -7,6 +7,7 @@ use ScalofrioBundle\Form\IncidenciasClientesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Dompdf\Dompdf;
 
 class IncidenciasClientesController extends Controller
 {
@@ -37,13 +38,27 @@ class IncidenciasClientesController extends Controller
             ),
         );
         if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
             $em->persist($incidencia);
             $em->flush();
-            $this->sendMail($parameters, 'incidenciasclientes@controlweb.es');
+            
+            $dompdf = new DOMPDF();
+            $dompdf->load_html($this->renderView(
+                    'ScalofrioBundle:Email:registrarIncidencia.html.twig',
+                    $parameters
+                    )
+            );
+            $dompdf->render();
+            $output = $dompdf->output();
+            $raiz = $this->get('kernel')->getRootDir() . '/../web/';
+            $fecha = new DateTime();
+            file_put_contents($raiz . 'informeIncidencia.pdf' . $fecha->getTimestamp(), $output);
+
+            $this->sendMail($parameters, 'incidenciasclientes@controlweb.es', $raiz . 'informeIncidencia.pdf');
             if($usuario->getCliente()->getEmail() != null){
-                $this->sendMail($parameters, $usuario->getCliente()->getEmail());
+                $this->sendMail($parameters, $usuario->getCliente()->getEmail(),$raiz . 'informeIncidencia.pdf');
             }
             $this->addFlash(
                 'mensaje',
@@ -108,19 +123,20 @@ class IncidenciasClientesController extends Controller
         $form = $this->createForm(new IncidenciasClientesType(), $entity, array("attr" => array("modo" => "lectura")));
         return $form;
     }
-    private function sendMail($parameters, $mailto)
+    private function sendMail($parameters, $mailto, $file)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject('Incidencia del cliente')
             ->setFrom('incidencias@controlweb.es')
-            ->setTo($mailto)
+            ->setTo('lcs.arjones@gmail.com')
             ->setBody(
                 $this->renderView(
                     'ScalofrioBundle:Email:registrarIncidencia.html.twig',
                     $parameters
                 ),
                 'text/html'
-            );
+            )
+            ->attach(\Swift_Attachment::fromPath($file));
 
         $this->get('mailer')->send($message);
 
@@ -194,7 +210,6 @@ class IncidenciasClientesController extends Controller
 
         }
         $csv->output('avisos.csv');
-        die;
     }
 
     /*OBTENCIÓN DE INFORMACIÓN EN LOS SELECTS*/

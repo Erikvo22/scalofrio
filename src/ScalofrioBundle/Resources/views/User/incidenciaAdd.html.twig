@@ -91,14 +91,13 @@
                     <div class="signature-pad--footer">
                         <div class="signature-pad--actions">
                             <div>
-                                <button type="button" class="button clear" data-action="clear">Limpiar</button>
-                                <button type="button" class="button save" data-action="save-png">Guardar</button>
+                                <button id="clear" type="button" class="button clear" data-action="clear">Limpiar</button>
+                                <button id="saveFirma" type="button" class="button save" data-action="save-png">Guardar</button>
                             </div>
                         </div>
                     </div>
                 </div><br>
                 <div class="form-group">
-                    <label style="color: red;">Adjuntar firma</label>
                     {{ form_widget(form.firma) }}
                     <span class = "text-danger">{{ form_errors(form.firma) }}</span>
                 </div><br>
@@ -186,25 +185,11 @@
                 backgroundColor: 'rgb(255, 255, 255)'
             });
 
-            // Adjust canvas coordinate space taking into account pixel ratio,
-            // to make it look crisp on mobile devices.
-            // This also causes canvas to be cleared.
             function resizeCanvas() {
-                // When zoomed out to less than 100%, for some very strange reason,
-                // some browsers report devicePixelRatio as less than 1
-                // and only part of the canvas is cleared then.
                 var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-
-                // This part causes the canvas to be cleared
                 canvas.width = canvas.offsetWidth * ratio;
                 canvas.height = canvas.offsetHeight * ratio;
                 canvas.getContext("2d").scale(ratio, ratio);
-
-                // This library does not listen for canvas changes, so after the canvas is automatically
-                // cleared by the browser, SignaturePad#isEmpty might still return false, even though the
-                // canvas looks empty, because the internal data of this library wasn't cleared. To make sure
-                // that the state of this library is consistent with visual state of the canvas, you
-                // have to clear it manually.
                 signaturePad.clear();
             }
 
@@ -246,14 +231,23 @@
 
             clearButton.addEventListener("click", function (event) {
                 signaturePad.clear();
+                var select = document.getElementById('saveFirma');
+                select.innerText = 'Guardar';
+                debugger;
             });
 
             savePNGButton.addEventListener("click", function (event) {
                 if (signaturePad.isEmpty()) {
                     alert("Please provide a signature first.");
                 } else {
+                    var select = document.getElementById('incidencias_firma');
+                    if(select !== ''){
+                        event.toElement.innerText = "Firma Guardada"
+                    }
                     var dataURL = signaturePad.toDataURL();
-                    download(dataURL, "signature.png");
+                    var select = document.getElementById('incidencias_firma');
+                    select.value = "";
+                    select.value = dataURL;
                 }
             });
 

@@ -126,7 +126,7 @@ class Incidencias
     /**
      * @var string
      *
-     * @ORM\Column(name="firma", type="string", length=255, nullable=true)
+     * @ORM\Column(name="firma", type="text", nullable=true)
      */
     private $firma;
 

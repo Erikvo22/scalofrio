@@ -24,7 +24,11 @@ use ScalofrioBundle\Form\UsuariosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+<<<<<<< HEAD
 use Symfony\Component\HttpFoundation\JsonResponse;
+=======
+use Dompdf\Dompdf;
+>>>>>>> AttachPdfWithRGPD
 
 class UserController extends Controller
 {
@@ -146,8 +150,7 @@ class UserController extends Controller
         }
 
         if ($form->isValid()) {
-            $em->persist($incidencia);
-            $em->flush();
+
 
             /* TEXTO PARA EL ENVÍO DE EMAIL*/
             //Controlando si los campos son nulos.
@@ -195,6 +198,8 @@ class UserController extends Controller
 
             $datos["incidencia"] = $incidencia;
 
+            $datos["firma" ]= $incidencia->getFirma();
+
             /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */
             $emailCliente = "";
             $emailPlus = "";
@@ -207,6 +212,22 @@ class UserController extends Controller
             }
 
             try {
+
+                    
+                    $dompdf = new DOMPDF();
+                    $dompdf->load_html($this->renderView(
+                            'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',
+                            array('datos' => $datos)
+                            )
+                    );
+                    $dompdf->render();
+                    $output = $dompdf->output();
+                    $raiz = $this->get('kernel')->getRootDir() . '/../web/';
+                    $fecha = new \DateTime();
+                    file_put_contents($raiz . 'informeIncidenciaAdmin.pdf', $output);
+                    $file = $raiz . 'informeIncidenciaAdmin.pdf';
+        
+
                 $message = \Swift_Message::newInstance()
                     ->setSubject('INCIDENCIA SCALOFRIO S.L. - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d/m/y'))
                     ->setFrom('incidencias@controlweb.es')
@@ -220,7 +241,8 @@ class UserController extends Controller
                         ),
                         'text/html'
                     )
-                    ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
+                    ->attach(\Swift_Attachment::fromPath($file));
+                    // ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
 
                 $this->get('mailer')->send($message);
 
@@ -238,7 +260,8 @@ class UserController extends Controller
                             ),
                             'text/html'
                         )
-                        ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
+                        ->attach(\Swift_Attachment::fromPath($file));
+                        // ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
 
                     $this->get('mailer')->send($message);
                 }
@@ -257,7 +280,8 @@ class UserController extends Controller
                             ),
                             'text/html'
                         )
-                        ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
+                        ->attach(\Swift_Attachment::fromPath($file));
+                        // ->attach(\Swift_Attachment::fromPath($incidencia->getFirma(), 'image/png')->setFilename('firmacliente.png'));
 
                     $this->get('mailer')->send($message);
                 }
@@ -270,6 +294,13 @@ class UserController extends Controller
                 'mensaje',
                 'Incidencia creada correctamente.'
             );
+
+            $firmaRuta = $incidencia->getFirma();
+            $firmaArray = split(',', $firmaRuta);
+            $firmaBase64 = $firmaArray[1];
+            $incidencia->setFirma($firmaBase64);
+            $em->persist($incidencia);
+            $em->flush();
 
             return $this->redirectToRoute('scalofrio_index');
         }
