@@ -24,11 +24,8 @@ use ScalofrioBundle\Form\UsuariosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-<<<<<<< HEAD
 use Symfony\Component\HttpFoundation\JsonResponse;
-=======
 use Dompdf\Dompdf;
->>>>>>> AttachPdfWithRGPD
 
 class UserController extends Controller
 {
