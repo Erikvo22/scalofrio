@@ -337,6 +337,10 @@ obtener_incidencias_clientes:
     pattern: /obtenerIncidenciasClientes/
     defaults: { _controller: ScalofrioBundle:User:obtenerIncidenciasClientes }
 
+seleccion_incidencia:
+    pattern: /seleccionIncidencia/{idincidencia}
+    defaults: { _controller: ScalofrioBundle:User:seleccionIncidencia }
+
 
 
 

@@ -87,6 +87,14 @@ class Usuarios implements AdvancedUserInterface, \Serializable
 
     protected $establecimientos;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Comercial", inversedBy="usuarios")
+     * @ORM\JoinColumn(name="comercial_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+
+    protected $comercial;
+
 
     public function __construct()
     {
@@ -349,6 +357,23 @@ class Usuarios implements AdvancedUserInterface, \Serializable
     public function setEstablecimientos($establecimientos)
     {
         $this->establecimientos = $establecimientos;
+    }
+
+    /**
+     * @return \ScalofrioBundle\Entity\Comercial
+     */
+    public function getComercial()
+    {
+        return $this->comercial;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Comercial $comercial
+     * @return Usuarios
+     */
+    public function setComercial($comercial)
+    {
+        $this->comercial = $comercial;
     }
 
 

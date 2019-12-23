@@ -24,6 +24,7 @@ use ScalofrioBundle\Form\UsuariosType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
@@ -108,10 +109,15 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $comercial = null;
+        if($usuario->getComercial() != null) {
+            $comercial = $usuario->getComercial()->getId();
+        }
         $incidencia = new Incidencias();
         $form = $this->createIncidenciaCreateForm($incidencia);
 
-        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView(), 'user' => $usuario));
+        return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView(), 'user' => $usuario,
+                                'comercial' => $comercial));
     }
 
     private function createIncidenciaCreateForm(Incidencias $entity)
@@ -1283,6 +1289,29 @@ class UserController extends Controller
             $option .= '<option value="' . $r->getId() . '">' . $r->getNombre() . '</option>';
         }
         return new Response($option);
+    }
+
+    public function seleccionIncidenciaAction($idincidencia)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $incidenciaCliente = $em->getRepository('ScalofrioBundle:IncidenciasCliente')->find($idincidencia);
+        $cliente = $incidenciaCliente->getUsuario()->getCliente()->getId();
+        $estab = 0;$bar = 0;
+        if($incidenciaCliente->getEstablecimientos() != null){
+            $estab = $incidenciaCliente->getEstablecimientos()->getId();
+        }
+        if($incidenciaCliente->getSubestablecimientos() != null){
+            $bar = $incidenciaCliente->getSubestablecimientos()->getId();
+        }
+
+        $resultado = array(
+            'cliente' => $cliente,
+            'establecimiento' => $estab,
+            'bar' => $bar
+        );
+
+        return new JsonResponse($resultado);
     }
 
 }

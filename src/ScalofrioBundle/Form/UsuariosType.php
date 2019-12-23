@@ -23,6 +23,7 @@ class UsuariosType extends AbstractType
             ->add('isActive', 'checkbox', array(
                 'required' => false,
             ))
+            ->add('comercial')
             ->add('guardar', 'submit')
         ;
     }

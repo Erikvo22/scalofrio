@@ -127,6 +127,20 @@
                 format: 'yyyy-mm-dd'
             });
 
+            //Autorellenado si se selecciona una incidencia en el primer select
+            var nIncidencia = document.getElementById('incidencias_numinccliente');
+            nIncidencia.addEventListener('change',
+                function () {
+                    var selectedOption = this.options[nIncidencia.selectedIndex];
+                    seleccionIncidencia(selectedOption.value);
+                });
+
+            //Si el usuario es COMERCIAL, rellenamos el select de comercial.
+            var comercial = '{{ comercial }}';
+            if(comercial != null){
+                $("#incidencias_comercial").val(comercial);
+            }
+
             //Control selects cliente>establecimiento
             var select = document.getElementById('incidencias_cliente');
             $("#incidencias_establecimientos").prop("disabled", true);
@@ -269,6 +283,19 @@
             $.post(ruta, null, function(result) {
                 $("#incidencias_repuestos").prop("disabled", false);
                 $("#incidencias_repuestos").append(result);
+            });
+        }
+
+        function seleccionIncidencia(idincidencia){
+            var ruta = '{{ path('seleccion_incidencia', {'idincidencia':'IDINCIDENCIA'}) }}';
+            ruta = ruta.replace('IDINCIDENCIA', idincidencia);
+            $.post(ruta, null, function(result) {
+                console.log(result);
+                $("#incidencias_cliente").val(result['cliente']);
+                $("#incidencias_establecimientos").val(result['establecimiento']);
+                $("#incidencias_subestablecimientos").val(result['bar']);
+                $("#incidencias_establecimientos").prop("disabled", false);
+                $("#incidencias_subestablecimientos").prop("disabled", false);
             });
         }
 

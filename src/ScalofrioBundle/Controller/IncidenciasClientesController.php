@@ -130,9 +130,10 @@ class IncidenciasClientesController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
+        $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+
 
         if ($rol[0] == 'ROLE_USER') {
-            $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
             $dql = "SELECT u FROM 
                 ScalofrioBundle:IncidenciasCliente u
                 WHERE u.usuario = '" . $usuario->getId() . "'
