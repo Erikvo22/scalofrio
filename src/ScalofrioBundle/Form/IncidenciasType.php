@@ -5,9 +5,11 @@ namespace ScalofrioBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Doctrine\ORM\EntityRepository;
 
 class IncidenciasType extends AbstractType
@@ -33,10 +35,7 @@ class IncidenciasType extends AbstractType
                 'MAITRE'=>'MAITRE', 'SEGUNDO/A'=>'SEGUNDO/A', 'JEFE/A SECTOR'=>'JEFE/A SECTOR', 'CAMARERO/A'=>'CAMARERO/A',
                 'ECONOMATO' => 'ECONOMATO', 'SSTT CLIENTE' => 'SSTT CLIENTE')))
             ->add('nombrecliente')
-            ->add('firma', FileType::class, array(
-                'required'    => true,
-                "data_class" => null
-            ))
+            ->add('firma', HiddenType::class)
             ->add('resultado','choice', array('choices' => array(''=>'','RESUELTO'=>'RESUELTO', 'PENDIENTE'=>'PENDIENTE',
                 'CAMBIO DE MÁQUINA'=>'CAMBIO DE MÁQUINA')))
             ->add('ruta','choice', array('choices' => array(''=>'','GC NORTE'=>'GC NORTE', 'GC SUR'=>'GC SUR',

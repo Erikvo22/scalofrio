@@ -36,3 +36,6 @@
 </ul><br>
 
 <p>Se adjunta la firma del cliente.</p>
+    {% if datos['firma'] is defined  %}
+        <img src={{datos['firma']}}>
+    {% endif %}

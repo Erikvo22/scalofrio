@@ -37,6 +37,7 @@ class IncidenciasClientesController extends Controller
             ),
         );
         if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
             $em->persist($incidencia);

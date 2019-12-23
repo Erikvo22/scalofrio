@@ -46,22 +46,15 @@ class IncidenciasCliente
      * @ORM\Column(name="DESCRIPCION", type="string", length=255)
      */
     private $descripcion;
-
     /**
-     * @ORM\Column(name="estado", type="integer", length=1)
+     * @ORM\Column(name="ESTADO", type="integer", length=11)
      */
-    private $estado = 0;
-
+    private $estado;
     /**
-     * @ORM\Column(name="testigo", type="integer", length=1)
+     * @ORM\Column(name="TESTIGO", type="integer", length=11)
      */
-    private $testigo = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Usuarios")
-     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
-     */
-    private $usuario;
+    private $testigo;
 
     /**
      * Get the value of id
@@ -79,6 +72,86 @@ class IncidenciasCliente
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of gestion
+     */
+    public function getGestion()
+    {
+        return $this->gestion;
+    }
+
+    /**
+     * Set the value of gestion
+     *
+     * @return  self
+     */
+    public function setGestion($gestion)
+    {
+        $this->gestion = $gestion;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of establecimientos
+     */
+    public function getEstablecimientos()
+    {
+        return $this->establecimientos;
+    }
+
+    /**
+     * Set the value of establecimientos
+     *
+     * @return  self
+     */
+    public function setEstablecimientos($establecimientos)
+    {
+        $this->establecimientos = $establecimientos;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of subestablecimientos
+     */
+    public function getSubestablecimientos()
+    {
+        return $this->subestablecimientos;
+    }
+
+    /**
+     * Set the value of subestablecimientos
+     *
+     * @return  self
+     */
+    public function setSubestablecimientos($subestablecimientos)
+    {
+        $this->subestablecimientos = $subestablecimientos;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fechaIncidencia
+     */
+    public function getFechaIncidencia()
+    {
+        return $this->fechaIncidencia;
+    }
+
+    /**
+     * Set the value of fechaIncidencia
+     *
+     * @return  self
+     */
+    public function setFechaIncidencia($fechaIncidencia)
+    {
+        $this->fechaIncidencia = $fechaIncidencia;
 
         return $this;
     }
@@ -104,45 +177,7 @@ class IncidenciasCliente
     }
 
     /**
-     * @return \ScalofrioBundle\Entity\Gestion
-     */
-    public function getGestion()
-    {
-        return $this->gestion;
-    }
-
-    /**
-     * @param \ScalofrioBundle\Entity\Gestion $gestion
-     * @return IncidenciasCliente
-     */
-    public function setGestion($gestion)
-    {
-        $this->gestion = $gestion;
-    }
-
-
-    /**
-     * Get the value of fechaIncidencia
-     */
-    public function getFechaIncidencia()
-    {
-        return $this->fechaIncidencia;
-    }
-
-    /**
-     * Set the value of fechaIncidencia
-     *
-     * @return  self
-     */
-    public function setFechaIncidencia($fechaIncidencia)
-    {
-        $this->fechaIncidencia = $fechaIncidencia;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of titulo
+     * Get the value of estado
      */
     public function getEstado()
     {
@@ -150,7 +185,7 @@ class IncidenciasCliente
     }
 
     /**
-     * Set the value of titulo
+     * Set the value of estado
      *
      * @return  self
      */
@@ -163,7 +198,7 @@ class IncidenciasCliente
 
     /**
      * Get the value of testigo
-     */
+     */ 
     public function getTestigo()
     {
         return $this->testigo;
@@ -173,7 +208,7 @@ class IncidenciasCliente
      * Set the value of testigo
      *
      * @return  self
-     */
+     */ 
     public function setTestigo($testigo)
     {
         $this->testigo = $testigo;
@@ -181,71 +216,19 @@ class IncidenciasCliente
         return $this;
     }
 
-    /**
-     * Get the value of usuario
-     */
-    public function getUsuario()
+
+    public function __toString()
     {
-        return $this->usuario;
+        return "";
+        // $id = (string)$this->getId();
+        // $cli = $this->getUsuario()->getCliente();
+        // if($this->getEstablecimientos()!=null) {
+        //     $est = $this->getEstablecimientos()->getNombre();
+        //     $devolver = $id . ' - ' . $cli . ' - ' . $est;
+        // }else{
+        //     $devolver = $id . ' - ' . $cli;
+        // }
+
+        // return $devolver;
     }
-
-    /**
-     * Set the value of usuario
-     *
-     * @return  self
-     */
-    public function setUsuario($usuario)
-    {
-        $this->usuario = $usuario;
-
-        return $this;
-    }
-
-    /**
-     * @return \ScalofrioBundle\Entity\Subestablecimientos
-     */
-    public function getSubestablecimientos()
-    {
-        return $this->subestablecimientos;
-    }
-
-    /**
-     * @param \ScalofrioBundle\Entity\Subestablecimientos $subestablecimientos
-     * @return IncidenciasCliente
-     */
-    public function setSubestablecimientos($subestablecimientos)
-    {
-        $this->subestablecimientos = $subestablecimientos;
-    }
-
-    /**
-     * @return \ScalofrioBundle\Entity\Establecimientos
-     */
-    public function getEstablecimientos()
-    {
-        return $this->establecimientos;
-    }
-
-    /**
-     * @param \ScalofrioBundle\Entity\Establecimientos $establecimientos
-     * @return IncidenciasCliente
-     */
-    public function setEstablecimientos($establecimientos)
-    {
-        $this->establecimientos = $establecimientos;
-    }
-
-    // public function __toString()
-    // {
-    //     $id = (string)$this->getId();
-    //     $cli = $this->getUsuario()->getCliente();
-    //     if($this->getEstablecimientos()!=null) {
-    //         $est = $this->getEstablecimientos()->getNombre();
-    //         $devolver = $id . ' - ' . $cli . ' - ' . $est;
-    //     }else{
-    //         $devolver = $id . ' - ' . $cli;
-    //     }
-
-    //     return $devolver;
-    // }
 }
