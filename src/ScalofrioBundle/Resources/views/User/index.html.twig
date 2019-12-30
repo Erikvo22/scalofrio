@@ -56,6 +56,7 @@
                         <th>Establecimiento</th>
                         <th>Bar</th>
                         <th>Gestión</th>
+                        <th>Máquina</th>
                         <th>Resultado</th>
                         <th>Acciones</th>
                     </tr>
@@ -75,6 +76,7 @@
                             <td>{{ incidencia.establecimientos}}</td>
                             <td>{{ incidencia.subestablecimientos}}</td>
                             <td>{{ incidencia.gestion }}</td>
+                            <td>{{ incidencia.maquinas }}</td>
                             <td>{{ incidencia.resultado }}</td>
                             <td class="actions">
                                 <a href="{{ path('scalofrio_incidencia_view', { id: incidencia.id}) }}" class="btn btn-sm btn-primary">Ver</a>

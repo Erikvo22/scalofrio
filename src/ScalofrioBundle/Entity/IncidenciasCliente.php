@@ -38,6 +38,12 @@ class IncidenciasCliente
     protected $subestablecimientos;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Usuarios")
+     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     */
+    protected $usuario;
+
+    /**
      * @ORM\Column(name="FECHA_INCIDENCIA", type="datetime")
      */
     private $fechaIncidencia;
@@ -46,14 +52,15 @@ class IncidenciasCliente
      * @ORM\Column(name="DESCRIPCION", type="string", length=255)
      */
     private $descripcion;
+
     /**
      * @ORM\Column(name="ESTADO", type="integer", length=11)
      */
     private $estado;
+
     /**
      * @ORM\Column(name="TESTIGO", type="integer", length=11)
      */
-
     private $testigo;
 
     /**
@@ -112,6 +119,26 @@ class IncidenciasCliente
     public function setEstablecimientos($establecimientos)
     {
         $this->establecimientos = $establecimientos;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of usuarios
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * Set the value of usuarios
+     *
+     * @return  self
+     */
+    public function setUsuario($usuario)
+    {
+        $this->usuario = $usuario;
 
         return $this;
     }
@@ -219,16 +246,15 @@ class IncidenciasCliente
 
     public function __toString()
     {
-        return "";
-        // $id = (string)$this->getId();
-        // $cli = $this->getUsuario()->getCliente();
-        // if($this->getEstablecimientos()!=null) {
-        //     $est = $this->getEstablecimientos()->getNombre();
-        //     $devolver = $id . ' - ' . $cli . ' - ' . $est;
-        // }else{
-        //     $devolver = $id . ' - ' . $cli;
-        // }
+         $id = (string)$this->getId();
+         $cli = $this->getUsuario()->getCliente();
+         if($this->getEstablecimientos()!=null) {
+             $est = $this->getEstablecimientos()->getNombre();
+             $devolver = $id . ' - ' . $cli . ' - ' . $est;
+         }else{
+             $devolver = $id . ' - ' . $cli;
+         }
 
-        // return $devolver;
+         return $devolver;
     }
 }
