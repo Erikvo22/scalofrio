@@ -2,6 +2,8 @@
 <ul>
     {% if datos['numinccliente'] is defined  %}
         <li>Nº de incidencia del cliente: {{ datos['numinccliente'] }} </li>
+    {% elseif %}
+        <li>Nª de incidencia del cliente: No</li>
     {% endif %}
     <li>Cliente: {{datos['cliente']}}</li>
     {% if datos['establecimientos'] is defined  %}
@@ -34,8 +36,3 @@
     </ul>
     {% endif %}
 </ul><br>
-
-<p>Firma electrónica</p>
-    {% if datos['firma'] is defined  %}
-        <img src={{datos['firma']}}>
-    {% endif %}

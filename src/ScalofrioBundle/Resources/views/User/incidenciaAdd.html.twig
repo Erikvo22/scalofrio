@@ -91,8 +91,8 @@
                     <div class="signature-pad--footer">
                         <div class="signature-pad--actions">
                             <div>
-                                <button id="clear" type="button" class="button clear" data-action="clear">Limpiar</button>
-                                <button id="saveFirma" type="button" class="button save" data-action="save-png">Guardar</button>
+                                <button id="clear" type="button" class="btn btn-info clear" data-action="clear">Limpiar</button>
+                                <button id="saveFirma" type="button" class="btn btn-success save" data-action="save-png">Fijar firma</button>
                             </div>
                         </div>
                     </div>
@@ -185,6 +185,15 @@
                 backgroundColor: 'rgb(255, 255, 255)'
             });
 
+            //A la hora de guardar el formulario comprobamos si la firma está rellena
+            var saveFormulario = document.getElementById("incidencias_guardar");
+            saveFormulario.addEventListener("click", function (event) {
+                var firma = document.getElementById('saveFirma');
+                if (firma.innerText == 'Fijar firma') {
+                    alert("Por favor, debe de realizar una firma.");
+                }
+            });
+
             function resizeCanvas() {
                 var ratio =  Math.max(window.devicePixelRatio || 1, 1);
                 canvas.width = canvas.offsetWidth * ratio;
@@ -232,17 +241,16 @@
             clearButton.addEventListener("click", function (event) {
                 signaturePad.clear();
                 var select = document.getElementById('saveFirma');
-                select.innerText = 'Guardar';
-                debugger;
+                select.innerText = 'Fijar firma';
             });
 
             savePNGButton.addEventListener("click", function (event) {
                 if (signaturePad.isEmpty()) {
-                    alert("Please provide a signature first.");
+                    alert("Por favor, debe de realizar una firma.");
                 } else {
                     var select = document.getElementById('incidencias_firma');
                     if(select !== ''){
-                        event.toElement.innerText = "Firma Guardada"
+                        event.toElement.innerText = "¡Firma fijada!"
                     }
                     var dataURL = signaturePad.toDataURL();
                     var select = document.getElementById('incidencias_firma');
