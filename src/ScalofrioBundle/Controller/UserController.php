@@ -134,6 +134,10 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $comercial = null;
+        if($usuario->getComercial() != null) {
+            $comercial = $usuario->getComercial()->getId();
+        }
         $incidencia = new Incidencias();
         $form = $this->createIncidenciaCreateForm($incidencia);
         $form->handleRequest($request);
@@ -196,6 +200,10 @@ class UserController extends Controller
             $datos["incidencia"] = $incidencia;
 
             $datos["firma" ]= $incidencia->getFirma();
+            if($datos["firma"] == null){
+                return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView(),
+                    'user' => $usuario, 'comercial' => $comercial));
+            }
 
             /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */
             $emailCliente = "";
