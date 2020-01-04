@@ -44,6 +44,7 @@
                 <p style="color: limegreen">No hay incidencias de clientes pendientes.</p>
             {% endif %}
 
+            {% if pagination|length > 0 %}
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <tr>
@@ -92,6 +93,12 @@
                     {{ knp_pagination_render(pagination) }}
                 </div>
             </div>
+            {% else %}
+            <div style="text-align:center;">
+                <span><i class="fas fa-server" style="font-size:64px"></i></span>
+                <span><h4>No se ha generado ninguna incidencia.</h4></span>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>

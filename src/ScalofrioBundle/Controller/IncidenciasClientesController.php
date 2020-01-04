@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Dompdf\Dompdf;
+use \Datetime;
 
 class IncidenciasClientesController extends Controller
 {
@@ -43,22 +44,10 @@ class IncidenciasClientesController extends Controller
             $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
             $em->persist($incidencia);
             $em->flush();
-            
-            $dompdf = new DOMPDF();
-            $dompdf->load_html($this->renderView(
-                    'ScalofrioBundle:Email:registrarIncidencia.html.twig',
-                    $parameters
-                    )
-            );
-            $dompdf->render();
-            $output = $dompdf->output();
-            $raiz = $this->get('kernel')->getRootDir() . '/../web/';
-            $fecha = new DateTime();
-            file_put_contents($raiz . 'informeIncidencia.pdf' . $fecha->getTimestamp(), $output);
 
-            $this->sendMail($parameters, 'incidenciasclientes@controlweb.es', $raiz . 'informeIncidencia.pdf');
+            $this->sendMail($parameters, 'incidenciasclientes@controlweb.es');
             if($usuario->getCliente()->getEmail() != null){
-                $this->sendMail($parameters, $usuario->getCliente()->getEmail(),$raiz . 'informeIncidencia.pdf');
+                $this->sendMail($parameters, $usuario->getCliente()->getEmail());
             }
             $this->addFlash(
                 'mensaje',
@@ -123,20 +112,19 @@ class IncidenciasClientesController extends Controller
         $form = $this->createForm(new IncidenciasClientesType(), $entity, array("attr" => array("modo" => "lectura")));
         return $form;
     }
-    private function sendMail($parameters, $mailto, $file)
+    private function sendMail($parameters, $mailto)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject('Incidencia del cliente')
             ->setFrom('incidencias@controlweb.es')
-            ->setTo('lcs.arjones@gmail.com')
+            ->setTo($mailto)
             ->setBody(
                 $this->renderView(
                     'ScalofrioBundle:Email:registrarIncidencia.html.twig',
                     $parameters
                 ),
                 'text/html'
-            )
-            ->attach(\Swift_Attachment::fromPath($file));
+            );
 
         $this->get('mailer')->send($message);
 

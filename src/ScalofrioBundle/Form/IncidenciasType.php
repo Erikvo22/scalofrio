@@ -86,6 +86,7 @@ class IncidenciasType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->where('u.estado = 0')
+                        ->orWhere('u.estado is null')
                         ->orderBy('u.id', 'ASC');
                 },
             ))

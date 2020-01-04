@@ -37,10 +37,19 @@ class UserController extends Controller
         $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0
         ));
+        $incCliPend2 = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => null
+        ));
+        $sumaP = count($incCliPend) + count($incCliPend2);
         $incRev = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0,
             'testigo' => 1
         ));
+        $incRev2 = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => null,
+            'testigo' => 1
+        ));
+        $sumaR = count($incRev) + count($incRev2);
 
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
@@ -59,7 +68,7 @@ class UserController extends Controller
         );
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             return $this->render('ScalofrioBundle:User:index.html.twig',
-                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev), 'user' => $usuario));
+                array('pagination' => $pagination, 'incCliPend' => $sumaP, 'incRev' => $sumaR, 'user' => $usuario));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
                 array('pagination' => $pagination, 'user' => $usuario));
@@ -74,10 +83,19 @@ class UserController extends Controller
         $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0
         ));
+        $incCliPend2 = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => null
+        ));
+        $sumaP = count($incCliPend) + count($incCliPend2);
         $incRev = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0,
             'testigo' => 1
         ));
+        $incRev2 = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => null,
+            'testigo' => 1
+        ));
+        $sumaR = count($incRev) + count($incRev2);
 
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             $dql = "SELECT u FROM ScalofrioBundle:Incidencias u ORDER BY u.id DESC";
@@ -97,7 +115,7 @@ class UserController extends Controller
         );
         if ($rol[0] == 'ROLE_ADMIN' || $rol[0] == 'ROLE_COMERCIAL') {
             return $this->render('ScalofrioBundle:User:index.html.twig',
-                array('pagination' => $pagination, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev), 'user' => $usuario));
+                array('pagination' => $pagination, 'incCliPend' => $sumaP, 'incRev' => $sumaR, 'user' => $usuario));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
                 array('pagination' => $pagination, 'user' => $usuario));
@@ -1173,10 +1191,19 @@ class UserController extends Controller
         $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0
         ));
+        $incCliPend2 = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => null
+        ));
+        $sumaP = count($incCliPend) + count($incCliPend2);
         $incRev = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0,
             'testigo' => 1
         ));
+        $incRev2 = $em->getRepository(IncidenciasCliente::class)->findBy(array(
+            'estado' => null,
+            'testigo' => 1
+        ));
+        $sumaR = count($incRev) + count($incRev2);
 
         $dql = "SELECT i FROM ScalofrioBundle:Incidencias i
         JOIN i.cliente c
@@ -1215,7 +1242,7 @@ class UserController extends Controller
         }
 
         return $this->render('ScalofrioBundle:User:index.html.twig', array('pagination' => $pagination,
-            'user' => $usuario, 'incCliPend' => count($incCliPend), 'incRev' => count($incRev)));
+            'user' => $usuario, 'incCliPend' => $sumaP, 'incRev' => $sumaR));
     }
 
     public function busquedaClienteAction(Request $request)
