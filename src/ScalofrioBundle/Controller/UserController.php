@@ -2,6 +2,7 @@
 
 namespace ScalofrioBundle\Controller;
 
+use ScalofrioBundle\Entity\Cargocliente;
 use ScalofrioBundle\Entity\Cliente;
 use ScalofrioBundle\Entity\Comercial;
 use ScalofrioBundle\Entity\Establecimientos;
@@ -10,6 +11,8 @@ use ScalofrioBundle\Entity\Incidencias;
 use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Maquinas;
 use ScalofrioBundle\Entity\Repuestos;
+use ScalofrioBundle\Entity\Resultados;
+use ScalofrioBundle\Entity\Rutas;
 use ScalofrioBundle\Entity\Subestablecimientos;
 use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\ClienteType;
@@ -21,6 +24,9 @@ use ScalofrioBundle\Form\MaquinasType;
 use ScalofrioBundle\Form\RepuestosType;
 use ScalofrioBundle\Form\SubestablecimientosType;
 use ScalofrioBundle\Form\UsuariosType;
+use ScalofrioBundle\Form\ResultadosType;
+use ScalofrioBundle\Form\RutasType;
+use ScalofrioBundle\Form\CargoclienteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -438,11 +444,14 @@ class UserController extends Controller
             $em->flush();
 
             /*Comprobamos si existe otra incidencia con el numinccliente, si no, testigo = 0 */
-            $incNum = $em->getRepository('ScalofrioBundle:Incidencias')->findBy(
-                array(
-                    'numinccliente' => $incidencia->getNumIncCliente()->getId(),
-                )
-            );
+            $incNum = 0;
+            if($incidencia->getNumIncCliente() != null) {
+                $incNum = $em->getRepository('ScalofrioBundle:Incidencias')->findBy(
+                    array(
+                        'numinccliente' => $incidencia->getNumIncCliente()->getId(),
+                    )
+                );
+            }
             if(count($incNum) == 0){
                 $incCliente = $em->getRepository('ScalofrioBundle:IncidenciasCliente')->find($incidencia->getNumIncCliente()->getId());
                 $incCliente->setTestigo(0);
@@ -1178,6 +1187,126 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_index');
         }
         return $this->render('ScalofrioBundle:User:gestionAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    /******** APARTADO DE RESULTADOS **********/
+
+    public function resultadosAddAction()
+    {
+        $resultados = new Resultados();
+        $form = $this->createResultadosCreateForm($resultados);
+
+        return $this->render('ScalofrioBundle:User:resultadosAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    private function createResultadosCreateForm(Resultados $entity)
+    {
+        $form = $this->createForm(new ResultadosType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_resultados_create'),
+            'method' => 'POST',
+        ));
+        return $form;
+    }
+
+    public function createResultadosAction(Request $request)
+    {
+        $resultados = new Resultados();
+        $form = $this->createResultadosCreateForm($resultados);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($resultados);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Nuevo tipo de resultado creado correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_index');
+        }
+        return $this->render('ScalofrioBundle:User:resultadoAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    /******** APARTADO DE RUTAS **********/
+
+    public function rutasAddAction()
+    {
+        $rutas = new Rutas();
+        $form = $this->createRutasCreateForm($rutas);
+
+        return $this->render('ScalofrioBundle:User:rutasAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    private function createRutasCreateForm(Rutas $entity)
+    {
+        $form = $this->createForm(new RutasType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_rutas_create'),
+            'method' => 'POST',
+        ));
+        return $form;
+    }
+
+    public function createRutasAction(Request $request)
+    {
+        $rutas = new Rutas();
+        $form = $this->createRutasCreateForm($rutas);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($rutas);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Nueva ruta creada correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_index');
+        }
+        return $this->render('ScalofrioBundle:User:rutasAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    /******** APARTADO DE CARGOS DEL CLIENTE **********/
+
+    public function cargosAddAction()
+    {
+        $cargos = new Cargocliente();
+        $form = $this->createCargosCreateForm($cargos);
+
+        return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    private function createCargosCreateForm(Cargocliente $entity)
+    {
+        $form = $this->createForm(new CargoclienteType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_cargos_create'),
+            'method' => 'POST',
+        ));
+        return $form;
+    }
+
+    public function createCargosAction(Request $request)
+    {
+        $cargos = new Cargocliente();
+        $form = $this->createCargosCreateForm($cargos);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($cargos);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Nuevo tipo de cargo del cliente creado correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_index');
+        }
+        return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView()));
     }
 
     /******** BÚSQUEDA **********/

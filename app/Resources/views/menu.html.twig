@@ -25,8 +25,11 @@
                     <li><a href="{{ path('scalofrio_cliente_list') }}"><span class="glyphicon glyphicon-home"></span> Gestión clientes</a></li>
                     <li><a href="{{ path('scalofrio_user_list') }}"><span class="glyphicon glyphicon-user"></span> Gestión usuarios</a></li>
                     <li><a href="{{ path('scalofrio_maquinas_list') }}"><span class="glyphicon glyphicon-print"></span> Gestión máquinas</a></li>
-                    <li><a href="{{ path('scalofrio_comercial_add') }}"><span class="glyphicon glyphicon-star"></span> Añadir comercial</a></li>
-                    <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Añadir tipo gestión</a></li>
+                    <li><a href="{{ path('scalofrio_comercial_add') }}"><span class="glyphicon glyphicon-star"></span> Comerciales</a></li>
+                    <li><a href="{{ path('scalofrio_cargos_add') }}"><span class="glyphicon glyphicon-briefcase"></span> Cargos clientes</a></li>
+                    <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Gestiones</a></li>
+                    <li><a href="{{ path('scalofrio_rutas_add') }}"><span class="glyphicon glyphicon-road"></span> Rutas</a></li>
+                    <li><a href="{{ path('scalofrio_resultados_add') }}"><span class="glyphicon glyphicon-ok"></span> Resultados</a></li>
                 </ul>
                 {% endif %}
                 {% if is_granted('ROLE_USER') or is_granted('ROLE_COMERCIAL')%}

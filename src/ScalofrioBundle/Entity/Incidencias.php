@@ -95,9 +95,9 @@ class Incidencias
     private $fecha;
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="ruta", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Rutas", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="ruta", referencedColumnName="id", onDelete="CASCADE")
      */
 
     private $ruta;
@@ -110,9 +110,9 @@ class Incidencias
     private $tiempo;
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="cargocliente", type="string", length=100)
+     * @ORM\ManyToOne(targetEntity="Cargocliente", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="cargocliente", referencedColumnName="id", onDelete="CASCADE")
      */
     private $cargocliente;
 
@@ -131,9 +131,9 @@ class Incidencias
     private $firma;
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="resultado", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Resultados", inversedBy="incidencias")
+     * @ORM\JoinColumn(name="resultado", referencedColumnName="id", onDelete="CASCADE")
      */
     private $resultado;
 
@@ -203,27 +203,20 @@ class Incidencias
     }
 
     /**
-     * Set cargocliente
-     *
-     * @param string $cargocliente
-     *
+     * @return \ScalofrioBundle\Entity\Cargocliente
+     */
+    public function getCargocliente()
+    {
+        return $this->cargocliente;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Cargocliente $cargocliente
      * @return Incidencias
      */
     public function setCargocliente($cargocliente)
     {
         $this->cargocliente = $cargocliente;
-
-        return $this;
-    }
-
-    /**
-     * Get cargocliente
-     *
-     * @return string
-     */
-    public function getCargocliente()
-    {
-        return $this->cargocliente;
     }
 
 
@@ -276,27 +269,20 @@ class Incidencias
     }
 
     /**
-     * Set resultado
-     *
-     * @param string $resultado
-     *
+     * @return \ScalofrioBundle\Entity\Resultados
+     */
+    public function getResultado()
+    {
+        return $this->resultado;
+    }
+
+    /**
+     * @param \ScalofrioBundle\Entity\Resultados $resultado
      * @return Incidencias
      */
     public function setResultado($resultado)
     {
         $this->resultado = $resultado;
-
-        return $this;
-    }
-
-    /**
-     * Get resultado
-     *
-     * @return string
-     */
-    public function getResultado()
-    {
-        return $this->resultado;
     }
 
     /**
@@ -316,15 +302,15 @@ class Incidencias
     }
 
     /**
-     * @return \ScalofrioBundle\Entity\Ruta
-*/
+     * @return \ScalofrioBundle\Entity\Rutas
+     */
     public function getRuta()
     {
         return $this->ruta;
     }
 
     /**
-     * @param \ScalofrioBundle\Entity\Ruta $ruta
+     * @param \ScalofrioBundle\Entity\Rutas $ruta
      * @return Incidencias
      */
     public function setRuta($ruta)

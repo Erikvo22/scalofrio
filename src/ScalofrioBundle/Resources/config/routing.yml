@@ -342,5 +342,54 @@ seleccion_incidencia:
     defaults: { _controller: ScalofrioBundle:User:seleccionIncidencia }
 
 
+####### APARTADO DE RESULTADOS ########
+scalofrio_resultados_add:
+    path:     /resultados/add
+    defaults: { _controller: ScalofrioBundle:User:resultadosAdd }
+
+scalofrio_resultados_create:
+    path: /resultados/create
+    defaults: {_controller: ScalofrioBundle:User:createResultados }
+    methods: POST
+
+scalofrio_resultados_redirect_add:
+    path: /resultados/create
+    defaults:
+        _controller: ScalofrioBundle:User:resultadosAdd
+        path: /resultados/add
+        permanent: true
 
 
+####### APARTADO DE RUTAS ########
+scalofrio_rutas_add:
+    path:     /rutas/add
+    defaults: { _controller: ScalofrioBundle:User:rutasAdd }
+
+scalofrio_rutas_create:
+    path: /rutas/create
+    defaults: {_controller: ScalofrioBundle:User:createRutas }
+    methods: POST
+
+scalofrio_rutas_redirect_add:
+    path: /rutas/create
+    defaults:
+        _controller: ScalofrioBundle:User:rutasAdd
+        path: /rutas/add
+        permanent: true
+
+
+####### APARTADO DE CARGOS DEL CLIENTE ########
+scalofrio_cargos_add:
+  path:     /cargos/add
+  defaults: { _controller: ScalofrioBundle:User:cargosAdd }
+
+scalofrio_cargos_create:
+  path: /cargos/create
+  defaults: {_controller: ScalofrioBundle:User:createCargos }
+  methods: POST
+
+scalofrio_cargos_redirect_add:
+  path: /cargos/create
+  defaults:
+    _controller: ScalofrioBundle:User:cargosAdd
+    path: /cargos/add
