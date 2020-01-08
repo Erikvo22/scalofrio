@@ -67,7 +67,7 @@ class IncidenciasClientesType extends AbstractType
             ))
             ->add('descripcion', TextareaType::class, array(
                 'attr' => array('class' => 'tinymce', 'placeholder' => 'Descripción de la incidencia...'),
-                'required'  => true,
+                'required'  => false,
                 'read_only' => $this->modo,
                 )
             )
