@@ -32,55 +32,95 @@ class IncidenciasType extends AbstractType
             ->add('cargocliente', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Cargocliente',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('nombrecliente')
             ->add('firma', HiddenType::class)
             ->add('resultado', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Resultados',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('ruta', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Rutas',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('comercial', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Comercial',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('cliente', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Cliente',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('establecimientos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Establecimientos',
                 'empty_value' => '',
-                'required'    => false
+                'required'    => false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('subestablecimientos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Subestablecimientos',
                 'empty_value' => '',
-                'required'    => false
+                'required'    => false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('gestion', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Gestion',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('maquinas', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Maquinas',
                 'empty_value' => '',
-                'required'    => true
+                'required'    => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('repuestos', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Repuestos',
                 'multiple' => true,
                 'empty_value' => '',
-                'required'    => false
+                'required'    => false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nombre', 'ASC');
+                },
             ))
             ->add('email', 'email', array(
                 'required'    => false

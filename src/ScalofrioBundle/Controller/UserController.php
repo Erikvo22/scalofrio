@@ -253,7 +253,7 @@ class UserController extends Controller
                     $output = $dompdf->output();
                     $raiz = $this->get('kernel')->getRootDir() . '/../web/';
                     $fecha = new \DateTime();
-                    $nombrePdf = 'N.' . $incidencia->getId() . ' - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha().'.pdf';
+                    $nombrePdf = 'INCIDENCIA ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha()->format('d-m-Y').'.pdf';
                     file_put_contents($raiz . $nombrePdf, $output);
                     $file = $raiz . $nombrePdf;
         
@@ -616,7 +616,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
-        $dql = "SELECT u FROM ScalofrioBundle:Usuarios u";
+        $dql = "SELECT u FROM ScalofrioBundle:Usuarios u order by u.nombre ASC";
         $usuarios = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
@@ -773,7 +773,7 @@ class UserController extends Controller
         $form = $this->createComercialCreateForm($comercial);
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:Comercial u";
+        $dql = "SELECT u FROM ScalofrioBundle:Comercial u order by u.nombre ASC";
         $comerciales = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -821,7 +821,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $dql = "SELECT u FROM ScalofrioBundle:Cliente u";
+        $dql = "SELECT u FROM ScalofrioBundle:Cliente u order by u.nombre ASC";
         $clientes = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
@@ -1013,7 +1013,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $dql = "SELECT u FROM ScalofrioBundle:Maquinas u";
+        $dql = "SELECT u FROM ScalofrioBundle:Maquinas u order by u.nombre ASC";
         $maquinas = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
@@ -1168,7 +1168,7 @@ class UserController extends Controller
         $form = $this->createGestionCreateForm($gestion);
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:Gestion u";
+        $dql = "SELECT u FROM ScalofrioBundle:Gestion u order by u.nombre ASC";
         $gestiones = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -1218,7 +1218,7 @@ class UserController extends Controller
         $form = $this->createResultadosCreateForm($resultados);
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:Resultados u";
+        $dql = "SELECT u FROM ScalofrioBundle:Resultados u order by u.nombre ASC";
         $resultado = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -1268,7 +1268,7 @@ class UserController extends Controller
         $form = $this->createRutasCreateForm($rutas);
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:Rutas u";
+        $dql = "SELECT u FROM ScalofrioBundle:Rutas u order by u.nombre ASC";
         $ruta = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -1318,7 +1318,7 @@ class UserController extends Controller
         $form = $this->createCargosCreateForm($cargos);
 
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT u FROM ScalofrioBundle:Cargocliente u";
+        $dql = "SELECT u FROM ScalofrioBundle:Cargocliente u order by u.nombre ASC";
         $cargosCliente = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
