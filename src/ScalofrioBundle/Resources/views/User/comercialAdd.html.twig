@@ -3,32 +3,61 @@
 {% block body %}
     {{ include('menu.html.twig') }}
     {{ parent() }}
+    {#Mensaje de confirmación de operación#}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
 
-    <div class="main container">
-        <div class="row well">
-            <div class="col-md-6">
-                <div class="page-header">
-                    <h2><b><span class="glyphicon glyphicon-star"></span> Nuevo comercial</b></h2>
-                </div>
-                {{ form_start(form) }}
-
-                <div class="form-group">
-                    {{ form_label(form.nombre) }}
-                    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.nombre) }}</span>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.apellidos) }}
-                    {{ form_widget(form.apellidos, { 'attr' : {'class' : 'form-control'}}) }}
-                    <span class = "text-danger">{{ form_errors(form.apellidos) }}</span>
-                </div>
-
-                <p>
-                    {{ form_widget(form.guardar, {'label' : 'Crear comercial', 'attr': {'class': 'btn btn-success'}}) }}
-                </p>
-
-                {{ form_end(form) }}
+    <div class="container">
+        <div class="col-md-6">
+            <div class="page-header margin-none">
+                <h2><b>Listado de comerciales</b></h2>
             </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                    </tr>
+                    {% for comercial in pagination %}
+                        <tr>
+                            <td>{{ comercial.id }}</td>
+                            <td>{{ comercial.nombre }}</td>
+                            <td>{{ comercial.apellidos }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {#display navigation#}
+                <div class="navigation" style="text-align: center">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="page-header">
+                <h2><b><span class="glyphicon glyphicon-star"></span> Nuevo comercial</b></h2>
+            </div>
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.nombre) }}
+                {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                <span class="text-danger">{{ form_errors(form.nombre) }}</span>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.apellidos) }}
+                {{ form_widget(form.apellidos, { 'attr' : {'class' : 'form-control'}}) }}
+                <span class="text-danger">{{ form_errors(form.apellidos) }}</span>
+            </div>
+
+            <p>
+                {{ form_widget(form.guardar, {'label' : 'Crear comercial', 'attr': {'class': 'btn btn-success'}}) }}
+            </p>
+
+            {{ form_end(form) }}
         </div>
     </div>
 

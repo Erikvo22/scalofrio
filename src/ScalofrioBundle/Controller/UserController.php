@@ -253,8 +253,9 @@ class UserController extends Controller
                     $output = $dompdf->output();
                     $raiz = $this->get('kernel')->getRootDir() . '/../web/';
                     $fecha = new \DateTime();
-                    file_put_contents($raiz . 'informeIncidenciaAdmin.pdf', $output);
-                    $file = $raiz . 'informeIncidenciaAdmin.pdf';
+                    $nombrePdf = 'N.' . $incidencia->getId() . ' - ' . $incidencia->getCliente()->getNombre() . ' - ' . $incidencia->getFecha().'.pdf';
+                    file_put_contents($raiz . $nombrePdf, $output);
+                    $file = $raiz . $nombrePdf;
         
 
                 $message = \Swift_Message::newInstance()
@@ -766,12 +767,22 @@ class UserController extends Controller
 
     /******** APARTADO DE COMERCIALES **********/
 
-    public function comercialAddAction()
+    public function comercialAddAction(Request $request)
     {
         $comercial = new Comercial();
         $form = $this->createComercialCreateForm($comercial);
 
-        return $this->render('ScalofrioBundle:User:comercialAdd.html.twig', array('form' => $form->createView()));
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:Comercial u";
+        $comerciales = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $comerciales, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:comercialAdd.html.twig', array('form' => $form->createView(),
+                            'comercial' => $comerciales, 'pagination' => $pagination));
     }
 
     private function createComercialCreateForm(Comercial $entity)
@@ -799,7 +810,7 @@ class UserController extends Controller
                 'Comercial creado correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_comercial_add');
         }
         return $this->render('ScalofrioBundle:User:comercialAdd.html.twig', array('form' => $form->createView()));
     }
@@ -1151,12 +1162,22 @@ class UserController extends Controller
 
     /******** APARTADO DE GESTIONES **********/
 
-    public function gestionAddAction()
+    public function gestionAddAction(Request $request)
     {
         $gestion = new Gestion();
         $form = $this->createGestionCreateForm($gestion);
 
-        return $this->render('ScalofrioBundle:User:gestionAdd.html.twig', array('form' => $form->createView()));
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:Gestion u";
+        $gestiones = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $gestiones, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:gestionAdd.html.twig', array('form' => $form->createView(),
+                            'gestion' => $gestiones, 'pagination' => $pagination));
     }
 
     private function createGestionCreateForm(Gestion $entity)
@@ -1184,19 +1205,29 @@ class UserController extends Controller
                 'Nueva gestión creada correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_gestion_add');
         }
         return $this->render('ScalofrioBundle:User:gestionAdd.html.twig', array('form' => $form->createView()));
     }
 
     /******** APARTADO DE RESULTADOS **********/
 
-    public function resultadosAddAction()
+    public function resultadosAddAction(Request $request)
     {
         $resultados = new Resultados();
         $form = $this->createResultadosCreateForm($resultados);
 
-        return $this->render('ScalofrioBundle:User:resultadosAdd.html.twig', array('form' => $form->createView()));
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:Resultados u";
+        $resultado = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $resultado, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:resultadosAdd.html.twig', array('form' => $form->createView(),
+                            'resultado' => $resultado, 'pagination' => $pagination));
     }
 
     private function createResultadosCreateForm(Resultados $entity)
@@ -1224,19 +1255,29 @@ class UserController extends Controller
                 'Nuevo tipo de resultado creado correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_resultados_add');
         }
         return $this->render('ScalofrioBundle:User:resultadoAdd.html.twig', array('form' => $form->createView()));
     }
 
     /******** APARTADO DE RUTAS **********/
 
-    public function rutasAddAction()
+    public function rutasAddAction(Request $request)
     {
         $rutas = new Rutas();
         $form = $this->createRutasCreateForm($rutas);
 
-        return $this->render('ScalofrioBundle:User:rutasAdd.html.twig', array('form' => $form->createView()));
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:Rutas u";
+        $ruta = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $ruta, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:rutasAdd.html.twig', array('form' => $form->createView(),
+                            'ruta' => $ruta, 'pagination' => $pagination));
     }
 
     private function createRutasCreateForm(Rutas $entity)
@@ -1264,19 +1305,29 @@ class UserController extends Controller
                 'Nueva ruta creada correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_rutas_add');
         }
         return $this->render('ScalofrioBundle:User:rutasAdd.html.twig', array('form' => $form->createView()));
     }
 
     /******** APARTADO DE CARGOS DEL CLIENTE **********/
 
-    public function cargosAddAction()
+    public function cargosAddAction(Request $request)
     {
         $cargos = new Cargocliente();
         $form = $this->createCargosCreateForm($cargos);
 
-        return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView()));
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:Cargocliente u";
+        $cargosCliente = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $cargosCliente, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView(),
+                            'cargo' => $cargosCliente, 'pagination' => $pagination));
     }
 
     private function createCargosCreateForm(Cargocliente $entity)
@@ -1304,7 +1355,7 @@ class UserController extends Controller
                 'Nuevo tipo de cargo del cliente creado correctamente'
             );
 
-            return $this->redirectToRoute('scalofrio_index');
+            return $this->redirectToRoute('scalofrio_cargos_add');
         }
         return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView()));
     }
