@@ -3,12 +3,11 @@ namespace ScalofrioBundle\Controller;
 
 use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Usuarios;
+use ScalofrioBundle\Entity\Cliente;
 use ScalofrioBundle\Form\IncidenciasClientesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Dompdf\Dompdf;
-use \Datetime;
 
 class IncidenciasClientesController extends Controller
 {
@@ -135,30 +134,53 @@ class IncidenciasClientesController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
-
+        $cliente = $em->getRepository(Cliente::class)->find($usuario->getCliente()->getId());
 
         if ($rol[0] == 'ROLE_USER') {
             $dql = "SELECT u FROM 
                 ScalofrioBundle:IncidenciasCliente u
                 WHERE u.usuario = '" . $usuario->getId() . "'
                 ORDER BY u.id DESC";
+            $dqlVisitas = "SELECT u FROM 
+                ScalofrioBundle:Incidencias u
+                WHERE u.cliente = '" . $cliente->getId() . "'";
+            if($usuario->getEstablecimientos() != null) {
+                $dqlVisitas .= " AND u.establecimientos = '" . $usuario->getEstablecimientos()->getId() . "'";
+            }
+            $dqlVisitas .= "ORDER BY u.id DESC";
+
+            $incidencias = $em->createQuery($dql);
+            $paginator = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $incidencias, $request->query->getInt('page', 1),
+                10
+            );
+
+            $incidenciasVisitas = $em->createQuery($dqlVisitas);
+            $paginatorVisitas = $this->get('knp_paginator');
+            $paginationVisitas = $paginatorVisitas->paginate(
+                $incidenciasVisitas, $request->query->getInt('page', 1),
+                10
+            );
+
+            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
+                array('pagination' => $pagination,'paginationVisitas' => $paginationVisitas, 'user' => $usuario));
+
         } else {
             $dql = "SELECT u FROM 
                 ScalofrioBundle:IncidenciasCliente u
                 ORDER BY u.id DESC";
+
+            $incidencias = $em->createQuery($dql);
+            $paginator = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $incidencias, $request->query->getInt('page', 1),
+                10
+            );
+
+            return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
+                array('pagination' => $pagination, 'user' => $usuario));
         }
-
-        $incidencias = $em->createQuery($dql);
-
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $incidencias, $request->query->getInt('page', 1),
-            10
-        );
-
-        return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
-            array('pagination' => $pagination, 'user' => $usuario));
-
     }
 
     /* Exportar a CSV */
@@ -198,6 +220,7 @@ class IncidenciasClientesController extends Controller
 
         }
         $csv->output('avisos.csv');
+        die;
     }
 
     /*OBTENCIÓN DE INFORMACIÓN EN LOS SELECTS*/

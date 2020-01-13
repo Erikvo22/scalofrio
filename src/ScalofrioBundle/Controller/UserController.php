@@ -40,6 +40,8 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $cliente = $em->getRepository(Cliente::class)->find($usuario->getCliente()->getId());
+
         $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0
         ));
@@ -64,6 +66,20 @@ class UserController extends Controller
                 ScalofrioBundle:IncidenciasCliente u
                 WHERE u.usuario = '" . $usuario->getId() . "'
                 ORDER BY u.id DESC";
+            $dqlVisitas = "SELECT u FROM 
+                ScalofrioBundle:Incidencias u
+                WHERE u.cliente = '" . $cliente->getId() . "'";
+            if($usuario->getEstablecimientos() != null) {
+                $dqlVisitas .= " AND u.establecimientos = '" . $usuario->getEstablecimientos()->getId() . "'";
+            }
+            $dqlVisitas .= "ORDER BY u.id DESC";
+
+            $incidenciasVisitas = $em->createQuery($dqlVisitas);
+            $paginatorVisitas = $this->get('knp_paginator');
+            $paginationVisitas = $paginatorVisitas->paginate(
+                $incidenciasVisitas, $request->query->getInt('page', 1),
+                10
+            );
         }
 
         $incidencias = $em->createQuery($dql);
@@ -77,7 +93,7 @@ class UserController extends Controller
                 array('pagination' => $pagination, 'incCliPend' => $sumaP, 'incRev' => $sumaR, 'user' => $usuario));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
-                array('pagination' => $pagination, 'user' => $usuario));
+                array('pagination' => $pagination,'paginationVisitas' => $paginationVisitas,'user' => $usuario));
         }
     }
 
@@ -86,6 +102,8 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rol = $this->getUser()->getRoles();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
+        $cliente = $em->getRepository(Cliente::class)->find($usuario->getCliente()->getId());
+
         $incCliPend = $em->getRepository(IncidenciasCliente::class)->findBy(array(
             'estado' => 0
         ));
@@ -110,10 +128,23 @@ class UserController extends Controller
                 ScalofrioBundle:IncidenciasCliente u
                 WHERE u.usuario = '" . $usuario->getId() . "'
                 ORDER BY u.id DESC";
+            $dqlVisitas = "SELECT u FROM 
+                ScalofrioBundle:Incidencias u
+                WHERE u.cliente = '" . $cliente->getId() . "'";
+            if($usuario->getEstablecimientos() != null) {
+                $dqlVisitas .= " AND u.establecimientos = '" . $usuario->getEstablecimientos()->getId() . "'";
+            }
+            $dqlVisitas .= "ORDER BY u.id DESC";
+
+            $incidenciasVisitas = $em->createQuery($dqlVisitas);
+            $paginatorVisitas = $this->get('knp_paginator');
+            $paginationVisitas = $paginatorVisitas->paginate(
+                $incidenciasVisitas, $request->query->getInt('page', 1),
+                10
+            );
         }
 
         $incidencias = $em->createQuery($dql);
-
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $incidencias, $request->query->getInt('page', 1),
@@ -124,7 +155,7 @@ class UserController extends Controller
                 array('pagination' => $pagination, 'incCliPend' => $sumaP, 'incRev' => $sumaR, 'user' => $usuario));
         } else {
             return $this->render('ScalofrioBundle:User:historialIncidenciaClientes.html.twig',
-                array('pagination' => $pagination, 'user' => $usuario));
+                array('pagination' => $pagination,'paginationVisitas' => $paginationVisitas,'user' => $usuario));
         }
     }
 
@@ -616,7 +647,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository(Usuarios::class)->findOneBy(array('id' => $this->getUser()->getId()));
-        $dql = "SELECT u FROM ScalofrioBundle:Usuarios u order by u.nombre ASC";
+        $dql = "SELECT u FROM ScalofrioBundle:Usuarios u order by u.username ASC";
         $usuarios = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
