@@ -52,6 +52,16 @@
                 {% endif %}
                 </div>
             </div>
+            {#Modal de guardando#}
+            <div class="modal fade" id="modal_guardando" role="dialog">
+                <div class="modal-dialog modal-sm modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title"><span class="glyphicon glyphicon-save"></span> Guardando...</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -81,6 +91,15 @@
                 obtenerEstablecimiento({{ cliente }});
                 obtenerSubestablecimientos({{ cliente }});
             }
+
+            //Cuando le damos a guardar, comprobamos que como mínimo la gestión está rellenada y mostramos modal
+            $(function() {
+                $("#incidencias_clientes_guardar").click(function(){
+                    if($('#incidencias_clientes_gestion').val() != '') {
+                        $('#modal_guardando').modal('show');
+                    }
+                });
+            });
 
         });
 

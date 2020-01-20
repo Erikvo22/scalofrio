@@ -114,6 +114,16 @@
 
                 {{ form_end(form) }}
             </div>
+            {#Modal de guardando#}
+            <div class="modal fade" id="modal_guardando" role="dialog">
+                <div class="modal-dialog modal-sm modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title"><span class="glyphicon glyphicon-save"></span> Guardando...</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -125,6 +135,7 @@
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
             });
+            var textito = '';
 
             //Autorellenado si se selecciona una incidencia en el primer select
             var nIncidencia = document.getElementById('incidencias_numinccliente');
@@ -242,6 +253,7 @@
                 signaturePad.clear();
                 var select = document.getElementById('saveFirma');
                 select.innerText = 'Fijar firma';
+                textito = "Fijar firma";
             });
 
             savePNGButton.addEventListener("click", function (event) {
@@ -250,13 +262,32 @@
                 } else {
                     var select = document.getElementById('incidencias_firma');
                     if(select !== ''){
-                        event.toElement.innerText = "¡Firma fijada!"
+                        event.toElement.innerText = "¡Firma fijada!";
+                        textito = "¡Firma fijada!";
                     }
                     var dataURL = signaturePad.toDataURL();
                     var select = document.getElementById('incidencias_firma');
                     select.value = "";
                     select.value = dataURL;
                 }
+            });
+
+            //Cuando le damos a guardar, comprobamos que el formulario esté correctamente rellenado y mostramos la modal
+            $(function() {
+                $("#incidencias_guardar").click(function(){
+                    if($('#incidencias_comercial').val() != '' &&
+                        $('#incidencias_cliente').val() != '' &&
+                        $('#incidencias_ruta').val() != '' &&
+                        $('#incidencias_nombrecliente').val() != '' &&
+                        $('#incidencias_cargocliente').val() != '' &&
+                        $('#incidencias_gestion').val() != '' &&
+                        $('#incidencias_resultado').val() != '' &&
+                        $('#incidencias_tiempo').val() != '' &&
+                        $('#incidencias_maquinas').val() != '' &&
+                        textito === "¡Firma fijada!") {
+                        $('#modal_guardando').modal('show');
+                    }
+                });
             });
 
         });

@@ -206,7 +206,8 @@ class UserController extends Controller
         }
 
         if ($form->isValid()) {
-
+            $em->persist($incidencia);
+            $em->flush();
 
             /* TEXTO PARA EL ENVÍO DE EMAIL*/
             //Controlando si los campos son nulos.
