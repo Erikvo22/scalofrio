@@ -62,7 +62,11 @@
                         <th>Acciones</th>
                     </tr>
                     {% for incidencia in pagination %}
-                        <tr>
+                        {% if incidencia.resultado == 'PENDIENTE' %}
+                            <tr style="background-color:#F8C58C;">
+                        {% else %}
+                            <tr>
+                        {% endif %}
                             <td>
                                 {% if incidencia.numinccliente is not null  %}
                                     <b>Nº {{ incidencia.numinccliente.id }}</b>
