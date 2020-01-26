@@ -393,3 +393,20 @@ scalofrio_cargos_redirect_add:
   defaults:
     _controller: ScalofrioBundle:User:cargosAdd
     path: /cargos/add
+
+
+####### APARTADO DE MÁQUINAS DEL CLIENTE ########
+scalofrio_maquinasCliente_add:
+  path:     /maquinasCliente/add
+  defaults: { _controller: ScalofrioBundle:User:maquinasClienteAdd }
+
+scalofrio_maquinasCliente_create:
+  path: /maquinasCliente/create
+  defaults: {_controller: ScalofrioBundle:User:createMaquinasCliente }
+  methods: POST
+
+scalofrio_maquinasCliente_redirect_add:
+  path: /maquinasCliente/create
+  defaults:
+    _controller: ScalofrioBundle:User:maquinasClienteAdd
+    path: /maquinasCliente/add

@@ -49,6 +49,12 @@ class IncidenciasClientesType extends AbstractType
                 'required'    => true,
                 'read_only' => $this->modo,
             ))
+            ->add('maquinasCliente', 'entity', array(
+                'class' => 'ScalofrioBundle\Entity\MaquinasCliente',
+                'empty_value' => '...',
+                'required'    => true,
+                'read_only' => $this->modo,
+            ))
             ->add('establecimientos',
                 'entity',
                 array(

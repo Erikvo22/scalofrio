@@ -196,6 +196,7 @@ class IncidenciasClientesController extends Controller
             'cliente',
             'establecimiento',
             'bar',
+            'maquina',
             'tipo gestion',
             'estado',
             'descripcion'
@@ -203,9 +204,11 @@ class IncidenciasClientesController extends Controller
 
         foreach ($avisos as $a) {
             //Controlando si los campos son nulos.
-            $subestablecimiento = ''; $establecimiento = '';
+            $subestablecimiento = ''; $establecimiento = '';$maquina = '';
             if($a->getSubestablecimientos() != null) $subestablecimiento = $a->getSubestablecimientos()->getNombre();
             if($a->getEstablecimientos() != null) $establecimiento = $a->getEstablecimientos()->getNombre();
+            if($a->getMaquinasCliente() != null) $maquina = $a->getMaquinasCliente()->getNombre();
+
             //Se escribe en el CSV.
             $csv->insertOne([
                 $a->getId(),
@@ -213,6 +216,7 @@ class IncidenciasClientesController extends Controller
                 $a->getUsuario()->getCliente()->getNombre(),
                 $establecimiento,
                 $subestablecimiento,
+                $maquina,
                 $a->getGestion()->getNombre(),
                 $a->getEstado(),
                 $a->getDescripcion(),

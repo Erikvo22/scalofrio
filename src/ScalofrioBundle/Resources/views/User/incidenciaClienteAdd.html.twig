@@ -33,6 +33,11 @@
                     <span class = "text-danger">{{ form_errors(form.subestablecimientos) }}</span>
                 </div>
                 <div class="form-group">
+                    <label>Máquina</label>
+                    {{ form_widget(form.maquinasCliente, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.maquinasCliente) }}</span>
+                </div>
+                <div class="form-group">
                     {{ form_label(form.gestion) }}
                     {{ form_widget(form.gestion, { 'attr' : {'class' : 'form-control'}}) }}
                     <span class = "text-danger">{{ form_errors(form.gestion) }}</span>
@@ -80,6 +85,7 @@
                 $("#incidencias_clientes_subestablecimientos").prop("disabled", true);
                 $("#incidencias_clientes_gestion").prop("disabled", true);
                 $("#incidencias_clientes_usuario").prop("disabled", true);
+                $("#incidencias_clientes_maquinasCliente").prop("disabled", true);
             }
 
             //A la hora de crear la incidencia, hay que mirar si existen subestablecimientos.

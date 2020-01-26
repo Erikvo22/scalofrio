@@ -42,6 +42,7 @@
                             <th>Cliente</th>
                             <th>Establecimiento</th>
                             <th>Bar</th>
+                            <th>Máquina</th>
                             <th>Tipo gestión</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -62,6 +63,7 @@
                             <td>{{ incidencia.usuario.cliente }}</td>
                             <td>{{ incidencia.establecimientos }}</td>
                             <td>{{ incidencia.subestablecimientos }}</td>
+                            <td>{{ incidencia.maquinasCliente }}</td>
                             <td>{{ incidencia.gestion }}</td>
                             {% if incidencia.estado == 0 %}
                                 <td>Pendiente</td>

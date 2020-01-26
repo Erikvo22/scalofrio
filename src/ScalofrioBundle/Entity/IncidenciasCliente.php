@@ -44,6 +44,12 @@ class IncidenciasCliente
     protected $usuario;
 
     /**
+     * @ORM\ManyToOne(targetEntity="MaquinasCliente")
+     * @ORM\JoinColumn(name="maquinasCliente_id", referencedColumnName="id")
+     */
+    protected $maquinasCliente;
+
+    /**
      * @ORM\Column(name="FECHA_INCIDENCIA", type="datetime")
      */
     private $fechaIncidencia;
@@ -139,6 +145,26 @@ class IncidenciasCliente
     public function setUsuario($usuario)
     {
         $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of maquinasClientes
+     */
+    public function getMaquinasCliente()
+    {
+        return $this->maquinasCliente;
+    }
+
+    /**
+     * Set the value of maquinasClientes
+     *
+     * @return  self
+     */
+    public function setMaquinasCliente($maquinasCliente)
+    {
+        $this->maquinasCliente = $maquinasCliente;
 
         return $this;
     }

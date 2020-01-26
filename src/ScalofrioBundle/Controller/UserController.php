@@ -10,6 +10,7 @@ use ScalofrioBundle\Entity\Gestion;
 use ScalofrioBundle\Entity\Incidencias;
 use ScalofrioBundle\Entity\IncidenciasCliente;
 use ScalofrioBundle\Entity\Maquinas;
+use ScalofrioBundle\Entity\MaquinasCliente;
 use ScalofrioBundle\Entity\Repuestos;
 use ScalofrioBundle\Entity\Resultados;
 use ScalofrioBundle\Entity\Rutas;
@@ -27,6 +28,7 @@ use ScalofrioBundle\Form\UsuariosType;
 use ScalofrioBundle\Form\ResultadosType;
 use ScalofrioBundle\Form\RutasType;
 use ScalofrioBundle\Form\CargoclienteType;
+use ScalofrioBundle\Form\MaquinasClienteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1390,6 +1392,56 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_cargos_add');
         }
         return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    /******** APARTADO DE MÁQUINAS DEL CLIENTE **********/
+
+    public function maquinasClienteAddAction(Request $request)
+    {
+        $maquinasCliente = new MaquinasCliente();
+        $form = $this->createMaquinasClienteCreateForm($maquinasCliente);
+
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT u FROM ScalofrioBundle:MaquinasCliente u order by u.nombre ASC";
+        $maquinasClienteDql = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $maquinasClienteDql, $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('ScalofrioBundle:User:maquinasClienteAdd.html.twig', array('form' => $form->createView(),
+            'maquinasCliente' => $maquinasClienteDql, 'pagination' => $pagination));
+    }
+
+    private function createMaquinasClienteCreateForm(MaquinasCliente $entity)
+    {
+        $form = $this->createForm(new MaquinasClienteType(), $entity, array(
+            'action' => $this->generateUrl('scalofrio_maquinasCliente_create'),
+            'method' => 'POST',
+        ));
+        return $form;
+    }
+
+    public function createMaquinasClienteAction(Request $request)
+    {
+        $maquinasCliente = new MaquinasCliente();
+        $form = $this->createMaquinasClienteCreateForm($maquinasCliente);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($maquinasCliente);
+            $em->flush();
+
+            $this->addFlash(
+                'mensaje',
+                'Nueva máquina creada correctamente'
+            );
+
+            return $this->redirectToRoute('scalofrio_maquinasCliente_add');
+        }
+        return $this->render('ScalofrioBundle:User:maquinasClienteAdd.html.twig', array('form' => $form->createView()));
     }
 
     /******** BÚSQUEDA **********/

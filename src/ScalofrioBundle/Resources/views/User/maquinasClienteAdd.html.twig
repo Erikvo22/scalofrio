@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+    {#Mensaje de confirmación de operación#}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
+    <div class="container">
+        <div class="col-md-6">
+            <div class="page-header margin-none">
+                <h2><b>Máquinas (cliente)</b></h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                    </tr>
+                    {% for maquinasCliente in pagination %}
+                        <tr>
+                            <td>{{ maquinasCliente.id }}</td>
+                            <td>{{ maquinasCliente.nombre }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {#display navigation#}
+                <div class="navigation" style="text-align: center">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="page-header">
+                <h2><b><span class="glyphicon glyphicon-print"></span> Nueva máquina</b></h2>
+            </div>
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.nombre) }}
+                {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                <span class="text-danger">{{ form_errors(form.nombre) }}</span>
+            </div>
+
+            <p>
+                {{ form_widget(form.guardar, {'label' : 'Crear máquina', 'attr': {'class': 'btn btn-success'}}) }}
+            </p>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}
