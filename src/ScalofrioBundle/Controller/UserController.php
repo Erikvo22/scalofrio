@@ -522,6 +522,7 @@ class UserController extends Controller
             'Resultado',
             'Tiempo(min)',
             'Maquinas',
+            'Repuestos',
         ]);
 
         foreach ($incidencias as $incidencia) {
@@ -559,6 +560,10 @@ class UserController extends Controller
                 //Las incidencias pueden tener mas de un repuesto
                 $repuestos = $incidencia->getRepuestos();
             }
+            $repuestosDesc = '';
+            foreach ($repuestos as $r) {
+                $repuestosDesc .= $r->getNombre() . ', ';
+            }
 
             //Se escribe en el CSV.
             $csv->insertOne([
@@ -575,14 +580,10 @@ class UserController extends Controller
                 $incidencia->getResultado(),
                 $incidencia->getTiempo(),
                 $maquinas,
+                $repuestosDesc,
             ]);
 
-            foreach ($repuestos as $r) {
-                $csv->insertOne([
-                    $incidencia->getId(),
-                    $r->getNombre(),
-                ]);
-            }
+
         }
         $csv->output('incidencias.csv');
         die;
