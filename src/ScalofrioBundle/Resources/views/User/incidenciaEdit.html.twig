@@ -122,6 +122,18 @@
             //El campo FIRMA no es obligatorio
             $('#incidencias_firma').removeAttr("required");
 
+            //Recogemos los repuesto seleccionados de la incidencia.
+            var rep=new Array();
+            $("#incidencias_repuestos option:selected").each(function() {
+                rep.push($(this).val());
+            });
+            //Actualizamos la máquina para actualizar así los repuestos.
+            $("#incidencias_repuestos").empty();
+            CambioMaquina($("#incidencias_maquinas option:selected").val());
+            //Seleccionamos los repuestos que estaban antes
+            rep.forEach(seleccionRepuestos);
+
+
             //Control selects cliente>establecimiento
             var select = document.getElementById('incidencias_cliente');
             select.addEventListener('change',
@@ -175,6 +187,12 @@
             $.post(ruta, null, function(result) {
                 $("#incidencias_repuestos").prop("disabled", false);
                 $("#incidencias_repuestos").append(result);
+            });
+        }
+
+        function seleccionRepuestos(item) {
+            $('#incidencias_repuestos > option').each(function() {
+                console.log($(this));
             });
         }
 
