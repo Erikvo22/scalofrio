@@ -31,6 +31,7 @@
                     <li><a href="{{ path('scalofrio_gestion_add') }}"><span class="glyphicon glyphicon-wrench"></span> Gestiones</a></li>
                     <li><a href="{{ path('scalofrio_rutas_add') }}"><span class="glyphicon glyphicon-road"></span> Rutas</a></li>
                     <li><a href="{{ path('scalofrio_resultados_add') }}"><span class="glyphicon glyphicon-ok"></span> Resultados</a></li>
+                    <li><a href="{{ path('scalofrio_correo') }}"><span class="glyphicon glyphicon-envelope"></span> Texto correos</a></li>
                 </ul>
                 {% endif %}
                 {% if is_granted('ROLE_USER') or is_granted('ROLE_COMERCIAL')%}

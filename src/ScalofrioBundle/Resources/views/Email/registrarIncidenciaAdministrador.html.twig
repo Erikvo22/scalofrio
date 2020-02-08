@@ -1,3 +1,7 @@
+{% if datos['superior'] is defined  %}
+    <p> {{ datos['superior'] }} </p>
+{% endif %}
+
 <h3><b>Resumen de la incidencia</b></h3>
 <ul>
     {% if datos['numinccliente'] is defined  %}
@@ -34,6 +38,10 @@
     </ul>
     {% endif %}
 </ul><br>
+
+{% if datos['inferior'] is defined  %}
+    <p> {{ datos['inferior'] }} </p>
+{% endif %}
 
 <p>Se adjunta la firma del cliente.</p>
     {% if datos['firma'] is defined  %}

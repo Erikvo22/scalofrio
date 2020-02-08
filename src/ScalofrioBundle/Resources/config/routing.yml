@@ -410,3 +410,13 @@ scalofrio_maquinasCliente_redirect_add:
   defaults:
     _controller: ScalofrioBundle:User:maquinasClienteAdd
     path: /maquinasCliente/add
+
+    ####### APARTADO DE TEXTO EN LOS CORREOS ########
+scalofrio_correo:
+  path:   /user/correo/edit
+  defaults: { _controller: ScalofrioBundle:User:textoCorreo }
+
+scalofrio_correo_update:
+  path:     /user/correo/update
+  defaults: { _controller: ScalofrioBundle:User:textoCorreoUpdate }
+  methods: [POST, PUT]

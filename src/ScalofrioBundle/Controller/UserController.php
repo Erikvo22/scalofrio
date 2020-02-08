@@ -15,6 +15,7 @@ use ScalofrioBundle\Entity\Repuestos;
 use ScalofrioBundle\Entity\Resultados;
 use ScalofrioBundle\Entity\Rutas;
 use ScalofrioBundle\Entity\Subestablecimientos;
+use ScalofrioBundle\Entity\TextoCorreo;
 use ScalofrioBundle\Entity\Usuarios;
 use ScalofrioBundle\Form\ClienteType;
 use ScalofrioBundle\Form\ComercialType;
@@ -29,6 +30,7 @@ use ScalofrioBundle\Form\ResultadosType;
 use ScalofrioBundle\Form\RutasType;
 use ScalofrioBundle\Form\CargoclienteType;
 use ScalofrioBundle\Form\MaquinasClienteType;
+use ScalofrioBundle\Form\TextoCorreoType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -214,7 +216,16 @@ class UserController extends Controller
             /* TEXTO PARA EL ENVÍO DE EMAIL*/
             //Controlando si los campos son nulos.
             // $establecimiento = '';$comercial = '';$cliente = '';$gestion = '';$maquinas = '';$repuestos = '';
+            $textoCorreo = $em->getRepository('ScalofrioBundle:TextoCorreo')->find(1);
             $datos = array();
+            if($textoCorreo){
+                if($textoCorreo->getSuperior() != 'prueba') {
+                    $datos["superior"] = $textoCorreo->getSuperior();
+                }
+                if($textoCorreo->getInferior() != 'prueba') {
+                    $datos["inferior"] = $textoCorreo->getInferior();
+                }
+            }
             if($incidencia->getNumIncCliente() != null){
                 $datos["numinccliente"] = $incidencia->getNumIncCliente()->getId();
             }
@@ -1443,6 +1454,54 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_maquinasCliente_add');
         }
         return $this->render('ScalofrioBundle:User:maquinasClienteAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    /********* TEXTO EN LOS CORREOS ********/
+    public function textoCorreoAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $textoCorreo = $em->getRepository('ScalofrioBundle:TextoCorreo')->find(1);
+
+        if (!$textoCorreo) {
+            $messageException = 'Error al encontrar los datos.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createTextoCorreoForm($textoCorreo);
+
+        return $this->render('ScalofrioBundle:User:textoCorreos.html.twig',
+                            array('form' => $form->createView()));
+
+    }
+
+    private function createTextoCorreoForm(TextoCorreo $entity)
+    {
+        $form = $this->createForm(new TextoCorreoType(), $entity, array('action' => $this->generateUrl('scalofrio_correo_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function textoCorreoUpdateAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $textoCorreo = $em->getRepository('ScalofrioBundle:TextoCorreo')->find(1);
+
+        if (!$textoCorreo) {
+            $messageException = 'Error al encontrar los datos.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createTextoCorreoForm($textoCorreo);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Textos actualizados correctamente.';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_index');
+        }
+        return $this->render('ScalofrioBundle:User:textoCorreos.html.twig',
+                            array('form' => $form->createView()));
     }
 
     /******** BÚSQUEDA **********/
