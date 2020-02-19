@@ -124,6 +124,19 @@ scalofrio_comercial_redirect_add:
         path: /comercial/add
         permanent: true
 
+scalofrio_comercial_edit:
+  path:   /comercial/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:comercialEdit }
+
+scalofrio_comercial_update:
+  path:     /comercial/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:comercialUpdate }
+  methods: [POST, PUT]
+
+scalofrio_comercial_redirect_edit:
+  path: /comercial/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:comercialEdit
 
 
 ############# APARTADO DE CLIENTES ################
@@ -140,10 +153,38 @@ scalofrio_establecimientos_create:
     defaults: {_controller: ScalofrioBundle:User:createEstablecimientos }
     methods: POST
 
+scalofrio_establecimientos_edit:
+  path:   /establecimientos/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:establecimientosEdit }
+
+scalofrio_establecimientos_update:
+  path:     /establecimientos/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:establecimientosUpdate }
+  methods: [POST, PUT]
+
+scalofrio_establecimientos_redirect_edit:
+  path: /establecimientos/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:establecimientosEdit
+
 scalofrio_subestablecimientos_create:
     path: /subestablecimiento/create
     defaults: {_controller: ScalofrioBundle:User:createSubestablecimientos }
     methods: POST
+
+scalofrio_subestablecimientos_edit:
+  path:   /subestablecimientos/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:subestablecimientosEdit }
+
+scalofrio_subestablecimientos_update:
+  path:     /subestablecimientos/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:subestablecimientosUpdate }
+  methods: [POST, PUT]
+
+scalofrio_subestablecimientos_redirect_edit:
+  path: /subestablecimientos/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:subestablecimientosEdit
 
 scalofrio_cliente_edit:
     path:   /cliente/edit{id}
@@ -198,6 +239,20 @@ scalofrio_gestion_redirect_add:
         path: /gestion/add
         permanent: true
 
+scalofrio_gestion_edit:
+  path:   /gestion/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:gestionEdit }
+
+scalofrio_gestion_update:
+  path:     /gestion/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:gestionUpdate }
+  methods: [POST, PUT]
+
+scalofrio_gestion_redirect_edit:
+  path: /gestion/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:gestionEdit
+
 
 ############# APARTADO DE MAQUINAS ################
 scalofrio_maquinas_list:
@@ -245,7 +300,20 @@ scalofrio_maquinas_redirect_add:
         path: /maquinas/add
         permanent: true
 
+############# APARTADO DE REPUESTOS #############
+scalofrio_repuestos_edit:
+  path:   /repuestos/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:repuestosEdit }
 
+scalofrio_repuestos_update:
+  path:     /repuestos/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:repuestosUpdate }
+  methods: [POST, PUT]
+
+scalofrio_repuestos_redirect_edit:
+  path: /repuestos/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:repuestosEdit
 
 
 ############# AUTENTIFICACIÓN ################
@@ -341,6 +409,10 @@ seleccion_incidencia:
     pattern: /seleccionIncidencia/{idincidencia}
     defaults: { _controller: ScalofrioBundle:User:seleccionIncidencia }
 
+scalofrio_delete_all:
+    pattern: /deleteAll/{fechas}
+    defaults: { _controller: ScalofrioBundle:User:deleteAll }
+
 
 ####### APARTADO DE RESULTADOS ########
 scalofrio_resultados_add:
@@ -358,6 +430,20 @@ scalofrio_resultados_redirect_add:
         _controller: ScalofrioBundle:User:resultadosAdd
         path: /resultados/add
         permanent: true
+
+scalofrio_resultados_edit:
+  path:   /resultados/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:resultadosEdit }
+
+scalofrio_resultados_update:
+  path:     /resultados/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:resultadosUpdate }
+  methods: [POST, PUT]
+
+scalofrio_resultados_redirect_edit:
+  path: /resultados/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:resultadosEdit
 
 
 ####### APARTADO DE RUTAS ########
@@ -377,6 +463,20 @@ scalofrio_rutas_redirect_add:
         path: /rutas/add
         permanent: true
 
+scalofrio_rutas_edit:
+  path:   /rutas/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:rutasEdit }
+
+scalofrio_rutas_update:
+  path:     /rutas/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:rutasUpdate }
+  methods: [POST, PUT]
+
+scalofrio_rutas_redirect_edit:
+  path: /rutas/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:rutasEdit
+
 
 ####### APARTADO DE CARGOS DEL CLIENTE ########
 scalofrio_cargos_add:
@@ -394,6 +494,20 @@ scalofrio_cargos_redirect_add:
     _controller: ScalofrioBundle:User:cargosAdd
     path: /cargos/add
 
+scalofrio_cargos_edit:
+  path:   /cargos/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:cargosEdit }
+
+scalofrio_cargos_update:
+  path:     /cargos/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:cargosUpdate }
+  methods: [POST, PUT]
+
+scalofrio_cargos_redirect_edit:
+  path: /cargos/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:cargosEdit
+
 
 ####### APARTADO DE MÁQUINAS DEL CLIENTE ########
 scalofrio_maquinasCliente_add:
@@ -410,6 +524,20 @@ scalofrio_maquinasCliente_redirect_add:
   defaults:
     _controller: ScalofrioBundle:User:maquinasClienteAdd
     path: /maquinasCliente/add
+
+scalofrio_maquinasCliente_edit:
+  path:   /maquinasCliente/edit{id}
+  defaults: { _controller: ScalofrioBundle:User:maquinasClienteEdit }
+
+scalofrio_maquinasCliente_update:
+  path:     /maquinasCliente/update/{id}
+  defaults: { _controller: ScalofrioBundle:User:maquinasClienteUpdate }
+  methods: [POST, PUT]
+
+scalofrio_maquinasCliente_redirect_edit:
+  path: /maquinasCliente/update{id}
+  defaults:
+    _controller: ScalofrioBundle:User:maquinasClienteEdit
 
     ####### APARTADO DE TEXTO EN LOS CORREOS ########
 scalofrio_correo:

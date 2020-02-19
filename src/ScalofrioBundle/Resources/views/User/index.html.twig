@@ -105,8 +105,74 @@
             {% endif %}
         </div>
         {% endif %}
+
+        {#BOTON ELIMINAR#}
+        {% if is_granted('ROLE_ADMIN') %}
+            <button data-toggle="modal" data-target="#modalEliminar" class="btn btn-sm btn-danger">Eliminar incidencias</button>
+        {% endif %}
+
+        {#MODAL ELIMINAR#}
+        <div class="modal fade" id="modalEliminar" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Eliminar incidencias</h4>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body col-md-12">
+                        <div class="col-md-6">
+                            <label>Desde</label>
+                            <input type="date" class="form-control" id="fechaDesde" style="width: 200px"/>
+                        </div>
+                        <div class= "col-md-6">
+                            <label>Hasta</label>
+                            <input type="date" class="form-control" id="fechaHasta" style="width: 200px"/>
+                        </div>
+                    </div>
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" id="eliminarIncidencias" class="btn btn-primary submitBtn" onclick="eliminarIncidencias()">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <script>
+        $("#modalEliminar").modal("show");
+        function eliminarIncidencias() {
+            var fechaDesde = $("#fechaDesde").val();
+            var fechaHasta = $("#fechaHasta").val();
+            //Comprobaciones
+            if(fechaDesde == "" || fechaHasta == "" ){
+                alert("Debe de rellenar los dos campos");
+                return;
+            }
+            if(fechaDesde > fechaHasta){
+                alert("Ojo, la fecha desde no puede ser mayor a la fecha hasta");
+                return;
+            }
+            //Llamamos al servicio para eliminar
+            $("#eliminarIncidencias").addClass('disabled');
+            var fechas = fechaDesde+','+fechaHasta;
+            var ruta = '{{ path('scalofrio_delete_all', {'fechas':'FECHAS'}) }}';
+            ruta = ruta.replace('FECHAS', fechas);
+            $.post(ruta, null, function(result) {
+                $("#eliminarIncidencias").removeClass('disabled');
+                if(result == 0) {
+                    alert("No se han eliminado incidencias");
+                }else{
+                    alert("Se han eliminado " + result + " incidencias, recargue la página");
+                }
+            });
+        }
+    </script>
 {% endblock %}
 
 

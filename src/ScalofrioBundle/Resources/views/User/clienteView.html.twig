@@ -18,7 +18,11 @@
                 <dd>
 
                     {% for i in establecimientos|keys %}
-                    {{ establecimientos[i].nombre }} <br>
+                    {{ establecimientos[i].nombre }}
+                        <a href="{{ path('scalofrio_establecimientos_edit', { id: establecimientos[i].id}) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <br>
                     {% endfor %}
 
                 </dd>
@@ -28,7 +32,11 @@
                 <dd>
 
                     {% for i in subestablecimientos|keys %}
-                        {{ subestablecimientos[i].nombre }} <br>
+                        {{ subestablecimientos[i].nombre }}
+                        <a href="{{ path('scalofrio_subestablecimientos_edit', { id: subestablecimientos[i].id}) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <br>
                     {% endfor %}
 
                 </dd>

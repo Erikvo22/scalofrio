@@ -20,11 +20,16 @@
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
+                        <th>Acciones</th>
                     </tr>
                     {% for gestion in pagination %}
                         <tr>
                             <td>{{ gestion.id }}</td>
                             <td>{{ gestion.nombre }}</td>
+                            <td class="actions">
+                                <a href="{{ path('scalofrio_gestion_edit', { id: gestion.id}) }}"
+                                   class="btn btn-sm btn-danger">Editar</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

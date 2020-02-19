@@ -11,11 +11,14 @@
                 <dt>Repuestos</dt>
                 <dd>
                     {% for i in repuestos|keys %}
-                        {{ repuestos[i].nombre }} <br>
+                        {{ repuestos[i].nombre }}
+                        <a href="{{ path('scalofrio_repuestos_edit', { id: repuestos[i].id}) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <br>
                     {% endfor %}
                 </dd>
             </dl>
-        </div>
     </div>
 
 {% endblock %}

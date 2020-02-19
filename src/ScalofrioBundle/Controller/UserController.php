@@ -861,6 +861,50 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:comercialAdd.html.twig', array('form' => $form->createView()));
     }
 
+    public function comercialEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $comercial = $em->getRepository('ScalofrioBundle:Comercial')->find($id);
+
+        if (!$comercial) {
+            $messageException = 'Comercial no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createComercialEditForm($comercial);
+
+        return $this->render('ScalofrioBundle:User:comercialEdit.html.twig', array('comercial' => $comercial, 'form' => $form->createView()));
+    }
+
+    private function createComercialEditForm(Comercial $entity)
+    {
+        $form = $this->createForm(new ComercialType(), $entity, array('action' => $this->generateUrl('scalofrio_comercial_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function comercialUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $comercial = $em->getRepository('ScalofrioBundle:Comercial')->find($id);
+
+        if (!$comercial) {
+            $messageException = 'Comercial no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createComercialEditForm($comercial);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Comercial actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_comercial_add');
+        }
+        return $this->render('ScalofrioBundle:User:comercialEdit.html.twig', array('comercial' => $comercial, 'form' => $form->createView()));
+    }
+
     /******** APARTADO DE CLIENTES **********/
 
     public function clienteListAction(Request $request)
@@ -1053,6 +1097,96 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:clienteEdit.html.twig', array('cliente' => $cliente, 'form' => $form->createView()));
     }
 
+    /******* EDICIÓN DE LOS ESTABLECIMIENTOS *********/
+    public function establecimientosEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $establecimientos = $em->getRepository('ScalofrioBundle:Establecimientos')->find($id);
+
+        if (!$establecimientos) {
+            $messageException = 'Establecimiento no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createEstablecimientosEditForm($establecimientos);
+
+        return $this->render('ScalofrioBundle:User:establecimientosEdit.html.twig', array('establecimientos' => $establecimientos, 'form' => $form->createView()));
+    }
+
+    private function createEstablecimientosEditForm(Establecimientos $entity)
+    {
+        $form = $this->createForm(new EstablecimientosType(), $entity, array('action' => $this->generateUrl('scalofrio_establecimientos_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function establecimientosUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $establecimientos = $em->getRepository('ScalofrioBundle:Establecimientos')->find($id);
+
+        if (!$establecimientos) {
+            $messageException = 'Establecimiento no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createEstablecimientosEditForm($establecimientos);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Establecimiento actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_cliente_list');
+        }
+        return $this->render('ScalofrioBundle:User:establecimientosEdit.html.twig', array('establecimientos' => $establecimientos, 'form' => $form->createView()));
+    }
+
+    /******* EDICIÓN DE LOS SUBESTABLECIMIENTOS *********/
+    public function subestablecimientosEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $bares = $em->getRepository('ScalofrioBundle:Subestablecimientos')->find($id);
+
+        if (!$bares) {
+            $messageException = 'Bar no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createSubestablecimientosEditForm($bares);
+
+        return $this->render('ScalofrioBundle:User:baresEdit.html.twig', array('subestablecimientos' => $bares, 'form' => $form->createView()));
+    }
+
+    private function createSubestablecimientosEditForm(Subestablecimientos $entity)
+    {
+        $form = $this->createForm(new SubestablecimientosType(), $entity, array('action' => $this->generateUrl('scalofrio_subestablecimientos_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function subestablecimientosUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $bares = $em->getRepository('ScalofrioBundle:Subestablecimientos')->find($id);
+
+        if (!$bares) {
+            $messageException = 'Bar no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createSubestablecimientosEditForm($bares);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Bar actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_cliente_list');
+        }
+        return $this->render('ScalofrioBundle:User:baresEdit.html.twig', array('subestablecimientos' => $bares, 'form' => $form->createView()));
+    }
+
     /******** APARTADO DE MAQUINAS **********/
 
     public function maquinasListAction(Request $request)
@@ -1206,6 +1340,52 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:maquinasEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
     }
 
+    /******* EDICIÓN DE LOS REPUESTOS *********/
+    public function repuestosEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->find($id);
+
+        if (!$repuestos) {
+            $messageException = 'Repuesto no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createRepuestosEditForm($repuestos);
+
+        return $this->render('ScalofrioBundle:User:repuestosEdit.html.twig', array('repuestos' => $repuestos, 'form' => $form->createView()));
+    }
+
+    private function createRepuestosEditForm(Repuestos $entity)
+    {
+        $form = $this->createForm(new RepuestosType(), $entity, array('action' => $this->generateUrl('scalofrio_repuestos_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function repuestosUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repuestos = $em->getRepository('ScalofrioBundle:Repuestos')->find($id);
+
+        if (!$repuestos) {
+            $messageException = 'Repuesto no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createRepuestosEditForm($repuestos);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Repuesto actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_maquinas_list');
+        }
+        return $this->render('ScalofrioBundle:User:resultadosEdit.html.twig', array('repuestos' => $repuestos, 'form' => $form->createView()));
+    }
+
+
     /******** APARTADO DE GESTIONES **********/
 
     public function gestionAddAction(Request $request)
@@ -1254,6 +1434,50 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_gestion_add');
         }
         return $this->render('ScalofrioBundle:User:gestionAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    public function gestionEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $gestion = $em->getRepository('ScalofrioBundle:Gestion')->find($id);
+
+        if (!$gestion) {
+            $messageException = 'Tipo de gestión no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createGestionEditForm($gestion);
+
+        return $this->render('ScalofrioBundle:User:gestionEdit.html.twig', array('gestion' => $gestion, 'form' => $form->createView()));
+    }
+
+    private function createGestionEditForm(Gestion $entity)
+    {
+        $form = $this->createForm(new GestionType(), $entity, array('action' => $this->generateUrl('scalofrio_gestion_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function gestionUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $gestion = $em->getRepository('ScalofrioBundle:Gestion')->find($id);
+
+        if (!$gestion) {
+            $messageException = 'Tipo de gestion no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createGestionEditForm($gestion);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Tipo de gestión actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_gestion_add');
+        }
+        return $this->render('ScalofrioBundle:User:gestionEdit.html.twig', array('gestion' => $gestion, 'form' => $form->createView()));
     }
 
     /******** APARTADO DE RESULTADOS **********/
@@ -1306,6 +1530,50 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:resultadoAdd.html.twig', array('form' => $form->createView()));
     }
 
+    public function resultadosEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $resultados = $em->getRepository('ScalofrioBundle:Resultados')->find($id);
+
+        if (!$resultados) {
+            $messageException = 'Tipo de resultado no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createResultadosEditForm($resultados);
+
+        return $this->render('ScalofrioBundle:User:resultadosEdit.html.twig', array('resultados' => $resultados, 'form' => $form->createView()));
+    }
+
+    private function createResultadosEditForm(Resultados $entity)
+    {
+        $form = $this->createForm(new ResultadosType(), $entity, array('action' => $this->generateUrl('scalofrio_resultados_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function resultadosUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $resultados = $em->getRepository('ScalofrioBundle:Resultados')->find($id);
+
+        if (!$resultados) {
+            $messageException = 'Tipo de resultado no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createResultadosEditForm($resultados);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Tipo de resultado actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_resultados_add');
+        }
+        return $this->render('ScalofrioBundle:User:resultadosEdit.html.twig', array('resultados' => $resultados, 'form' => $form->createView()));
+    }
+
     /******** APARTADO DE RUTAS **********/
 
     public function rutasAddAction(Request $request)
@@ -1354,6 +1622,50 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_rutas_add');
         }
         return $this->render('ScalofrioBundle:User:rutasAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    public function rutasEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rutas = $em->getRepository('ScalofrioBundle:Rutas')->find($id);
+
+        if (!$rutas) {
+            $messageException = 'Ruta no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createRutasEditForm($rutas);
+
+        return $this->render('ScalofrioBundle:User:rutasEdit.html.twig', array('rutas' => $rutas, 'form' => $form->createView()));
+    }
+
+    private function createRutasEditForm(Rutas $entity)
+    {
+        $form = $this->createForm(new RutasType(), $entity, array('action' => $this->generateUrl('scalofrio_rutas_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function rutasUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rutas = $em->getRepository('ScalofrioBundle:Rutas')->find($id);
+
+        if (!$rutas) {
+            $messageException = 'Ruta no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createRutasEditForm($rutas);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Ruta actualizada correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_rutas_add');
+        }
+        return $this->render('ScalofrioBundle:User:rutasEdit.html.twig', array('rutas' => $rutas, 'form' => $form->createView()));
     }
 
     /******** APARTADO DE CARGOS DEL CLIENTE **********/
@@ -1406,6 +1718,50 @@ class UserController extends Controller
         return $this->render('ScalofrioBundle:User:cargosAdd.html.twig', array('form' => $form->createView()));
     }
 
+    public function cargosEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cargos = $em->getRepository('ScalofrioBundle:Cargocliente')->find($id);
+
+        if (!$cargos) {
+            $messageException = 'Cargo no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createCargoEditForm($cargos);
+
+        return $this->render('ScalofrioBundle:User:cargosEdit.html.twig', array('cargo' => $cargos, 'form' => $form->createView()));
+    }
+
+    private function createCargoEditForm(Cargocliente $entity)
+    {
+        $form = $this->createForm(new CargoclienteType(), $entity, array('action' => $this->generateUrl('scalofrio_cargos_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function cargosUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cargo = $em->getRepository('ScalofrioBundle:Cargocliente')->find($id);
+
+        if (!$cargo) {
+            $messageException = 'Cargo no encontrado.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createCargoEditForm($cargo);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Cargo actualizado correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_cargos_add');
+        }
+        return $this->render('ScalofrioBundle:User:cargosEdit.html.twig', array('cargo' => $cargo, 'form' => $form->createView()));
+    }
+
     /******** APARTADO DE MÁQUINAS DEL CLIENTE **********/
 
     public function maquinasClienteAddAction(Request $request)
@@ -1454,6 +1810,50 @@ class UserController extends Controller
             return $this->redirectToRoute('scalofrio_maquinasCliente_add');
         }
         return $this->render('ScalofrioBundle:User:maquinasClienteAdd.html.twig', array('form' => $form->createView()));
+    }
+
+    public function maquinasClienteEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $maquina = $em->getRepository('ScalofrioBundle:MaquinasCliente')->find($id);
+
+        if (!$maquina) {
+            $messageException = 'Máquina no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createMaquinasClienteEditForm($maquina);
+
+        return $this->render('ScalofrioBundle:User:maquinasClienteEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
+    }
+
+    private function createMaquinasClienteEditForm(MaquinasCliente $entity)
+    {
+        $form = $this->createForm(new MaquinasClienteType(), $entity, array('action' => $this->generateUrl('scalofrio_maquinasCliente_update',
+            array('id' => $entity->getId())), 'method' => 'PUT'));
+        return $form;
+    }
+
+    public function maquinasClienteUpdateAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $maquina = $em->getRepository('ScalofrioBundle:MaquinasCliente')->find($id);
+
+        if (!$maquina) {
+            $messageException = 'Máquina no encontrada.';
+            throw $this->createNotFoundException($messageException);
+        }
+
+        $form = $this->createMaquinasClienteEditForm($maquina);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $successMessage = 'Máquina actualizada correctamente';
+            $this->addFlash('mensaje', $successMessage);
+            return $this->redirectToRoute('scalofrio_maquinasCliente_add');
+        }
+        return $this->render('ScalofrioBundle:User:maquinasClienteEdit.html.twig', array('maquina' => $maquina, 'form' => $form->createView()));
     }
 
     /********* TEXTO EN LOS CORREOS ********/
@@ -1699,6 +2099,26 @@ class UserController extends Controller
         );
 
         return new JsonResponse($resultado);
+    }
+
+    //FUNCION PARA ELIMINAR LAS INCIDENCIAS SEGÚN LAS FECHAS OBTENIDAS
+    public function deleteAllAction($fechas)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $array = explode(",", $fechas);
+
+        $dql = "SELECT e FROM ScalofrioBundle:Incidencias e
+        WHERE e.fecha BETWEEN '" . $array[0] . "' AND '" . $array[1] . "'";
+        $query = $em->createQuery($dql);
+        $result = $query->getResult();
+
+        if(count($result)>0) {
+            foreach ($result as $r) {
+                $em->remove($r);
+                $em->flush();
+            }
+        }
+        return new Response(count($result));
     }
 
 }

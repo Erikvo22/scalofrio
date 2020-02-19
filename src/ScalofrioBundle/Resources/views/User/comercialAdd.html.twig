@@ -21,12 +21,17 @@
                         <th>Id</th>
                         <th>Nombre</th>
                         <th>Apellidos</th>
+                        <th>Acciones</th>
                     </tr>
                     {% for comercial in pagination %}
                         <tr>
                             <td>{{ comercial.id }}</td>
                             <td>{{ comercial.nombre }}</td>
                             <td>{{ comercial.apellidos }}</td>
+                            <td class="actions">
+                                <a href="{{ path('scalofrio_comercial_edit', { id: comercial.id}) }}"
+                                   class="btn btn-sm btn-danger">Editar</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

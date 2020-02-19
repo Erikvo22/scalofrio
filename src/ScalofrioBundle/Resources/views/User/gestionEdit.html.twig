@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+    {{ parent() }}
+
+    {#Mensaje de confirmación de operación#}
+    {%  for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-success" role="alert">
+            <div class="container">{{ flashMessage }}</div>
+        </div>
+    {% endfor %}
+
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h2><b><span class="glyphicon glyphicon-wrench"></span> Editar gestión</b></h2>
+                </div>
+                {{ form_start(form) }}
+
+                <div class="form-group" style="width: 200px">
+                    {{ form_label(form.nombre) }}*
+                    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control'}}) }}
+                    <span class = "text-danger">{{ form_errors(form.nombre) }}</span>
+                </div>
+
+                <p>
+                    {{ form_widget(form.guardar, {'label' : 'Actualizar gestión', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
