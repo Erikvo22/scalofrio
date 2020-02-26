@@ -32,13 +32,15 @@ class IncidenciasType extends AbstractType
             ->add('cargocliente', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Cargocliente',
                 'empty_value' => '',
-                'required'    => true,
+                'required'    => false,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.nombre', 'ASC');
                 },
             ))
-            ->add('nombrecliente')
+            ->add('nombrecliente', 'text', array(
+                'required' => false
+            ))
             ->add('firma', HiddenType::class)
             ->add('resultado', 'entity', array(
                 'class' => 'ScalofrioBundle\Entity\Resultados',

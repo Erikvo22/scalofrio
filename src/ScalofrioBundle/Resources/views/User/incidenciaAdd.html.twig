@@ -196,15 +196,6 @@
                 backgroundColor: 'rgb(255, 255, 255)'
             });
 
-            //A la hora de guardar el formulario comprobamos si la firma está rellena
-            var saveFormulario = document.getElementById("incidencias_guardar");
-            saveFormulario.addEventListener("click", function (event) {
-                var firma = document.getElementById('saveFirma');
-                if (firma.innerText == 'Fijar firma') {
-                    alert("Por favor, debe de realizar una firma.");
-                }
-            });
-
             function resizeCanvas() {
                 var ratio =  Math.max(window.devicePixelRatio || 1, 1);
                 canvas.width = canvas.offsetWidth * ratio;
@@ -257,19 +248,15 @@
             });
 
             savePNGButton.addEventListener("click", function (event) {
-                if (signaturePad.isEmpty()) {
-                    alert("Por favor, debe de realizar una firma.");
-                } else {
-                    var select = document.getElementById('incidencias_firma');
-                    if(select !== ''){
-                        event.toElement.innerText = "¡Firma fijada!";
-                        textito = "¡Firma fijada!";
-                    }
-                    var dataURL = signaturePad.toDataURL();
-                    var select = document.getElementById('incidencias_firma');
-                    select.value = "";
-                    select.value = dataURL;
+                var select = document.getElementById('incidencias_firma');
+                if (select !== '') {
+                    event.toElement.innerText = "¡Firma fijada!";
+                    textito = "¡Firma fijada!";
                 }
+                var dataURL = signaturePad.toDataURL();
+                var select = document.getElementById('incidencias_firma');
+                select.value = "";
+                select.value = dataURL;
             });
 
             //Cuando le damos a guardar, comprobamos que el formulario esté correctamente rellenado y mostramos la modal
@@ -278,13 +265,10 @@
                     if($('#incidencias_comercial').val() != '' &&
                         $('#incidencias_cliente').val() != '' &&
                         $('#incidencias_ruta').val() != '' &&
-                        $('#incidencias_nombrecliente').val() != '' &&
-                        $('#incidencias_cargocliente').val() != '' &&
                         $('#incidencias_gestion').val() != '' &&
                         $('#incidencias_resultado').val() != '' &&
                         $('#incidencias_tiempo').val() != '' &&
-                        $('#incidencias_maquinas').val() != '' &&
-                        textito === "¡Firma fijada!") {
+                        $('#incidencias_maquinas').val() != '') {
                         $('#modal_guardando').modal('show');
                     }
                 });

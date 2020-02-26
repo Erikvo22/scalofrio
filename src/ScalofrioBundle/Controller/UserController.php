@@ -269,10 +269,6 @@ class UserController extends Controller
             $datos["incidencia"] = $incidencia;
 
             $datos["firma" ]= $incidencia->getFirma();
-            if($datos["firma"] == null){
-                return $this->render('ScalofrioBundle:User:incidenciaAdd.html.twig', array('form' => $form->createView(),
-                    'user' => $usuario, 'comercial' => $comercial));
-            }
 
             /* COMPROBAMOS SI EL CLIENTE TIENE UN EMAIL REGISTRADO Y SI SE HA PUESTO ALGUNO EN LA INCIDENCIA */
             $emailCliente = "";
@@ -286,8 +282,6 @@ class UserController extends Controller
             }
 
             try {
-
-                    
                     $dompdf = new DOMPDF();
                     $dompdf->load_html($this->renderView(
                             'ScalofrioBundle:Email:registrarIncidenciaAdministrador.html.twig',
