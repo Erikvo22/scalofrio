@@ -3,44 +3,43 @@
     {{ include('menu.html.twig') }}
     {{ parent() }}
 
-    <div class = "container well">
+    <div class="container well">
         <div class="col-md-9">
             <h2>{{ cliente.nombre }}</h2>
             <br>
-            <dl>
-                <dt>Email</dt>
-                <dd>
-                    {{ cliente.email }}
-                </dd>
-                <br>
-
-                <dt>Establecimientos</dt>
-                <dd>
-
-                    {% for i in establecimientos|keys %}
-                    {{ establecimientos[i].nombre }}
-                        <a href="{{ path('scalofrio_establecimientos_edit', { id: establecimientos[i].id}) }}">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                        <br>
-                    {% endfor %}
-
-                </dd>
-                <br>
-
-                <dt>Bares</dt>
-                <dd>
-
-                    {% for i in subestablecimientos|keys %}
-                        {{ subestablecimientos[i].nombre }}
-                        <a href="{{ path('scalofrio_subestablecimientos_edit', { id: subestablecimientos[i].id}) }}">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                        <br>
-                    {% endfor %}
-
-                </dd>
-            </dl>
+            <b>Email</b>
+            <p>{{ cliente.email }}</p>
+            <br>
+            <table class="table table-responsive" style="border: 1px solid black;">
+                <thead>
+                <tr>
+                    <th>Establecimiento</th>
+                    <th>Bar</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in establecimientos|keys %}
+                    <tr>
+                        <td>{{ establecimientos[i].nombre }}
+                            <a href="{{ path('scalofrio_establecimientos_edit', { id: establecimientos[i].id}) }}">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                        <td>
+                            {% for x in subestablecimientos|keys %}
+                                {% if subestablecimientos[x].establecimientos.id == establecimientos[i].id %}
+                                    {{ subestablecimientos[x].nombre }}
+                                    <a href="{{ path('scalofrio_subestablecimientos_edit', { id: subestablecimientos[x].id}) }}">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
